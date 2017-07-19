@@ -1,24 +1,16 @@
 #include "UnitTest.h"
 
+#include "Log.h"
+
 namespace Core {
   UnitTest::UnitTest(const std::string& name) : m_name(name) {}
 
-  void UnitTest::Examine() {
-    if (!m_examined) {
-      Perform();
-
-      // TODO :: Debug outcome.
-
-      m_examined = true;
-    }
+  const std::string& UnitTest::getName() const {
+    return m_name;
   }
 
   bool UnitTest::getPassed() const {
     return m_testCount == m_passCount;
-  }
-
-  bool UnitTest::getExamined() const {
-    return m_examined;
   }
 
   unsigned int UnitTest::getTestCount() const {

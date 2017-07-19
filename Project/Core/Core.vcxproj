@@ -20,11 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Core\ExamBoard.h" />
+    <ClInclude Include="..\..\Source\Core\Log.h" />
     <ClInclude Include="..\..\Source\Core\Singleton.h" />
+    <ClInclude Include="..\..\Source\Core\StringUtil.h" />
     <ClInclude Include="..\..\Source\Core\UnitTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Core\ExamBoard.cpp" />
+    <ClCompile Include="..\..\Source\Core\Log.cpp" />
     <ClCompile Include="..\..\Source\Core\UnitTest.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

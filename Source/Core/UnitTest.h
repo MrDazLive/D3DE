@@ -7,20 +7,21 @@
 namespace Core {
   class UnitTest {
   public:
-            void            Examine       ();
+    virtual void                  Examine       () {}
 
-            bool            getPassed     () const;
-            bool            getExamined   () const;
-            unsigned int    getTestCount  () const;
-            unsigned int    getPassCount  () const;
+            const std::string&    getName       () const;
+
+            bool                  getPassed     () const;
+            unsigned int          getTestCount  () const;
+            unsigned int          getPassCount  () const;
   protected:
-                            UnitTest      (const std::string&);
-            void            TestCase      (const std::function<bool()>&);
-    virtual void            Perform       () {};
+                                  UnitTest      (const std::string&);
+
+            void                  TestCase      (const std::function<bool()>&);
   private:
-    const std::string       m_name        { " _____ " };
-    bool                    m_examined    { false };
-    unsigned int            m_testCount   { 0 };
-    unsigned int            m_passCount   { 0 };
+    const std::string             m_name        { " _____ " };
+
+    unsigned int                  m_testCount   { 0 };
+    unsigned int                  m_passCount   { 0 };
   };
 }
