@@ -14,46 +14,56 @@ namespace Core {
 
     unitTest->Examine();
 
-    Logger->DebugError("TODO :: Log test results.");
+    PrintOutcome(unitTest);
 
     if (unitTest->getPassed()) {
       ++m_examPassCount;
     }
-
     ++m_examCount;
+
     m_testCount += unitTest->getTestCount();
     m_testPassCount += unitTest->getPassCount();
   }
 
   void ExamBoard::Results() {
+    int logType = Log::MESSAGE;
+    std::string messageNote = "";
+
     if (m_examCount == 0) {
-      Logger->DebugMessage("////////////////////////////////////");
-      Logger->DebugMessage("         No tests provided!         ");
-      Logger->DebugMessage("////////////////////////////////////");
-      Logger->DebugMessage(String::Format(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount));
-      Logger->DebugMessage(String::Format(" Function test results: %i out of %i.", m_testPassCount, m_testCount));
-      Logger->DebugMessage("////////////////////////////////////");
+      messageNote = "         No tests provided!         ";
     } else if (m_examCount == m_examPassCount) {
-      Logger->DebugSuccess("////////////////////////////////////");
-      Logger->DebugSuccess("     All tests were successful!     ");
-      Logger->DebugSuccess("////////////////////////////////////");
-      Logger->DebugSuccess(String::Format(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount));
-      Logger->DebugSuccess(String::Format(" Function test results: %i out of %i.", m_testPassCount, m_testCount));
-      Logger->DebugSuccess("////////////////////////////////////");
+      logType = Log::SUCCESS;
+      messageNote = "     All tests were successful!     ";
     } else if (m_examPassCount > 0) {
-      Logger->DebugWarning("////////////////////////////////////");
-      Logger->DebugWarning("     Some tests were successful!    ");
-      Logger->DebugWarning("////////////////////////////////////");
-      Logger->DebugWarning(String::Format(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount));
-      Logger->DebugWarning(String::Format(" Function test results: %i out of %i.", m_testPassCount, m_testCount));
-      Logger->DebugWarning("////////////////////////////////////");
+      logType = Log::WARNING;
+      messageNote = "     Some tests were successful!    ";
     } else {
-      Logger->DebugError("////////////////////////////////////");
-      Logger->DebugError("       All tests were failed!       ");
-      Logger->DebugError("////////////////////////////////////");
-      Logger->DebugError(String::Format(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount));
-      Logger->DebugError(String::Format(" Function test results: %i out of %i.", m_testPassCount, m_testCount));
-      Logger->DebugError("////////////////////////////////////");
+      logType = Log::ERROR;
+      messageNote = "       All tests were failed!       ";
     }
+
+    LOG->DebugBreak();
+    LOG->Debug("////////////////////////////////////", logType);
+    LOG->Debug(messageNote, logType);
+    LOG->Debug("////////////////////////////////////", logType);
+    LOG->Debug(String::Format(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount), logType);
+    LOG->Debug(String::Format(" Function test results: %i out of %i.", m_testPassCount, m_testCount), logType);
+    LOG->Debug("////////////////////////////////////", logType);
+  }
+
+  void ExamBoard::PrintOutcome(UnitTest* const unitTest) {
+    int logType = Log::WARNING;
+    if (unitTest->getPassed()) {
+      logType = Log::SUCCESS;
+    } else if (unitTest->getPassCount() == 0) {
+      logType = Log::ERROR;
+    }
+
+    LOG->Debug(
+      String::Format("%s: %i out of %i passed.",
+        unitTest->getName().c_str(),
+        unitTest->getPassCount(),
+        unitTest->getTestCount()),
+      logType);
   }
 }

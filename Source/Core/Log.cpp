@@ -7,6 +7,15 @@ namespace Core {
     system("Color");
   }
 
+  void Log::Debug(const std::string& message, const Type logType) {
+    switch (logType) {
+    case MESSAGE: DebugMessage(message);  break;
+    case SUCCESS: DebugSuccess(message);  break;
+    case WARNING: DebugWarning(message);  break;
+    default:      DebugError(message);    break;
+    }
+  }
+
   void Log::DebugMessage(const std::string& message) {
     Print(message, 37);
   }
@@ -23,7 +32,11 @@ namespace Core {
     Print(message, 31);
   }
 
+  void Log::DebugBreak() {
+    std::cout << std::endl;
+  }
+
   void Log::Print(const std::string& message, unsigned int colour) {
-    std::cout << "\033[" << colour << "m" << message << std::endl;
+    std::cout << "\033[1;" << colour << "m" << message << "\033[0m" << std::endl;
   }
 }

@@ -4,18 +4,71 @@
 #include "Singleton.h"
 
 namespace Core {
+
+  /// <summary>
+  /// Class used for logging information for debug purposes.
+  /// </summary>
   class Log : public Singleton<Log> {
     friend Singleton;
   public:
-    void DebugMessage(const std::string&);
-    void DebugSuccess(const std::string&);
-    void DebugWarning(const std::string&);
-    void DebugError(const std::string&);
+    /// <summary>
+    /// Enumerator used to identify the type of debug message desired for printing.
+    /// </summary>
+    enum Type {
+      MESSAGE,
+      SUCCESS,
+      WARNING,
+      ERROR
+    };
+
+    /// <summary>
+    /// Logs the provided message according to the provided log type.
+    /// </summary>
+    /// <param name = "message">The message to be logged.</param>
+    /// <param name = "logType">The identifier used to for specify how the message is logged.</param>
+    void  Debug         (const std::string&, const Type = WARNING);
+
+    /// <summary>
+    /// Logs the provided message.
+    /// </summary>
+    /// <param name = "message">The message to be logged.</param>
+    void  DebugMessage  (const std::string&);
+
+    /// <summary>
+    /// Logs the provided message as in the "success" formatting.
+    /// </summary>
+    /// <param name = "message">The message to be logged.</param>
+    void  DebugSuccess  (const std::string&);
+
+    /// <summary>
+    /// Logs the provided message as in the "warning" formatting.
+    /// </summary>
+    /// <param name = "message">The message to be logged.</param>
+    void  DebugWarning  (const std::string&);
+
+    /// <summary>
+    /// Logs the provided message as in the "error" formatting.
+    /// </summary>
+    /// <param name = "message">The message to be logged.</param>
+    void  DebugError    (const std::string&);
+
+    /// <summary>
+    /// Prints a break line into the log.
+    /// </summary>
+    void  DebugBreak    ();
   protected:
-    Log();
+          /// <summary>
+          /// Default constructor.
+          /// </summary>
+          Log           ();
   private:
-    void Print(const std::string&, unsigned int);
+    /// <summary>
+    /// Prints the provided message using the provided colour code.
+    /// </summary>
+    /// <param = "message">The message to be printed to the console.</param>
+    /// <param = "colour">The value used for specifying the print colour.</param>
+    void  Print         (const std::string&, unsigned int);
   };
 
-  #define Logger Log::Instance()
+  #define LOG Log::Instance()
 }
