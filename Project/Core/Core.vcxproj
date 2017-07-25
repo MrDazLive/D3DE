@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Core\ExamBoard.h" />
+    <ClInclude Include="..\..\Source\Core\Handler.h" />
     <ClInclude Include="..\..\Source\Core\Log.h" />
     <ClInclude Include="..\..\Source\Core\Singleton.h" />
     <ClInclude Include="..\..\Source\Core\StringUtil.h" />

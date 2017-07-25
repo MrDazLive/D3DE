@@ -4,12 +4,12 @@
 
 namespace Core_Test {
 
-  class String : public Core::UnitTest {
+  class Handler : public Core::UnitTest {
     friend class Core::ExamBoard;
   public:
-    void  Examine () override final;
+    void  Examine() override final;
   protected:
-          String  ();
+          Handler();
   };
 
 }

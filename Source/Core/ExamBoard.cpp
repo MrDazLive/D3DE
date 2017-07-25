@@ -26,7 +26,7 @@ namespace Core {
   }
 
   void ExamBoard::Results() {
-    int logType = Log::MESSAGE;
+    Log::Type logType = Log::MESSAGE;
     std::string messageNote = "";
 
     if (m_examCount == 0) {
@@ -52,7 +52,7 @@ namespace Core {
   }
 
   void ExamBoard::PrintOutcome(UnitTest* const unitTest) {
-    int logType = Log::WARNING;
+    Log::Type logType = Log::WARNING;
     if (unitTest->getPassed()) {
       logType = Log::SUCCESS;
     } else if (unitTest->getPassCount() == 0) {

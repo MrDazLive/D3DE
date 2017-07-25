@@ -21,9 +21,15 @@
     <ClCompile Include="..\..\Source\Core_Test\StringUtil_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Core_Test\Handler_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Core_Test\StringUtil_test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Core_Test\Handler_test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

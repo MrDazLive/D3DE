@@ -2,7 +2,8 @@
 
 #include <string>
 #include <functional>
-#include "Singleton.h"
+
+#include "ExamBoard.h"
 
 namespace Core {
   /// <summary>

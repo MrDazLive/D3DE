@@ -1,6 +1,7 @@
 #include "UnitTest.h"
 
 #include "Log.h"
+#include "StringUtil.h"
 
 namespace Core {
   UnitTest::UnitTest(const std::string& name) : m_name(name) {}
@@ -24,8 +25,11 @@ namespace Core {
   void UnitTest::TestCase(const std::function<bool()>& testMethod) {
     ++m_testCount;
     try {
-      if (testMethod())
+      if (testMethod()) {
         ++m_passCount;
+        return;
+      }
     } catch (std::exception&) {}
+    LOG->DebugError(String::Format("%s: Test %i failed.", m_name.c_str(), m_testCount));
   }
 }

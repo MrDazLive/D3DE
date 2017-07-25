@@ -30,6 +30,9 @@
     <ClInclude Include="..\..\Source\Core\StringUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Core\ExamBoard.cpp">
