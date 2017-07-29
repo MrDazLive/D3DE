@@ -26,10 +26,12 @@ namespace Core {
     ++m_testCount;
     try {
       if (testMethod()) {
+        Reset();
         ++m_passCount;
         return;
       }
     } catch (std::exception&) {}
+    Reset();
     LOG->DebugError(String::Format("%s: Test %i failed.", m_name.c_str(), m_testCount));
   }
 }

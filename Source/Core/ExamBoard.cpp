@@ -4,13 +4,11 @@
 #include "UnitTest.h"
 #include "StringUtil.h"
 
-#include <assert.h>
-
 namespace Core {
   ExamBoard::ExamBoard(const std::string& name) : m_name(name) {}
 
   void ExamBoard::Examine(UnitTest* const unitTest) {
-    assert(unitTest);
+    LOG->DebugAssert(unitTest != nullptr, "Provided object is not a valid UnitTest.");
 
     unitTest->Examine();
 

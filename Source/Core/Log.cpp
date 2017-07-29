@@ -1,5 +1,6 @@
 #include "Log.h"
 
+#include <assert.h>
 #include <iostream>
 
 namespace Core {
@@ -9,10 +10,11 @@ namespace Core {
 
   void Log::Debug(const std::string& message, const Type logType) {
     switch (logType) {
-    case MESSAGE: DebugMessage(message);  break;
-    case SUCCESS: DebugSuccess(message);  break;
-    case WARNING: DebugWarning(message);  break;
-    default:      DebugError(message);    break;
+    case MESSAGE: DebugMessage(message);        break;
+    case SUCCESS: DebugSuccess(message);        break;
+    case WARNING: DebugWarning(message);        break;
+    case ASSERT:  DebugAssert (false, message); break;
+    default:      DebugError  (message);        break;
     }
   }
 
@@ -30,6 +32,13 @@ namespace Core {
 
   void Log::DebugError(const std::string& message) {
     Print(message, 31);
+  }
+
+  void Log::DebugAssert(bool condition, const std::string& message) {
+    if (!condition) {
+      Print("Assert thrown: " + message, 35);
+      assert(false);
+    }
   }
 
   void Log::DebugBreak() {

@@ -18,7 +18,8 @@ namespace Core {
       MESSAGE,
       SUCCESS,
       WARNING,
-      ERROR
+      ERROR,
+      ASSERT
     };
 
     /// <summary>
@@ -51,6 +52,13 @@ namespace Core {
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     void  DebugError    (const std::string&);
+
+    /// <summary>
+    /// Checks assert condition, logging an arror message if assert fails.
+    /// </summary>
+    /// <param name = "condition">The assert condition.</param>
+    /// <param name = "message">The error message to be logged.</param>
+    void  DebugAssert   (bool, const std::string& = "");
 
     /// <summary>
     /// Prints a break line into the log.

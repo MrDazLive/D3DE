@@ -7,9 +7,10 @@ namespace Core_Test {
   class Handler : public Core::UnitTest {
     friend class Core::ExamBoard;
   public:
-    void  Examine() override final;
+    void  Examine () override final;
   protected:
-          Handler();
+          Handler ();
+    void  Reset   () override final;
   };
 
 }

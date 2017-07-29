@@ -1,5 +1,4 @@
 #include <Core\ExamBoard.h>
-#include <Core\Handler.h>
 
 #include "StringUtil_test.h"
 #include "Handler_test.h"

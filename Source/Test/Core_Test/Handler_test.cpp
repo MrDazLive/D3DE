@@ -17,43 +17,37 @@ namespace Core_Test {
     int         m_val   { 0 };
   };
 
+  void Handler::Reset() {
+    Dumby::DestroyAll();
+  }
+
   void Handler::Examine() {
     TestCase([]() {
       Dumby dud;
       return Dumby::getCount() == 0;
     });
 
-    Dumby::DestroyAll();
-
     TestCase([]() {
       Dumby* dud = Dumby::Create();
       return dud->getIndex() == 0;
     });
-
-    Dumby::DestroyAll();
 
     TestCase([]() {
       Dumby* dud = Dumby::Create(1);
       return dud->getVal() == 1;
     });
 
-    Dumby::DestroyAll();
-
     TestCase([]() {
       Dumby::Create();
       Dumby::Create();
       Dumby::Destroy(1);
-      return Dumby::getCount() == 1; //
+      return Dumby::getCount() == 1;
     });
-
-    Dumby::DestroyAll();
 
     TestCase([]() {
       Dumby::Destroy(Dumby::Create());
       return Dumby::getCount() == 0;
     });
-
-    Dumby::DestroyAll();
 
     TestCase([]() {
       Dumby::Create();
@@ -61,8 +55,6 @@ namespace Core_Test {
       Dumby::Create();
       return Dumby::getCount() == 2;
     });
-
-    Dumby::DestroyAll();
 
     TestCase([]() {
       Dumby::Create();
@@ -72,16 +64,12 @@ namespace Core_Test {
       return list[1]->getVal() == 3;
     });
 
-    Dumby::DestroyAll();
-
     TestCase([]() {
       Dumby::Create();
       Dumby::Create(3);
       Dumby::Create();
       return Dumby::getWithIndex(1)->getVal() == 3;
     });
-
-    Dumby::DestroyAll();
 
     TestCase([]() {
       Dumby::Create();
@@ -91,8 +79,6 @@ namespace Core_Test {
       Dumby* ptr = Dumby::getWhere([](auto ptr) { return ptr->getIndex() == 1; });
       return ptr->getVal() == 3;
     });
-
-    Dumby::DestroyAll();
 
     TestCase([]() {
       Dumby* ptr1 = Dumby::Create(0);
