@@ -145,18 +145,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\Core_Test\Handler_test.cpp" />
-    <ClCompile Include="..\..\Source\Core_Test\main.cpp" />
-    <ClCompile Include="..\..\Source\Core_Test\StringUtil_test.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">
       <Project>{4672a0d8-9224-4237-b4fd-887caad7050a}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\Core_Test\Handler_test.h" />
-    <ClInclude Include="..\..\Source\Core_Test\StringUtil_test.h" />
+    <ClInclude Include="..\..\Source\Test\Core_Test\Handler_test.h" />
+    <ClInclude Include="..\..\Source\Test\Core_Test\StringUtil_test.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\Test\Core_Test\Handler_test.cpp" />
+    <ClCompile Include="..\..\Source\Test\Core_Test\main.cpp" />
+    <ClCompile Include="..\..\Source\Test\Core_Test\StringUtil_test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

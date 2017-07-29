@@ -34,6 +34,7 @@ namespace Core {
             unsigned int          getTestCount  () const;
 
             /// <summary>
+            /// <i>Virtual function.</i><br/>
             /// Gets the total number of tests passed.
             /// </summary>
             unsigned int          getPassCount  () const;
@@ -51,6 +52,11 @@ namespace Core {
             /// </summary>
             /// <param name = "testMethod"> The test method to be performed; returning <b>true</b> if successful.</param>
             void                  TestCase      (const std::function<bool()>&);
+
+            /// <summary>
+            /// Resets the test environment if necessary. Some objects may otherwise allow for data to carry over.
+            /// </summary>
+    virtual void                  Reset         () {}
   private:
     const std::string             m_name        { " _____ " };
 

@@ -29,6 +29,7 @@ namespace Core {
 
 
     /// <summary>
+    /// <i>Static function.</i><br/>
     /// Creates and returns a handled instance of the object.
     /// </summary>
     /// <param name = "args">The arguments used in order to enact the desired constructor.</param>
@@ -36,34 +37,40 @@ namespace Core {
     static T* const           Create          (V...);
 
     /// <summary>
+    /// <i>Static function.</i><br/>
     /// Deletes the desired handled object. Adjusting other objects accordingly.
     /// </summary>
     /// <param name = "index">The index to the object to be destroyed.</param>
     static void               Destroy         (const size_t);
 
     /// <summary>
+    /// <i>Static function.</i><br/>
     /// Deletes the desired handled object. Adjusting other objects accordingly.
     /// </summary>
     /// <param name = "instance">The pointer to the object to be destroyed.</param>
     static void               Destroy         (T* const);
 
     /// <summary>
+    /// <i>Static function.</i><br/>
     /// Deletes all instances of handled objects.
     /// </summary>
     static void               DestroyAll      ();
 
     /// <summary>
+    /// <i>Static function.</i><br/>
     /// Obtains the total amount of instance being handled.
     /// </summary>
     static size_t             getCount        ();
 
 
     /// <summary>
+    /// <i>Static function.</i><br/>
     /// Obtains the vector of all objects being handled.
     /// </summary>
     static std::vector<T*>&   getAll();
 
     /// <summary>
+    /// <i>Static function.</i><br/>
     /// Obtains the desireed object.
     /// </summary>
     /// <param name = "index">The index to the object to be collected.</param>
@@ -71,6 +78,7 @@ namespace Core {
     static T* const           getWithIndex    (const unsigned int);
 
     /// <summary>
+    /// <i>Static function.</i><br/>
     /// Obtains an object that meets the specified criteria.
     /// </summary>
     /// <param name = "condition">The conditional method used to locate a suitable object; returning <b>true</b> is suitable.</param>
@@ -78,6 +86,7 @@ namespace Core {
     static T* const           getWhere        (std::function<bool(T* const)>);
 
     /// <summary>
+    /// <i>Static function.</i><br/>
     /// Iterates through each handled object, modifying it as deisred.
     /// </summary>
     /// <param name = "modifier">The alteration method used to modify the objects.</param>

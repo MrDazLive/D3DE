@@ -10,6 +10,7 @@ namespace Core {
   class Singleton {
   public:
     /// <summary>
+    /// <i>Static function.</i><br/>
     /// Creates and returns the only permitted instance of the object.
     /// </summary>
     /// <param name = "args">The arguments to be provided to the constructor of the object.</param>
