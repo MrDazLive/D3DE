@@ -11,6 +11,7 @@ namespace Core {
   /// Derived classes will be provided to Core::ExamBoard for examination.
   /// </summary>
   class UnitTest {
+    friend class Core::ExamBoard;
   public:
             /// <summary>
             /// <i>Pure virtual function.</i><br/>
@@ -56,7 +57,7 @@ namespace Core {
             /// <summary>
             /// Resets the test environment if necessary. Some objects may otherwise allow for data to carry over.
             /// </summary>
-    virtual void                  Reset         () {}
+    virtual void                  Reset         () = 0;
   private:
     const std::string             m_name        { " _____ " };
 
@@ -64,3 +65,15 @@ namespace Core {
     unsigned int                  m_passCount   { 0 };
   };
 }
+
+#define _UNIT_TEST_CLASS(OBJECT, CONSTRUCT, NAME)   \
+  class OBJECT : public Core::UnitTest {            \
+    friend class Core::ExamBoard;                   \
+  public:                                           \
+    void  Examine() override final;                 \
+  protected:                                        \
+          CONSTRUCT() : UnitTest(NAME) {}           \
+    void  Reset() override final;                   \
+  };
+
+#define UNIT_TEST(OBJECT, NAME) _UNIT_TEST_CLASS(OBJECT, OBJECT, NAME)

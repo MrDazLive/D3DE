@@ -1,11 +1,9 @@
-#include "Handler_test.h"
+#include "declerations.h"
 
 #include <Core\Handler.h>
 
 
 namespace Core_Test {
-
-  Handler::Handler() : UnitTest("Handler Container") {}
 
   class Dumby : public Core::Handler<Dumby> {
   public:

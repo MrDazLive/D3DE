@@ -1,11 +1,11 @@
-#include "StringUtil_test.h"
+#include "declerations.h"
 
 #include <Core\StringUtil.h>
 
 using namespace Core::String;
 
 namespace Core_Test {
-  String::String() : UnitTest("String Utilities") {}
+  void String::Reset() {}
 
   void String::Examine() {
     TestCase([]() {

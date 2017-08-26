@@ -150,10 +150,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\Test\Core_Test\Handler_test.h" />
-    <ClInclude Include="..\..\Source\Test\Core_Test\StringUtil_test.h" />
+    <ClInclude Include="..\..\Source\Test\Core_Test\declerations.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\Test\Core_Test\File_test.cpp" />
     <ClCompile Include="..\..\Source\Test\Core_Test\Handler_test.cpp" />
     <ClCompile Include="..\..\Source\Test\Core_Test\main.cpp" />
     <ClCompile Include="..\..\Source\Test\Core_Test\StringUtil_test.cpp" />

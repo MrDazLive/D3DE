@@ -1,61 +1,73 @@
 #include "File.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fstream>
+
+#include "StringUtil.h"
+
+#ifdef _WIN32
+#define stat _stat
+#else
+#include <unistd.h>
+#endif
+
+const struct stat details(const std::string& path) {
+  static struct stat result;
+  stat(path.c_str(), &result);
+  return result;
+}
+
 namespace Core {
 
-  File::File(const std::string& fullPath) {
+  File::File(const std::string& fullPath) : m_file(new std::fstream(fullPath)) {
     SplitPath(fullPath);
   }
 
   File::~File() {
-    if (isModified()) {
-      LOG->DebugWarning("File {" + getFullPath() + "} will save before closing.");
+    if (isOpen() && isModified()) {
+      LOG->DebugWarning(String::Format("Changes to {%s} were not saved before closing.", getFullPath().c_str()));
     }
     Close();
+    delete m_file;
   }
 
   bool File::Exists() const {
-    // TODO
-    return false;
+    return std::fstream(getFullPath().c_str()).good();
   }
 
   bool File::Create(bool overwrite) {
-    // TODO
-    if (overwrite || !Exists()) {
-
+    if (!Exists() || (overwrite && Delete())) {
+      m_file->open(getFullPath().c_str(), std::fstream::out);
+      return true;
     }
     return false;
   }
 
   bool File::Open(bool create) {
-    // TODO
-    if (Exists()) {
-
-    } else if (create) {
-      Create();
+    if (isOpen()) {
+      LOG->DebugWarning(String::Format("File {%s} is already open.", getFullPath().c_str()));
+      return false;
     }
-    return false;
-  }
-
-  bool File::Save(bool overwrite) {
-    // TODO
-    if (m_modified && overwrite) {
-
+    
+    if (create || Exists()) {
+      m_file->open(getFullPath().c_str(), std::fstream::out);
+      return true;
     }
     return false;
   }
 
   bool File::Close(bool save) {
-    // TODO
-    if (save && m_modified) {
-      Save();
+    if (Exists()) {
+      m_file->close();
+      return true;
     }
     return false;
   }
 
   bool File::Delete() {
-    // TODO
-    if (Exists()) {
-
+    if (Close()) {
+      return std::remove(getFullPath().c_str()) == 0;
     }
     return false;
   }
@@ -91,16 +103,22 @@ namespace Core {
     // TODO
   }
 
+  const bool File::isOpen() const {
+    return m_file->is_open();
+  }
+
   const bool File::isModified() const {
-    return m_modified;
+    const auto file = details(getFullPath());
+    return file.st_mtime != m_lastCheck;
   }
 
   const size_t File::getLength() const {
     return m_length;
   }
 
-  const std::string& File::getContent() const {
-    return m_content;
+  const std::string File::getContent() const {
+    // TODO
+    return "";
   }
 
   const std::string& File::getName() const {

@@ -24,14 +24,13 @@ namespace Core {
 
   void UnitTest::TestCase(const std::function<bool()>& testMethod) {
     ++m_testCount;
+    Reset();
     try {
       if (testMethod()) {
-        Reset();
         ++m_passCount;
         return;
       }
     } catch (std::exception&) {}
-    Reset();
     LOG->DebugError(String::Format("%s: Test %i failed.", m_name.c_str(), m_testCount));
   }
 }

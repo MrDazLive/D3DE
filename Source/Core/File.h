@@ -2,6 +2,10 @@
 
 #include "Handler.h"
 
+namespace std {
+  typedef basic_fstream<char> fstream;
+}
+
 namespace Core {
 
   /// <summary>
@@ -41,12 +45,6 @@ namespace Core {
     bool                Open            (bool = false);
 
     /// <summary>
-    /// Saves the modified version of the file, overwriting the existing file if specified.
-    /// </summary>
-    /// <param name = "overwrite">Specifies whether to overwrite an existing copy.</param>
-    bool                Save            (bool = true);
-
-    /// <summary>
     /// Closes the opened file.
     /// If the file has been modified, the file will be saved if specified.
     /// </summary>
@@ -84,6 +82,11 @@ namespace Core {
     void                RemoveLine      (const size_t, const size_t = 1);
 
     /// <summary>
+    /// Returns whether the file is currently open.
+    /// </summary>
+    const bool          isOpen          () const;
+
+    /// <summary>
     /// Returns whether the file has been modifed since it was created, opened or saved.
     /// </summary>
     const bool          isModified      () const;
@@ -96,7 +99,7 @@ namespace Core {
     /// <summary>
     /// Returns the content of the file.
     /// </summary>
-    const std::string&  getContent      () const;
+    const std::string   getContent      () const;
 
     /// <summary>
     /// Returns the name of the file.
@@ -124,9 +127,9 @@ namespace Core {
     void                SplitPath       (const std::string&);
 
     size_t              m_length        { 0 };
-    std::string         m_content       { "" };
-    bool                m_modified      { false };
+    time_t              m_lastCheck     { 0 };
     std::string         m_fullPath[3]   {};
+    std::fstream* const m_file          { nullptr };
   };
 
 }

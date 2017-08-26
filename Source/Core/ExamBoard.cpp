@@ -11,6 +11,7 @@ namespace Core {
     LOG->DebugAssert(unitTest != nullptr, "Provided object is not a valid UnitTest.");
 
     unitTest->Examine();
+    unitTest->Reset();
 
     PrintOutcome(unitTest);
 
