@@ -22,7 +22,7 @@ namespace Core {
     return m_passCount;
   }
 
-  void UnitTest::TestCase(const std::function<bool()>& testMethod) {
+  void UnitTest::TestCase(const std::function<bool()>& testMethod, const std::string& message) {
     ++m_testCount;
     Reset();
     try {
@@ -31,6 +31,6 @@ namespace Core {
         return;
       }
     } catch (std::exception&) {}
-    LOG->DebugError(String::Format("%s: Test %i failed.", m_name.c_str(), m_testCount));
+    LOG->DebugError(String::Format("%s: Test %i failed. [%s]", m_name.c_str(), m_testCount, message.c_str()));
   }
 }

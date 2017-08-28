@@ -30,5 +30,13 @@ namespace Core {
       return std::string(buffer);
     }
 
+    /// <summary>
+    /// Compares the value of two provided strings (case sensitive).
+    /// </summary>
+    /// <returns>Whether the strings are identical or not.</returns>
+    inline bool Compare(const std::string& l, const std::string& r) {
+      return l.compare(r) == 0;
+    }
+
   }
 }

@@ -48,8 +48,7 @@ namespace Core {
     /// Closes the opened file.
     /// If the file has been modified, the file will be saved if specified.
     /// </summary>
-    /// <param name = "save">Specified whether to save the file before closing.</param>
-    bool                Close           (bool = true);
+    bool                Close           ();
 
     /// <summary>
     /// Deletes the specified file.
@@ -125,6 +124,7 @@ namespace Core {
     enum                /*anonymous*/   { PATH = 0, NAME = 1, EXT = 2 };
 
     void                SplitPath       (const std::string&);
+    void                BuildDirectory  ();
 
     size_t              m_length        { 0 };
     time_t              m_lastCheck     { 0 };

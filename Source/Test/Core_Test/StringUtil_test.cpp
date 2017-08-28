@@ -9,8 +9,16 @@ namespace Core_Test {
 
   void String::Examine() {
     TestCase([]() {
+      return Compare(std::string("test text"), "test text");
+    }, "String::Compare");
+
+    TestCase([]() {
+      return !Compare(std::string("test text"), "Test Text");
+    }, "String::Compare");
+
+    TestCase([]() {
       std::string text = Format("%i is an interger and %.3f is a float.", 3, 0.142f);
       return text.compare("3 is an interger and 0.142 is a float.") == 0;
-    });
+    }, "String::Format");
   }
 }

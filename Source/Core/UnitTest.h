@@ -51,8 +51,9 @@ namespace Core {
             /// <summary>
             /// Performs the provided test function, updating the test results accordingly.
             /// </summary>
-            /// <param name = "testMethod"> The test method to be performed; returning <b>true</b> if successful.</param>
-            void                  TestCase      (const std::function<bool()>&);
+            /// <param name = "testMethod">The test method to be performed; returning <b>true</b> if successful.</param>
+            /// <param name = "message">A label to identify the purpose of the test case.</param>
+            void                  TestCase      (const std::function<bool()>&, const std::string& = "");
 
             /// <summary>
             /// Resets the test environment if necessary. Some objects may otherwise allow for data to carry over.

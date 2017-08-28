@@ -12,10 +12,15 @@
 #include <unistd.h>
 #endif
 
-const struct stat details(const std::string& path) {
-  static struct stat result;
-  stat(path.c_str(), &result);
-  return result;
+struct file_status {
+  bool success;
+  struct stat status;
+};
+
+const file_status& details(const std::string& path) {
+  static file_status file;
+  file.success = stat(path.c_str(), &file.status) == 0;
+  return file;
 }
 
 namespace Core {
@@ -25,9 +30,6 @@ namespace Core {
   }
 
   File::~File() {
-    if (isOpen() && isModified()) {
-      LOG->DebugWarning(String::Format("Changes to {%s} were not saved before closing.", getFullPath().c_str()));
-    }
     Close();
     delete m_file;
   }
@@ -38,6 +40,7 @@ namespace Core {
 
   bool File::Create(bool overwrite) {
     if (!Exists() || (overwrite && Delete())) {
+      BuildDirectory();
       m_file->open(getFullPath().c_str(), std::fstream::out);
       return true;
     }
@@ -51,13 +54,14 @@ namespace Core {
     }
     
     if (create || Exists()) {
+      BuildDirectory();
       m_file->open(getFullPath().c_str(), std::fstream::out);
       return true;
     }
     return false;
   }
 
-  bool File::Close(bool save) {
+  bool File::Close() {
     if (Exists()) {
       m_file->close();
       return true;
@@ -109,7 +113,7 @@ namespace Core {
 
   const bool File::isModified() const {
     const auto file = details(getFullPath());
-    return file.st_mtime != m_lastCheck;
+    return file.status.st_mtime != m_lastCheck;
   }
 
   const size_t File::getLength() const {
@@ -147,6 +151,12 @@ namespace Core {
     m_fullPath[PATH] = fullPath.substr(0, dirEnd);
     m_fullPath[NAME] = fullPath.substr(dirEnd, extStart - dirEnd);
     m_fullPath[EXT] = fullPath.substr(extStart, fullPath.size() - extStart);
+  }
+
+  void File::BuildDirectory() {
+    if (!details(m_fullPath[PATH]).success) {
+      system(String::Format("md \"%s\"", m_fullPath[PATH].c_str()).c_str());
+    }
   }
 
 }
