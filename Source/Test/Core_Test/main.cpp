@@ -10,6 +10,7 @@ int main() {
   EXAMBOARD->Examine<String>();
   EXAMBOARD->Examine<Handler>();
   EXAMBOARD->Examine<File>();
+  EXAMBOARD->Examine<Flags>();
   EXAMBOARD->Results();
   return 0;
 }

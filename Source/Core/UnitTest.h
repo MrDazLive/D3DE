@@ -71,10 +71,10 @@ namespace Core {
   class OBJECT : public Core::UnitTest {            \
     friend class Core::ExamBoard;                   \
   public:                                           \
-    void  Examine() override final;                 \
+    void  Examine   () override final;              \
   protected:                                        \
-          CONSTRUCT() : UnitTest(NAME) {}           \
-    void  Reset() override final;                   \
+          CONSTRUCT () : UnitTest(NAME) {}          \
+    void  Reset     () override final;              \
   };
 
 #define UNIT_TEST(OBJECT, NAME) _UNIT_TEST_CLASS(OBJECT, OBJECT, NAME)

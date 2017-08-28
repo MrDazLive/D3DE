@@ -24,7 +24,7 @@ namespace Core {
     /// 3 is an interger and 0.142 is a float.
     /// </code>
     template <typename ... V>
-    std::string Format(const char* text, V... args) {
+    inline std::string Format(const char* text, V... args) {
       char buffer[1024];
       sprintf_s(buffer, text, args...);
       return std::string(buffer);

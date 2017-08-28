@@ -32,5 +32,8 @@
     <ClCompile Include="..\..\Source\Test\Core_Test\File_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Test\Core_Test\Flags_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -18,7 +18,7 @@ namespace Core_Test {
 
     TestCase([]() {
       std::string text = Format("%i is an interger and %.3f is a float.", 3, 0.142f);
-      return text.compare("3 is an interger and 0.142 is a float.") == 0;
+      return Compare(text, "3 is an interger and 0.142 is a float.");
     }, "String::Format");
   }
 }
