@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fstream>
+#include <iostream>
 
 #include "StringUtil.h"
 
@@ -42,7 +43,7 @@ namespace Core {
     if (!Exists() || (overwrite && Delete())) {
       BuildDirectory();
       m_file->open(getFullPath().c_str(), std::fstream::out);
-      return true;
+      return Close() && Open();
     }
     return false;
   }
@@ -53,10 +54,13 @@ namespace Core {
       return false;
     }
     
-    if (create || Exists()) {
+    if (Exists()) {
       BuildDirectory();
-      m_file->open(getFullPath().c_str(), std::fstream::out);
+      m_file->open(getFullPath().c_str(), std::fstream::in | std::fstream::out | std::fstream::app);
       return true;
+    }
+    else if (create) {
+      return Create();
     }
     return false;
   }
@@ -77,34 +81,27 @@ namespace Core {
   }
 
   void File::InsertLine(const std::string& content) {
-    // TODO
+    if (isOpen()) {
+      *m_file << content;
+
+      if (!String::EndsWith(content, "\n"))
+        *m_file << "\n";
+    }
+    else {
+      LOG->DebugWarning(String::Format("Contents was not written to file: %s", getFullPath().c_str()));
+    }
   }
 
   void File::InsertLine(const std::string& content, const size_t line) {
-    // Adds content to end if specified line is not in range.
-    if (line >= m_length) {
-      InsertLine(content);
-      return;
-    }
-    // TODO
+    LOG->DebugAssert("Function (File::InsertLine) not implemented.");
   }
 
   void File::RemoveLine() {
-    // TODO
+    LOG->DebugAssert("Function (File::RemoveLine) not implemented.");
   }
 
   void File::RemoveLine(const size_t line, const size_t count) {
-    // Return if no lines are to be removed.
-    if (count == 0 || line >= m_length) {
-      return;
-    }
-
-    // Removes last line if desired.
-    if (line == m_length - 1) {
-      RemoveLine();
-      return;
-    }
-    // TODO
+    LOG->DebugAssert("Function (File::RemoveLine) not implemented.");
   }
 
   const bool File::isOpen() const {
@@ -116,13 +113,21 @@ namespace Core {
     return file.status.st_mtime != m_lastCheck;
   }
 
-  const size_t File::getLength() const {
-    return m_length;
+  const bool File::isEmpty() const {
+    return m_file->peek() == std::string::npos;
   }
 
-  const std::string File::getContent() const {
-    // TODO
-    return "";
+  void File::getContent(std::string& buffer) {
+    buffer = std::string(std::istreambuf_iterator<char>(*m_file),
+      std::istreambuf_iterator<char>());
+  }
+
+  void File::getContent(std::vector<std::string>& buffer) {
+    buffer.clear();
+    std::string line;
+    while (std::getline(*m_file, line)) {
+      buffer.push_back(line);
+    }
   }
 
   const std::string& File::getName() const {
@@ -157,6 +162,10 @@ namespace Core {
     if (!details(m_fullPath[PATH]).success) {
       system(String::Format("md \"%s\"", m_fullPath[PATH].c_str()).c_str());
     }
+  }
+
+  void File::Reopen() {
+    isOpen() && Close() && Open();
   }
 
 }

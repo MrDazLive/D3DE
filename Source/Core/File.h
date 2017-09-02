@@ -61,6 +61,7 @@ namespace Core {
     /// <param name = "content">The content to be inserted.</param>
     void                InsertLine      (const std::string&);
 
+
     /// <summary>
     /// Adds the desired contents to the specified point in the file.
     /// </summary>
@@ -91,14 +92,18 @@ namespace Core {
     const bool          isModified      () const;
 
     /// <summary>
-    /// Returns the line count of the file.
+    /// Returns whether the file is empty or not.
     /// </summary>
-    const size_t        getLength       () const;
+    const bool          isEmpty         () const;
+
 
     /// <summary>
-    /// Returns the content of the file.
+    /// Collects the conent of the file.
     /// </summary>
-    const std::string   getContent      () const;
+    /// <param name = "buffer">The object to be provided with the content of the file.</param>
+    /// <param name = "close">Prompts the file to close upon collecting contents.</param>
+    template <typename T>
+    void                getContent      (T&, bool);
 
     /// <summary>
     /// Returns the name of the file.
@@ -123,13 +128,36 @@ namespace Core {
   private:
     enum                /*anonymous*/   { PATH = 0, NAME = 1, EXT = 2 };
 
+    /// <summary>
+    /// Collects the conent of the file.
+    /// </summary>
+    /// <param name = "buffer">The string to be provided with the content of the file.</param>
+    void                getContent(std::string&);
+
+    /// <summary>
+    /// Collects the conent of the file.
+    /// </summary>
+    /// <param name = "buffer">The vector to be provided with the content of the file.</param>
+    void                getContent(std::vector<std::string>&);
+
     void                SplitPath       (const std::string&);
     void                BuildDirectory  ();
+    void                Reopen          ();
 
     size_t              m_length        { 0 };
     time_t              m_lastCheck     { 0 };
     std::string         m_fullPath[3]   {};
     std::fstream* const m_file          { nullptr };
   };
+
+  template <typename T>
+  void File::getContent(T& buffer, bool close) {
+    // TODO : Not require reopening between read and write.
+    if (Exists()) {
+      Reopen();
+      getContent(buffer);
+      close ? Close() : Reopen();
+    }
+  }
 
 }

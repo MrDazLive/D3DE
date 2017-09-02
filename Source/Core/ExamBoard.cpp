@@ -48,6 +48,8 @@ namespace Core {
     LOG->Debug(String::Format(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount), logType);
     LOG->Debug(String::Format(" Function test results: %i out of %i.", m_testPassCount, m_testCount), logType);
     LOG->Debug("////////////////////////////////////", logType);
+
+    system("pause");
   }
 
   void ExamBoard::PrintOutcome(UnitTest* const unitTest) {

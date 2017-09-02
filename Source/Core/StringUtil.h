@@ -34,8 +34,18 @@ namespace Core {
     /// Compares the value of two provided strings (case sensitive).
     /// </summary>
     /// <returns>Whether the strings are identical or not.</returns>
-    inline bool Compare(const std::string& l, const std::string& r) {
+    inline bool Equals(const std::string& l, const std::string& r) {
       return l.compare(r) == 0;
+    }
+
+    /// <summary>
+    /// Checks that the string ends with one of the provided characters.
+    /// </summary>
+    /// <param name = "text">The string to be checked.</param>
+    /// <param name = "args">The characters that the string can end with.</param>
+    inline bool EndsWith(const std::string& text, const char* args) {
+      const size_t last = text.find_last_of(args);
+      return last != std::string::npos && last == text.length() - 1;
     }
 
   }
