@@ -39,6 +39,9 @@
     <ClInclude Include="..\..\Source\Core\Flags.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Core\Observer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Core\ExamBoard.cpp">

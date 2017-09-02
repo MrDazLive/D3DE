@@ -50,7 +50,7 @@ namespace Core {
 
   bool File::Open(bool create) {
     if (isOpen()) {
-      LOG->DebugWarning(String::Format("File {%s} is already open.", getFullPath().c_str()));
+      LOG->PrintWarning(String::Format("File {%s} is already open.", getFullPath().c_str()));
       return false;
     }
     
@@ -88,20 +88,20 @@ namespace Core {
         *m_file << "\n";
     }
     else {
-      LOG->DebugWarning(String::Format("Contents was not written to file: %s", getFullPath().c_str()));
+      LOG->PrintWarning(String::Format("Contents was not written to file: %s", getFullPath().c_str()));
     }
   }
 
   void File::InsertLine(const std::string& content, const size_t line) {
-    LOG->DebugAssert("Function (File::InsertLine) not implemented.");
+    LOG->PrintAssert("Function (File::InsertLine) not implemented.");
   }
 
   void File::RemoveLine() {
-    LOG->DebugAssert("Function (File::RemoveLine) not implemented.");
+    LOG->PrintAssert("Function (File::RemoveLine) not implemented.");
   }
 
   void File::RemoveLine(const size_t line, const size_t count) {
-    LOG->DebugAssert("Function (File::RemoveLine) not implemented.");
+    LOG->PrintAssert("Function (File::RemoveLine) not implemented.");
   }
 
   const bool File::isOpen() const {
@@ -148,7 +148,7 @@ namespace Core {
 
   void File::SplitPath(const std::string& fullPath) {
     size_t extStart = fullPath.find_last_of('.');
-    LOG->DebugAssert(extStart != std::string::npos, "File path requires a valid extension.");
+    LOG->PrintAssert(extStart != std::string::npos, "File path requires a valid extension.");
 
     size_t dirEnd = fullPath.find_last_of("/\\");
     dirEnd = dirEnd != std::string::npos ? dirEnd + 1 : 0;

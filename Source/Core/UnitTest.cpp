@@ -31,6 +31,6 @@ namespace Core {
         return;
       }
     } catch (std::exception&) {}
-    LOG->DebugError(String::Format("%s: Test %i failed. [%s]", m_name.c_str(), m_testCount, message.c_str()));
+    LOG->PrintError(String::Format("%s: Test %i failed. [%s]", m_name.c_str(), m_testCount, message.c_str()));
   }
 }

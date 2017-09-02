@@ -112,7 +112,7 @@ namespace Core {
     T* obj = new T(args...);
     Handler<T>* handle = dynamic_cast<Handler<T>*>(obj);
 
-    LOG->DebugAssert(handle != nullptr, "Provided type has not been flagged for handling.");
+    LOG->PrintAssert(handle != nullptr, "Provided type has not been flagged for handling.");
 
     handle->m_index = m_instances.size();
     m_instances.push_back(obj);

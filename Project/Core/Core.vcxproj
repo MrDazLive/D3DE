@@ -24,6 +24,7 @@
     <ClInclude Include="..\..\Source\Core\Flags.h" />
     <ClInclude Include="..\..\Source\Core\Handler.h" />
     <ClInclude Include="..\..\Source\Core\Log.h" />
+    <ClInclude Include="..\..\Source\Core\Observer.h" />
     <ClInclude Include="..\..\Source\Core\Singleton.h" />
     <ClInclude Include="..\..\Source\Core\StringUtil.h" />
     <ClInclude Include="..\..\Source\Core\UnitTest.h" />

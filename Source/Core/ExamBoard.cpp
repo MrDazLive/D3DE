@@ -8,7 +8,7 @@ namespace Core {
   ExamBoard::ExamBoard(const std::string& name) : m_name(name) {}
 
   void ExamBoard::Examine(UnitTest* const unitTest) {
-    LOG->DebugAssert(unitTest != nullptr, "Provided object is not a valid UnitTest.");
+    LOG->PrintAssert(unitTest != nullptr, "Provided object is not a valid UnitTest.");
 
     unitTest->Examine();
     unitTest->Reset();
@@ -25,7 +25,7 @@ namespace Core {
   }
 
   void ExamBoard::Results() {
-    Log::Type logType = Log::MESSAGE;
+    Log::Flag_ logType = Log::MESSAGE;
     std::string messageNote = "";
 
     if (m_examCount == 0) {
@@ -41,30 +41,32 @@ namespace Core {
       messageNote = "       All tests were failed!       ";
     }
 
-    LOG->DebugBreak();
-    LOG->Debug("////////////////////////////////////", logType);
-    LOG->Debug(messageNote, logType);
-    LOG->Debug("////////////////////////////////////", logType);
-    LOG->Debug(String::Format(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount), logType);
-    LOG->Debug(String::Format(" Function test results: %i out of %i.", m_testPassCount, m_testCount), logType);
-    LOG->Debug("////////////////////////////////////", logType);
+    logType |= Log::UNIT_TEST;
+
+    LOG->PrintBreak();
+    LOG->Print("////////////////////////////////////", logType);
+    LOG->Print(messageNote, logType);
+    LOG->Print("////////////////////////////////////", logType);
+    LOG->Print(String::Format(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount), logType);
+    LOG->Print(String::Format(" Function test results: %i out of %i.", m_testPassCount, m_testCount), logType);
+    LOG->Print("////////////////////////////////////", logType);
 
     system("pause");
   }
 
   void ExamBoard::PrintOutcome(UnitTest* const unitTest) {
-    Log::Type logType = Log::WARNING;
+    Log::Flag_ logType = Log::WARNING;
     if (unitTest->getPassed()) {
       logType = Log::SUCCESS;
     } else if (unitTest->getPassCount() == 0) {
       logType = Log::ERROR;
     }
 
-    LOG->Debug(
+    LOG->Print(
       String::Format("%s: %i out of %i passed.",
         unitTest->getName().c_str(),
         unitTest->getPassCount(),
         unitTest->getTestCount()),
-      logType);
+      logType | Log::UNIT_TEST);
   }
 }

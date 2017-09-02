@@ -106,10 +106,14 @@ namespace Core {
       m_flags & flags;
   }
 
-  typedef Flags<uint8_t>  Flags8;
-  typedef Flags<uint16_t> Flags16;
-  typedef Flags<uint32_t> Flags32;
-  typedef Flags<uint64_t> Flags64;
+#define _FLAGS(SIZE)                        \
+  typedef uint ##SIZE##_t     Flag##SIZE;   \
+  typedef Flags<Flag##SIZE>   Flags##SIZE;  \
+
+  _FLAGS(8);
+  _FLAGS(16);
+  _FLAGS(32);
+  _FLAGS(64);
 
 #define FLAG(V) 1 << V
 

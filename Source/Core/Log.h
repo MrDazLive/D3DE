@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+
+#include "Flags.h"
+#include "Observer.h"
 #include "Singleton.h"
 
 namespace Core {
@@ -8,18 +11,44 @@ namespace Core {
   /// <summary>
   /// Class used for logging information for debug purposes.
   /// </summary>
-  class Log : public Singleton<Log> {
+  class Log :
+    public Singleton<Log>,
+    public Observable<Log> {
     friend Singleton;
   public:
+    typedef Flag8 Flag_;
+
     /// <summary>
-    /// Enumerator used to identify the type of debug message desired for printing.
+    /// Enumerator used for identifying the message type.
     /// </summary>
-    enum Type {
-      MESSAGE,
-      SUCCESS,
-      WARNING,
-      ERROR,
-      ASSERT
+    enum Flag {
+      MESSAGE   = FLAG(0),
+      SUCCESS   = FLAG(1),
+      WARNING   = FLAG(2),
+      ERROR     = FLAG(3),
+      ASSERT    = FLAG(4),
+      BREAK     = FLAG(5),
+
+      UNIT_TEST = FLAG(7)
+    };
+#define LOG_MESSAGES  (MESSAGE | SUCCESS | WARNING | ERROR | ASSERT | BREAK) 
+#define LOG_TARGETS   ~LOG_MESSAGES & !UNIT_TEST
+
+    /// <summary>
+    /// Base class used to distribute log messages.
+    /// </summary>
+    class LogObserver : public Flags<Flag_>, public Observer<Log> {
+    public:
+                    LogObserver   (const Flag_& = ~UNIT_TEST);
+
+      void          Print         (const std::string&, const Flag_&);
+    protected:
+      virtual void  PrintMessage  (const std::string&) {}
+      virtual void  PrintSuccess  (const std::string&) {}
+      virtual void  PrintWarning  (const std::string&) {}
+      virtual void  PrintError    (const std::string&) {}
+      virtual void  PrintAssert   (const std::string&) {}
+      virtual void  PrintBreak    (const std::string&) {}
     };
 
     /// <summary>
@@ -27,43 +56,43 @@ namespace Core {
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logType">The identifier used to for specify how the message is logged.</param>
-    void  Debug         (const std::string&, const Type = WARNING);
+    void  Print         (const std::string&, const Flag_& = Flag::WARNING & LOG_TARGETS);
 
     /// <summary>
     /// Logs the provided message.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
-    void  DebugMessage  (const std::string&);
+    void  PrintMessage  (const std::string&, const Flag_& = LOG_TARGETS);
 
     /// <summary>
     /// Logs the provided message as in the "success" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
-    void  DebugSuccess  (const std::string&);
+    void  PrintSuccess  (const std::string&, const Flag_& = LOG_TARGETS);
 
     /// <summary>
     /// Logs the provided message as in the "warning" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
-    void  DebugWarning  (const std::string&);
+    void  PrintWarning  (const std::string&, const Flag_& = LOG_TARGETS);
 
     /// <summary>
     /// Logs the provided message as in the "error" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
-    void  DebugError    (const std::string&);
+    void  PrintError    (const std::string&, const Flag_& = LOG_TARGETS);
 
     /// <summary>
     /// Checks assert condition, logging an arror message if assert fails.
     /// </summary>
     /// <param name = "condition">The assert condition.</param>
     /// <param name = "message">The error message to be logged.</param>
-    void  DebugAssert   (bool, const std::string& = "");
+    void  PrintAssert   (bool, const std::string& = "", const Flag_& = LOG_TARGETS);
 
     /// <summary>
     /// Prints a break line into the log.
     /// </summary>
-    void  DebugBreak    ();
+    void  PrintBreak    (const Flag_& = LOG_TARGETS);
   protected:
           /// <summary>
           /// Default constructor.
@@ -75,7 +104,7 @@ namespace Core {
     /// </summary>
     /// <param = "message">The message to be printed to the console.</param>
     /// <param = "colour">The value used for specifying the print colour.</param>
-    void  Print         (const std::string&, unsigned int);
+    //void  Print         (const std::string&, unsigned int);
   };
 
   #define LOG Log::Instance()
