@@ -157,6 +157,7 @@
     <ClCompile Include="..\..\Source\Test\Core_Test\Flags_test.cpp" />
     <ClCompile Include="..\..\Source\Test\Core_Test\Handler_test.cpp" />
     <ClCompile Include="..\..\Source\Test\Core_Test\main.cpp" />
+    <ClCompile Include="..\..\Source\Test\Core_Test\Observer_test.cpp" />
     <ClCompile Include="..\..\Source\Test\Core_Test\StringUtil_test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

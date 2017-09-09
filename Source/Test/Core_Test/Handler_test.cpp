@@ -9,7 +9,7 @@ public:
   const int   getVal        () const          { return m_val; };
   void        setVal        (const int val)   { m_val = val; }
 private:
-  int         m_val   { 0 };
+  int         m_val         { 0 };
 };
 
 namespace Core_Test {

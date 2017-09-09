@@ -2,15 +2,17 @@
 
 #include "declerations.h"
 
-#define EXAMBOARD Core::ExamBoard::Instance("Core_Tests")
+#define EXAMBOARD         Core::ExamBoard::Instance("Core_Tests")
+#define EXAMINATION(T)    EXAMBOARD->Examine<T>();
 
 using namespace Core_Test;
 
 int main() {
-  EXAMBOARD->Examine<String>();
-  EXAMBOARD->Examine<Handler>();
-  EXAMBOARD->Examine<File>();
-  EXAMBOARD->Examine<Flags>();
+  EXAMINATION(String);
+  EXAMINATION(Handler);
+  EXAMINATION(File);
+  EXAMINATION(Flags);
+  EXAMINATION(Observer);
   EXAMBOARD->Results();
   return 0;
 }
