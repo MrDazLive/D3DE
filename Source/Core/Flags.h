@@ -103,7 +103,7 @@ namespace Core {
   const bool Flags<T>::CheckFlags(const T& flags, bool strict) const {
     return strict ?
       m_flags == (m_flags | flags):   // Alternate solution: !(~m_flags & flags)
-      m_flags & flags;
+      (m_flags & flags) != 0;
   }
 
 #define _FLAGS(SIZE)                        \

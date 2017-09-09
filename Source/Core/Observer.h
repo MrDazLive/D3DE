@@ -5,30 +5,31 @@
 #include <functional>
 
 namespace Core {
-
-  template <typename T>
-  class ObserverBase {
-  public:
-    virtual                             ~ObserverBase         ();
-  };
-
+  
   template <typename T>
   class Observable {
-    typedef std::set<ObserverBase<T>*>  ObserverList;
-    typedef std::vector<Observable<T>*> ObservableList;
   public:
+    class Observer {
+    public:
+      virtual                           ~Observer();
+    };
+  private:
+    using ObserverList                  = std::set<Observer*>;
+    using ObservableList                = std::vector<Observable<T>*>;
+  public:
+
                                         Observable            ();
                                         ~Observable           ();
 
-    void                                AddObserver           (ObserverBase<T>* const);
-    void                                RemoveObserver        (ObserverBase<T>* const);
+    void                                AddObserver           (Observer* const);
+    void                                RemoveObserver        (Observer* const);
 
     static const ObservableList&        GetObservables        ();
 
-    static void                         AddGlobalObserver     (ObserverBase<T>* const);
-    static void                         RemoveGlobalObserver  (ObserverBase<T>* const);
+    static void                         AddGlobalObserver     (Observer* const);
+    static void                         RemoveGlobalObserver  (Observer* const);
   protected:
-    void                                NotifyObservers       (std::function<void(ObserverBase<T>*)>);
+    void                                NotifyObservers       (std::function<void(Observer*)>);
   private:
            ObserverList                 m_observers           {};
     static ObserverList                 s_globalObservers;
@@ -36,13 +37,10 @@ namespace Core {
   };
 
   template <typename T>
-  std::set<ObserverBase<T>*>    Observable<T>::s_globalObservers  = {};
+  std::vector<Observable<T>*> Observable<T>::s_observables = {};
 
   template <typename T>
-  std::vector<Observable<T>*>   Observable<T>::s_observables      = {};
-
-  template <typename T>
-  ObserverBase<T>::~ObserverBase() {
+  Observable<T>::Observer::~Observer() {
     Observable<T>::RemoveGlobalObserver(this);
     for (auto obs : Observable<T>::GetObservables()) {
       obs->RemoveObserver(this);
@@ -65,12 +63,12 @@ namespace Core {
   }
 
   template <typename T>
-  void Observable<T>::AddObserver(ObserverBase<T>* const ptr) {
+  void Observable<T>::AddObserver(Observer* const ptr) {
     m_observers.emplace(ptr);
   }
 
   template <typename T>
-  void Observable<T>::RemoveObserver(ObserverBase<T>* const ptr) {
+  void Observable<T>::RemoveObserver(Observer* const ptr) {
     m_observers.erase(ptr);
   }
 
@@ -80,23 +78,23 @@ namespace Core {
   }
 
   template <typename T>
-  void Observable<T>::AddGlobalObserver(ObserverBase<T>* const ptr) {
+  void Observable<T>::AddGlobalObserver(Observer* const ptr) {
     s_globalObservers.emplace(ptr);
   }
 
   template <typename T>
-  void Observable<T>::RemoveGlobalObserver(ObserverBase<T>* const ptr) {
+  void Observable<T>::RemoveGlobalObserver(Observer* const ptr) {
     s_globalObservers.erase(ptr);
   }
 
   template <typename T>
-  void Observable<T>::NotifyObservers(std::function<void(ObserverBase<T>*)> function) {
-    for (ObserverBase<T>* const ptr : m_observers) {
+  void Observable<T>::NotifyObservers(std::function<void(Observer*)> function) {
+    for (Observer* const ptr : m_observers) {
       function(ptr);
     }
   }
 
-#define NOTIFY_OBSERVERS(FUNC)                                                    \
-  NotifyObservers([&](auto* const ptr) { dynamic_cast<Observer*>(ptr)->FUNC; });  \
+#define NOTIFY_OBSERVERS(FUNC)                          \
+  NotifyObservers([&](auto* const ptr) { ptr->FUNC; }); \
 
 }

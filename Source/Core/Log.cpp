@@ -9,19 +9,17 @@ namespace Core {
     AddObserver(ConsoleLog::Instance());
   }
 
-  Log::Observer::Observer(const Flag_& flags) {
-    SetFlags(flags);
-  }
+  std::set<Observable<Log>::Observer*> Observable<Log>::s_globalObservers = {};
 
-  void Log::Observer::Print(const std::string& message, const Flag_& flags) {
+  inline void Observable<Log>::Observer::Print(const std::string& message, const Log::Flag_& flags) {
     if (CheckFlags(flags, true)) {
-      const Flag_ flags_ = GetFlags();
-      if (flags & MESSAGE)  PrintMessage(message);
-      if (flags & SUCCESS)  PrintSuccess(message);
-      if (flags & WARNING)  PrintWarning(message);
-      if (flags & ERROR  )  PrintError  (message);
-      if (flags & ASSERT )  PrintAssert (message);
-      if (flags & BREAK  )  PrintBreak  (       );
+      const Log::Flag_ flags_ = GetFlags();
+      if (flags & Log::MESSAGE)  PrintMessage (message);
+      if (flags & Log::SUCCESS)  PrintSuccess (message);
+      if (flags & Log::WARNING)  PrintWarning (message);
+      if (flags & Log::ERROR  )  PrintError   (message);
+      if (flags & Log::ASSERT )  PrintAssert  (message);
+      if (flags & Log::BREAK  )  PrintBreak   (       );
     }
   }
 
@@ -55,8 +53,4 @@ namespace Core {
   void Log::PrintBreak(const Flag_& logTargets) {
     Print("", BREAK);
   }
-
-  /*void Log::Print(const std::string& message, unsigned int colour) {
-    std::cout << "\033[1;" << colour << "m" << message << "\033[0m" << std::endl;
-  }*/
 }

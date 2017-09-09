@@ -33,53 +33,40 @@ namespace Core {
     };
 #define LOG_MESSAGES  (Log::MESSAGE | Log::SUCCESS | Log::WARNING | Log::ERROR | Log::ASSERT | Log::BREAK) 
 #define LOG_TARGETS   ~LOG_MESSAGES & !Log::UNIT_TEST
-
-    /// <summary>
-    /// Base class used to distribute log messages.
-    /// </summary>
-    class Observer : public Flags<Flag_>, public ObserverBase<Log> {
-    public:
-                    Observer      (const Flag_& = ~UNIT_TEST);
-
-      void          Print         (const std::string&, const Flag_&);
-    protected:
-      virtual void  PrintMessage  (const std::string&) {}
-      virtual void  PrintSuccess  (const std::string&) {}
-      virtual void  PrintWarning  (const std::string&) {}
-      virtual void  PrintError    (const std::string&) {}
-      virtual void  PrintAssert   (const std::string&) {}
-      virtual void  PrintBreak    (                  ) {}
-    };
-
+    
     /// <summary>
     /// Logs the provided message according to the provided log type.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
-    /// <param name = "logType">The identifier used to for specify how the message is logged.</param>
-    void  Print         (const std::string&, const Flag_& = Flag::WARNING & LOG_TARGETS);
+    /// <param name = "logTargets">The flags used to specify how the message is distributed.</param>
+    void  Print         (const std::string&, const Flag_& = Flag::MESSAGE & LOG_TARGETS);
 
     /// <summary>
     /// Logs the provided message.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
+    /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
     void  PrintMessage  (const std::string&, const Flag_& = LOG_TARGETS);
 
     /// <summary>
     /// Logs the provided message as in the "success" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
+    /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
     void  PrintSuccess  (const std::string&, const Flag_& = LOG_TARGETS);
 
     /// <summary>
     /// Logs the provided message as in the "warning" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
+    /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
     void  PrintWarning  (const std::string&, const Flag_& = LOG_TARGETS);
 
     /// <summary>
     /// Logs the provided message as in the "error" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
+    /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
     void  PrintError    (const std::string&, const Flag_& = LOG_TARGETS);
 
     /// <summary>
@@ -87,11 +74,13 @@ namespace Core {
     /// </summary>
     /// <param name = "condition">The assert condition.</param>
     /// <param name = "message">The error message to be logged.</param>
+    /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
     void  PrintAssert   (bool, const std::string& = "", const Flag_& = LOG_TARGETS);
 
     /// <summary>
     /// Prints a break line into the log.
     /// </summary>
+    /// <param name = "logTargets">The flags used to specify the targets for distributing the message break.</param>
     void  PrintBreak    (const Flag_& = LOG_TARGETS);
   protected:
           /// <summary>
@@ -99,6 +88,28 @@ namespace Core {
           /// </summary>
           Log           ();
   };
+
+  /// <summary>
+  /// Base class used to distribute log messages.
+  /// </summary>
+  template <>
+  class Observable<Log>::Observer : public Flags<Log::Flag_> {
+  public:
+    inline        Observer      (const Log::Flag_& flags = ~Log::UNIT_TEST);
+
+    inline  void  Print         (const std::string&, const Log::Flag_&);
+  protected:
+    virtual void  PrintMessage  (const std::string&) {}
+    virtual void  PrintSuccess  (const std::string&) {}
+    virtual void  PrintWarning  (const std::string&) {}
+    virtual void  PrintError    (const std::string&) {}
+    virtual void  PrintAssert   (const std::string&) {}
+    virtual void  PrintBreak    (                  ) {}
+  };
+
+  inline Observable<Log>::Observer::Observer(const Log::Flag_& flags) {
+    SetFlags(flags);
+  }
 
   #define LOG Log::Instance()
 }
