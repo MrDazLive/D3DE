@@ -31,15 +31,15 @@ namespace Core {
 
       UNIT_TEST = FLAG(7)
     };
-#define LOG_MESSAGES  (MESSAGE | SUCCESS | WARNING | ERROR | ASSERT | BREAK) 
-#define LOG_TARGETS   ~LOG_MESSAGES & !UNIT_TEST
+#define LOG_MESSAGES  (Log::MESSAGE | Log::SUCCESS | Log::WARNING | Log::ERROR | Log::ASSERT | Log::BREAK) 
+#define LOG_TARGETS   ~LOG_MESSAGES & !Log::UNIT_TEST
 
     /// <summary>
     /// Base class used to distribute log messages.
     /// </summary>
-    class LogObserver : public Flags<Flag_>, public Observer<Log> {
+    class Observer : public Flags<Flag_>, public ObserverBase<Log> {
     public:
-                    LogObserver   (const Flag_& = ~UNIT_TEST);
+                    Observer      (const Flag_& = ~UNIT_TEST);
 
       void          Print         (const std::string&, const Flag_&);
     protected:
@@ -48,7 +48,7 @@ namespace Core {
       virtual void  PrintWarning  (const std::string&) {}
       virtual void  PrintError    (const std::string&) {}
       virtual void  PrintAssert   (const std::string&) {}
-      virtual void  PrintBreak    (const std::string&) {}
+      virtual void  PrintBreak    (                  ) {}
     };
 
     /// <summary>
@@ -98,13 +98,6 @@ namespace Core {
           /// Default constructor.
           /// </summary>
           Log           ();
-  private:
-    /// <summary>
-    /// Prints the provided message using the provided colour code.
-    /// </summary>
-    /// <param = "message">The message to be printed to the console.</param>
-    /// <param = "colour">The value used for specifying the print colour.</param>
-    //void  Print         (const std::string&, unsigned int);
   };
 
   #define LOG Log::Instance()

@@ -1,31 +1,32 @@
 #include "Log.h"
 
+#include "ConsoleLog.h"
+
 #include <assert.h>
-#include <iostream>
 
 namespace Core {
   Log::Log() {
-    system("Color");
+    AddObserver(ConsoleLog::Instance());
   }
 
-  Log::LogObserver::LogObserver(const Flag_& flags) {
+  Log::Observer::Observer(const Flag_& flags) {
     SetFlags(flags);
   }
 
-  void Log::LogObserver::Print(const std::string& message, const Flag_& flags) {
+  void Log::Observer::Print(const std::string& message, const Flag_& flags) {
     if (CheckFlags(flags, true)) {
       const Flag_ flags_ = GetFlags();
       if (flags & MESSAGE)  PrintMessage(message);
-      if (flags & SUCCESS)  PrintMessage(message);
-      if (flags & WARNING)  PrintMessage(message);
-      if (flags & ERROR  )  PrintMessage(message);
-      if (flags & ASSERT )  PrintMessage(message);
-      if (flags & BREAK  )  PrintMessage(message);
+      if (flags & SUCCESS)  PrintSuccess(message);
+      if (flags & WARNING)  PrintWarning(message);
+      if (flags & ERROR  )  PrintError  (message);
+      if (flags & ASSERT )  PrintAssert (message);
+      if (flags & BREAK  )  PrintBreak  (       );
     }
   }
 
   void Log::Print(const std::string& message, const Flag_& logTargets) {
-    NOTIFY_OBSERVERS(LogObserver, Print(message, logTargets));
+    NOTIFY_OBSERVERS(Print(message, logTargets));
   }
 
   void Log::PrintMessage(const std::string& message, const Flag_& logTargets) {

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\Core\ConsoleLog.h" />
     <ClInclude Include="..\..\Source\Core\ExamBoard.h" />
     <ClInclude Include="..\..\Source\Core\File.h" />
     <ClInclude Include="..\..\Source\Core\Flags.h" />
@@ -30,6 +31,7 @@
     <ClInclude Include="..\..\Source\Core\UnitTest.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\Core\ConsoleLog.cpp" />
     <ClCompile Include="..\..\Source\Core\ExamBoard.cpp" />
     <ClCompile Include="..\..\Source\Core\File.cpp" />
     <ClCompile Include="..\..\Source\Core\Log.cpp" />
