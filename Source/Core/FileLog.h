@@ -4,10 +4,13 @@
 #include "Singleton.h"
 
 namespace Core {
-  class ConsoleLog : public Singleton<ConsoleLog>, public Log::Observer {
+
+  class File;
+
+  class FileLog : public Singleton<FileLog>, public Log::Observer {
     friend Singleton;
   protected:
-          ConsoleLog    ();
+          FileLog       ();
 
     void  PrintMessage  (const std::string&) final override;
     void  PrintSuccess  (const std::string&) final override;
@@ -16,11 +19,15 @@ namespace Core {
     void  PrintAssert   (const std::string&) final override;
     void  PrintBreak    (                  ) final override;
   private:
+    void CreateFile();
+
     /// <summary>
-    /// Prints the provided message to the console using the provided colour code.
+    /// Concats the provided message to the log file.
     /// </summary>
     /// <param = "message">The message to be printed to the console.</param>
-    /// <param = "colour">The value used for specifying the print colour.</param>
-    void  Log           (const std::string&, const unsigned int);
+    /// <param = "type">The type of message being logged to the file.</param>
+    void  Log           (const std::string&, const std::string&);
+
+    File* m_file        { nullptr };
   };
 }

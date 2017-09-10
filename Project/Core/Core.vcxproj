@@ -22,6 +22,7 @@
     <ClInclude Include="..\..\Source\Core\ConsoleLog.h" />
     <ClInclude Include="..\..\Source\Core\ExamBoard.h" />
     <ClInclude Include="..\..\Source\Core\File.h" />
+    <ClInclude Include="..\..\Source\Core\FileLog.h" />
     <ClInclude Include="..\..\Source\Core\Flags.h" />
     <ClInclude Include="..\..\Source\Core\Handler.h" />
     <ClInclude Include="..\..\Source\Core\Log.h" />
@@ -34,6 +35,7 @@
     <ClCompile Include="..\..\Source\Core\ConsoleLog.cpp" />
     <ClCompile Include="..\..\Source\Core\ExamBoard.cpp" />
     <ClCompile Include="..\..\Source\Core\File.cpp" />
+    <ClCompile Include="..\..\Source\Core\FileLog.cpp" />
     <ClCompile Include="..\..\Source\Core\Log.cpp" />
     <ClCompile Include="..\..\Source\Core\UnitTest.cpp" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 #include "Log.h"
 
+#include "FileLog.h"
 #include "ConsoleLog.h"
 
 #include <assert.h>
@@ -7,9 +8,11 @@
 namespace Core {
 
   Log::Flag_ Log::s_logMessages = Log::MESSAGE | Log::SUCCESS | Log::WARNING | Log::ERROR | Log::ASSERT | Log::BREAK;
-  Log::Flag_ Log::s_logTargets = ~s_logTargets & !Log::UNIT_TEST;
+  Log::Flag_ Log::s_logPriorities = Log::LOW | Log::MEDIUM | Log::HIGH;
+  Log::Flag_ Log::s_logTargets = ~(s_logTargets | s_logPriorities) & !Log::UNIT_TEST;
 
   Log::Log() {
+    AddObserver(FileLog::Instance());
     AddObserver(ConsoleLog::Instance());
   }
 
@@ -40,7 +43,7 @@ namespace Core {
     }
   }
 
-  void Log::PrintBreak(const Flag_& logTargets) {
+  void Log::PrintBreak(const Flag_& logPriorities) {
     Print("", BREAK);
   }
 

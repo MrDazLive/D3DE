@@ -4,7 +4,7 @@
 
 namespace Core {
 
-  ConsoleLog::ConsoleLog() : Log::Observer(Log::s_logMessages | Log::UNIT_TEST) {
+  ConsoleLog::ConsoleLog() : Log::Observer(~Log::Flag_(0)) {
     system("Color");
   }
 
