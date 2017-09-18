@@ -140,9 +140,15 @@ namespace Core {
     /// <param name = "buffer">The vector to be provided with the content of the file.</param>
     void                getContent(std::vector<std::string>&);
 
+    /// <summary>
+    /// Splits the provided path into; path, name and extension.
+    /// </summary>
     void                SplitPath       (const std::string&);
+
+    /// <summary>
+    /// Constructs the directory hierarchy if necessary.
+    /// </summary>
     void                BuildDirectory  ();
-    void                Reopen          ();
 
     size_t              m_length        { 0 };
     time_t              m_lastCheck     { 0 };
@@ -152,11 +158,11 @@ namespace Core {
 
   template <typename T>
   void File::getContent(T& buffer, bool close) {
-    // TODO : Not require reopening between read and write.
     if (Exists()) {
-      Reopen();
       getContent(buffer);
-      close ? Close() : Reopen();
+      if (close) {
+        Close();
+      }
     }
   }
 

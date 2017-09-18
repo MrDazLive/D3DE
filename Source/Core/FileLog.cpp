@@ -1,6 +1,7 @@
 #include "FileLog.h"
 
 #include "File.h"
+#include "Command.h"
 #include "StringUtil.h"
 
 namespace Core {
@@ -32,7 +33,13 @@ namespace Core {
   void FileLog::PrintBreak() {}
 
   void FileLog::CreateFile() {
-    m_file = Handler<File>::Create("../Logs/Log.html");
+    const std::string& appPath =  Command::Fetch(0);
+    size_t extStart = appPath.find_last_of('.');
+    size_t dirEnd = appPath.find_last_of("/\\");
+    dirEnd = dirEnd != std::string::npos ? dirEnd + 1 : 0;
+    const std::string& appName = appPath.substr(dirEnd, extStart - dirEnd);
+
+    m_file = Handler<File>::Create(String::Format("../Logs/%s.html", appName.c_str()));
     m_file->Create(true);
 
     auto createStyle = [](const char* type, const char* colour1, const char* colour2) {

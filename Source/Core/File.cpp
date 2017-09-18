@@ -86,6 +86,7 @@ namespace Core {
 
       if (!String::EndsWith(content, "\n"))
         *m_file << "\n";
+      m_file->flush();
     }
     else {
       LOG->PrintWarning(String::Format("Contents was not written to file: %s", getFullPath().c_str()));
@@ -114,15 +115,18 @@ namespace Core {
   }
 
   const bool File::isEmpty() const {
+    m_file->seekg(0, std::ios::beg);
     return m_file->peek() == std::string::npos;
   }
 
   void File::getContent(std::string& buffer) {
+    m_file->seekg(0, std::ios::beg);
     buffer = std::string(std::istreambuf_iterator<char>(*m_file),
       std::istreambuf_iterator<char>());
   }
 
   void File::getContent(std::vector<std::string>& buffer) {
+    m_file->seekg(0, std::ios::beg);
     buffer.clear();
     std::string line;
     while (std::getline(*m_file, line)) {
@@ -162,10 +166,6 @@ namespace Core {
     if (!details(m_fullPath[PATH]).success) {
       system(String::Format("md \"%s\"", m_fullPath[PATH].c_str()).c_str());
     }
-  }
-
-  void File::Reopen() {
-    isOpen() && Close() && Open();
   }
 
 }

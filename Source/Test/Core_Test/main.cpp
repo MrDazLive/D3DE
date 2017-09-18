@@ -1,3 +1,4 @@
+#include <Core\Command.h>
 #include <Core\ExamBoard.h>
 
 #include "declerations.h"
@@ -7,7 +8,10 @@
 
 using namespace Core_Test;
 
-int main() {
+int main(int argc, char **args) {
+
+  Core::Command::Collect(argc, args);
+
   EXAMINATION(String);
   EXAMINATION(Handler);
   EXAMINATION(File);

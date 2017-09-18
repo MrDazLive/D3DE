@@ -12,7 +12,7 @@ namespace Core {
     /// <summary>
     /// Enumerator used to identify desired flags. Should be expanded upon by derived class.
     /// </summary>
-    enum        Flag          { NONE = 0, ALL = ~0 };
+    enum        Flag          { NONE = T(0), ALL = ~T(0) };
 
                 /// <summary>
                 /// Default constructor.
