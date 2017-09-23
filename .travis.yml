@@ -16,11 +16,13 @@ addons:
       - g++-6
 
 jobs:
-  stage: Library
-  script:
-    - g++ -std=c++1y -c Source/Core/*.cpp
-    - ar rcs libCore.a
-  stage: Test
-  script:
-    - g++ -std=c++1y -ISource -o run Source/Test/Core_Test/*.cpp liCore.a
-    - ./run
+  - stage: Library
+    script:
+      - g++ -std=c++1y -c Source/Core/*.cpp
+      - ar rcs libCore.a
+  - stage: Test
+    script:
+      - g++ -std=c++1y -c Source/Core/*.cpp
+      - ar rcs libCore.a
+      - g++ -std=c++1y -ISource -o run Source/Test/Core_Test/*.cpp liCore.a
+      - ./run
