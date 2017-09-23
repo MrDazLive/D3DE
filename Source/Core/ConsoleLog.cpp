@@ -5,7 +5,7 @@
 namespace Core {
 
   ConsoleLog::ConsoleLog() : Log::Observer(~Log::Flag_(0)) {
-    system("Color");
+    system("color");
   }
 
   void ConsoleLog::PrintMessage(const std::string& message) {

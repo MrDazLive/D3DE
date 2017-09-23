@@ -1,23 +1,26 @@
 #include "declerations.h"
 
-#include <Core\Observer.h>
+#include <Core/Observer.h>
 
 class Observable_Dumby;
 
-OBSERVER_CLASS(Observable_Dumby) {
-public:
-  const int   getVal  () const          { return m_val; };
-  void        setVal  (const int val)   { m_val = val; }
-private:
-  int         m_val   { 0 };
-};
+namespace Core {
+  OBSERVER_CLASS(Observable_Dumby) {
+  public:
+    const int   getVal  () const          { return m_val; };
+    void        setVal  (const int val)   { m_val = val; }
+  private:
+    int         m_val   { 0 };
+  };
+}
 
 class Observable_Dumby : public Core::Observable<Observable_Dumby> {
 public:
   void        setVal  (const int v) { NOTIFY_OBSERVERS(setVal(v)); }
 };
 
-std::set <Observable_Dumby::Observer*> Observable_Dumby::s_globalObservers = {};
+template <>
+std::set <Core::Observable<Observable_Dumby>::Observer*> Core::Observable<Observable_Dumby>::s_globalObservers = {};
 
 namespace Core_Test {
 

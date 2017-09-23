@@ -1,5 +1,5 @@
-#include <Core\Command.h>
-#include <Core\ExamBoard.h>
+#include <Core/Command.h>
+#include <Core/ExamBoard.h>
 
 #include "declerations.h"
 

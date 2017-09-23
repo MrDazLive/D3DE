@@ -1,6 +1,6 @@
 #include "declerations.h"
 
-#include <Core\StringUtil.h>
+#include <Core/StringUtil.h>
 
 using namespace Core::String;
 

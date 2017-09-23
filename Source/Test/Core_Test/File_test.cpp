@@ -1,7 +1,7 @@
 #include "declerations.h"
 
-#include <Core\File.h>
-#include <Core\StringUtil.h>
+#include <Core/File.h>
+#include <Core/StringUtil.h>
 
 Core::File test_file("File/File2/test.txt");
 

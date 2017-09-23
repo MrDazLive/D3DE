@@ -1,6 +1,6 @@
 #include "declerations.h"
 
-#include <Core\Flags.h>
+#include <Core/Flags.h>
 
 class Flags_Dumby : public Core::Flags8 {
 public:
