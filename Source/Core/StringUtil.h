@@ -26,7 +26,7 @@ namespace Core {
     template <typename ... V>
     inline std::string Format(const char* text, V... args) {
       char buffer[1024];
-      sprintf_s(buffer, text, args...);
+      snprintf(buffer, 1023, text, args...);
       return std::string(buffer);
     }
 

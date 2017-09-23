@@ -100,7 +100,7 @@ namespace Core {
   /// </summary>
   OBSERVER_CLASS(Log), public Flags<Log::Flag_> {
   public:
-                  Observer      (const Log::Flag_& flags = ~Log::UNIT_TEST);
+                  Observer      (const Log::Flag_& flags = Log::Flag_(~Log::UNIT_TEST));
 
             void  Print         (const std::string&, const Log::Flag_&);
   protected:

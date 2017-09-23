@@ -47,7 +47,8 @@ namespace Core {
     Print("", BREAK);
   }
 
-  std::set<Log::Observer*> Log::s_globalObservers = {};
+  template <>
+  std::set<Observable<Log>::Observer*> Observable<Log>::s_globalObservers = {};
 
   Log::Observer::Observer(const Log::Flag_& flags) {
     SetFlags(flags);
