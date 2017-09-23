@@ -138,7 +138,7 @@ namespace Core {
 
   template <typename T>
   void Handler<T>::DestroyAll() {
-    forEach([](auto ptr) { delete ptr; });
+    forEach([](T* const ptr) { delete ptr; });
     m_instances.clear();
   }
 

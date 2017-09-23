@@ -171,6 +171,6 @@ namespace Core {
   }
 
 #define NOTIFY_OBSERVERS(FUNC)                          \
-  NotifyObservers([&](auto* const ptr) { ptr->FUNC; }); \
+  NotifyObservers([&](Observer* const ptr) { ptr->FUNC; }); \
 
 }
