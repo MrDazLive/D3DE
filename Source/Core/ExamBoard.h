@@ -23,7 +23,7 @@ namespace Core {
     /// <summary>
     /// Evaluates and prints the results of the performed @link Core::UnitTest Core::UnitTests@endlink.
     /// </summary>
-    void                Results         ();
+    bool                Results         ();
   protected:
                         /// <summary>
                         /// The default constructor of Core::ExamBoard. Providing no name identifier.

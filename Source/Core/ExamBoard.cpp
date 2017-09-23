@@ -25,7 +25,7 @@ namespace Core {
     m_testPassCount += unitTest->getPassCount();
   }
 
-  void ExamBoard::Results() {
+  bool ExamBoard::Results() {
     Log::Flag_ logType = Log::MESSAGE;
     std::string messageNote = "";
 
@@ -52,6 +52,7 @@ namespace Core {
 
     File::DestroyAll();
     system("pause");
+    return logType == Log::SUCCESS;
   }
 
   void ExamBoard::PrintOutcome(UnitTest* const unitTest) {

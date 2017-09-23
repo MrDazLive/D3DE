@@ -17,6 +17,5 @@ int main(int argc, char **args) {
   EXAMINATION(File);
   EXAMINATION(Flags);
   EXAMINATION(Observer);
-  EXAMBOARD->Results();
-  return 0;
+  return EXAMBOARD->Results() ? 0 : 1;
 }

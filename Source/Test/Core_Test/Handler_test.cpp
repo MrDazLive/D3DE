@@ -78,7 +78,7 @@ namespace Core_Test {
       Handler_Dumby::Create(3);
       Handler_Dumby::Create();
 
-      Handler_Dumby* ptr = Handler_Dumby::getWhere([](auto ptr) { return ptr->getIndex() == 1; });
+      Handler_Dumby* ptr = Handler_Dumby::getWhere([](Handler_Dumby* const ptr) { return ptr->getIndex() == 1; });
       return ptr->getVal() == 3;
     }, "Handler::getWhere");
 
@@ -86,7 +86,7 @@ namespace Core_Test {
       Handler_Dumby* ptr1 = Handler_Dumby::Create(0);
       Handler_Dumby* ptr2 = Handler_Dumby::Create(3);
 
-      Handler_Dumby::forEach([](auto ptr) { ptr->setVal(1); });
+      Handler_Dumby::forEach([](Handler_Dumby* const ptr) { ptr->setVal(1); });
       return ptr1->getVal() == 1 && ptr1->getVal() == 1;
     }, "Handler::forEach");
   }
