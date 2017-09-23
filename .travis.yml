@@ -15,5 +15,5 @@ addons:
       - gcc-6
       - g++-6
 script:
-  - gcc Source/Test/Core_Test/main.cpp
-  - g++ Source/Test/Core_Test/main.cpp
+  - gcc -std=c++1y -c Source/Core/*.cpp
+  - g++ -std=c++1y -c Source/Core/*.cpp
