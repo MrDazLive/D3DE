@@ -12,14 +12,16 @@ addons:
       - gcc-6
       - g++-6
       - cmake
+before_script:
+ - mkdir build
+ - cd build
+ - cmake ..
 jobs:
   include:
     - stage: Library
       script:
-        - cmake Source/Core
-	- rm CMakeCache.txt
+        - make -f Soure/Core/Makefile
     - stage: Test
       script:
-        - cmake Source/Test/Core_Test
-	- rm CMakeCache.txt
+        - make -f Soure/Test/Core_Test/Makefile
         - ./bin/Test-Core
