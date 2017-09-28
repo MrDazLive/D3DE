@@ -24,7 +24,4 @@ jobs:
     - stage: Test
       script:
         - make -d Core-Test
-        - cd bin
-        - pwd
-        - ls
-        - ./Test-Core
+        - ./bin/Core-Test
