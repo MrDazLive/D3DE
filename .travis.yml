@@ -21,7 +21,6 @@ jobs:
     - stage: Library
       script:
         - make -d Core
-	- pwd
     - stage: Test
       script:
         - make -d Core-Test
