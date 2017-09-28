@@ -20,8 +20,9 @@ jobs:
   include:
     - stage: Library
       script:
-        - make -f ./Soure/Core/Makefile
+        - make -d Core
+	- pwd
     - stage: Test
       script:
-        - make -f ./Soure/Test/Core_Test/Makefile
+        - make -d Core-Test
         - ./bin/Test-Core
