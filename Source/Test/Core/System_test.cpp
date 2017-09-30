@@ -3,7 +3,7 @@
 #include <Core/System.h>
 
 SYSTEM(System_Dumby_1) {
-  friend class Singleton;
+  friend class Core::Singleton<System_Dumby_1>;
 public:        
   void  Initialise  () override { Core::System::Initialise(); }
   void  Startup     () override { Core::System::Startup();    }
@@ -15,7 +15,7 @@ protected:
 };
 
 SYSTEM(System_Dumby_2) {
-  friend class Singleton;
+  friend class Core::Singleton<System_Dumby_2>;
 public:
   void  Initialise  () override { Core::System::Initialise(); }
   void  Startup     () override { Core::System::Startup();    }

@@ -164,7 +164,11 @@ namespace Core {
 
   void File::BuildDirectory() {
     if (!details(m_fullPath[PATH]).success) {
+#ifdef _WIN32 
+      system(String::Format("md \"%s\"", m_fullPath[PATH].c_str()).c_str());
+#else
       system(String::Format("mkdir -p \"%s\"", m_fullPath[PATH].c_str()).c_str());
+#endif
     }
   }
 
