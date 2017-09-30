@@ -158,13 +158,13 @@ namespace Core {
   }
 
   template <typename T>
-  void Observable<T>::NotifyObservers(std::function<void(Observer* const)> function) {
+  void Observable<T>::NotifyObservers(ObserverMethod function) {
     NotifyObservers(m_observers, function);
     NotifyObservers(s_globalObservers, function);
   }
 
   template <typename T>
-  void Observable<T>::NotifyObservers(const ObserverList& list, std::function<void(Observer* const)>& function) {
+  void Observable<T>::NotifyObservers(const ObserverList& list, ObserverMethod& function) {
     for (Observer* const ptr : list) {
       function(ptr);
     }

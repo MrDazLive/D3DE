@@ -16,7 +16,7 @@ namespace Core {
     template <typename ... V>
     static T* const   Instance    (V...);
 
-    /// <summar>
+    /// <summary>
     /// <i>Static function.</i><br/>
     /// Destroys the current instance of the object.
     /// </summary>

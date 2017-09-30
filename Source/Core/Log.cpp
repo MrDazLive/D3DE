@@ -43,7 +43,7 @@ namespace Core {
     }
   }
 
-  void Log::PrintBreak(const Flag_& logPriorities) {
+  void Log::PrintBreak(const Flag_& logTargets) {
     Print("", BREAK);
   }
 
