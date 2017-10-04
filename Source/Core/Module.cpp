@@ -1,9 +1,18 @@
 #include "Module.h"
 
+#include "System.h"
+
 namespace Core {
 
-  Module::Module(const std::string& name) {
+  template <>
+  std::set<Observable<Module>::Observer*> Observable<Module>::s_globalObservers = {};
 
+  Module::Module(const std::string& name) {
+    SYSTEM->ConfigureModule(this, name);
+  }
+
+  void Module::Require(Module* const req) {
+    SYSTEM->ConfigureRequirement(this, req);
   }
 
   void Module::Initialise() {

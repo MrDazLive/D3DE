@@ -16,7 +16,7 @@ namespace Core {
   ///   /* override virtuals */
   /// };
   /// </code>
-  class Module : Observable<Module> {
+  class Module : public Observable<Module> {
   public:
     virtual void        Initialise      ();
     virtual void        Startup         ();
@@ -28,10 +28,13 @@ namespace Core {
     virtual             ~Module         () = default;
 
     template <typename ... V>
-    void                Requires();
+    void                Requires        ();
+    template <>
+    void                Requires        ();
   private:
     template <typename T, typename ... V>
     void                RequiresSplit();
+    void                Require         (Module* const);
   };
 
   OBSERVER_CLASS(Module) {
@@ -60,11 +63,8 @@ namespace Core {
 
   template <typename T, typename ... V>
   void Module::RequiresSplit() {
-    Module* const ptr = T::Instance();
-    // TODO: Notify System of requirements & dependancies.
-
+    Require(T::Instance());
     Requires<V...>();
   }
-
 
 }
