@@ -11,7 +11,7 @@ namespace Core {
     SYSTEM->ConfigureModule(this, name);
   }
 
-  void Module::Require(Module* const req) {
+  void Module::Requires(Module* const req) {
     SYSTEM->ConfigureRequirement(this, req);
   }
 

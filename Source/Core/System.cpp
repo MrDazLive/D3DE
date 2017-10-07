@@ -27,14 +27,15 @@ namespace Core {
 
   void System::Startup() {
     // Push modules into a vector for sorting.
-    std::vector<Module*> modules(m_moduleConfig.size());
+    std::vector<Module*> modules;
+    modules.reserve(m_moduleConfig.size());
     for (auto& config : m_moduleConfig) {
       modules.push_back(config.first);
     }
 
     // Sort modules in priority order.
     std::sort(modules.begin(), modules.end(), [&](Module* const l, Module* const r) {
-      return m_moduleConfig[r].priority < m_moduleConfig[l].priority;
+      return m_moduleConfig[l].priority < m_moduleConfig[r].priority;
     });
 
     // Startup each module.
@@ -48,7 +49,7 @@ namespace Core {
   void System::Update() {
     // TODO: Check condition of each module and the associated threads.
     for (auto& config : m_moduleConfig) {
-      if (config.second.state == State::QUITTING || config.second.state == State::ACTIVE) {
+      if (config.second.state == State::ACTIVE) {
         config.first->Update();
       }
     }

@@ -69,14 +69,30 @@ namespace Core_Test {
   void System::Examine() {
     TestCase([]() {
       SYSTEM->Initialise(Module_Dumby_3::Instance());
-      auto v1 = Module_Dumby_1::Instance()->getCounter(INIT);
-      auto v2 = Module_Dumby_2::Instance()->getCounter(INIT);
-      auto v3 = Module_Dumby_3::Instance()->getCounter(INIT);
 
       return Module_Dumby_3::Instance()->getCounter(INIT) == 2
         && Module_Dumby_2::Instance()->getCounter(INIT) == 1
         && Module_Dumby_1::Instance()->getCounter(INIT) == 0;
     }, "System::Initialise");
+
+    TestCase([]() {
+      SYSTEM->Initialise(Module_Dumby_3::Instance());
+      SYSTEM->Startup();
+
+      return Module_Dumby_1::Instance()->getCounter(START) == 2
+        && Module_Dumby_3::Instance()->getCounter(START) == 1
+        && Module_Dumby_2::Instance()->getCounter(START) == 0;
+    }, "System::Startup");
+
+    TestCase([]() {
+      SYSTEM->Initialise(Module_Dumby_3::Instance());
+      SYSTEM->Startup();
+      SYSTEM->Quit();
+
+      return Module_Dumby_1::Instance()->getCounter(QUIT) == 2
+        && Module_Dumby_2::Instance()->getCounter(QUIT) == 1
+        && Module_Dumby_3::Instance()->getCounter(QUIT) == 0;
+    }, "System::Quit");
   }
 
 }
