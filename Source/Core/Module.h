@@ -27,13 +27,11 @@ namespace Core {
                         Module          (const std::string&);
     virtual             ~Module         () = default;
 
-    template <typename ... V>
-    void                Requires        ();
-    template <>
-    void                Requires        ();
+    template <typename T>
+    inline void                Requires        ();
+    template <typename T1, typename T2, typename ... V>
+    inline void                Requires        ();
   private:
-    template <typename T, typename ... V>
-    void                RequiresSplit();
     void                Require         (Module* const);
   };
 
@@ -54,17 +52,18 @@ namespace Core {
   protected:                                                  \
     T() : Core::Module("T") { Requires<__VA_ARGS__>(); }      \
 
-  template <typename ... V>
-  void Module::Requires() {
-    RequiresSplit<V...>();
+  template <typename T>
+  inline void Module::Requires() {
+    Require(T::Instance());
   }
 
-  template <> void Module::Requires<>() {}
+  template <>
+  inline void Module::Requires<void>() {}
 
-  template <typename T, typename ... V>
-  void Module::RequiresSplit() {
-    Require(T::Instance());
-    Requires<V...>();
+  template <typename T1, typename T2, typename ... V>
+  inline void Module::Requires () {
+    Requires<T1>();
+    Requires<T2, V...>();
   }
 
 }

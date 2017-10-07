@@ -15,7 +15,7 @@ private:
 };
 
 MODULE(Module_Dumby_1), public Module_Ticker {
-  MODULE_REQUIRES(Module_Dumby_1)
+  MODULE_REQUIRES(Module_Dumby_1, void)
 public:
   void  Initialise  () override { Core::Module::Initialise(); Tick(INIT);   }
   void  Startup     () override { Core::Module::Startup();    Tick(START);  }
