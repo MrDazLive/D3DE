@@ -56,7 +56,6 @@ void Core::System::Configure() {
 namespace Core_Test {
 
   void System::Reset() {
-    SYSTEM->Initialise(Module_Dumby_3::Instance());
     SYSTEM->Shutdown();
     SYSTEM->Configure();
 
