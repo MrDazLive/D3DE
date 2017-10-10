@@ -18,10 +18,16 @@ before_script:
  - cmake ..
 jobs:
   include:
-    - stage: Library
+    - stage: Library - Tier 1
+      script:
+        - make -d Types
+    - stage: Library - Tier 2
       script:
         - make -d Core
-    - stage: Test
+    - stage: Tests
+      script:
+        - make -d Types-Test
+        - ./bin/Types-Test
       script:
         - make -d Core-Test
         - ./bin/Core-Test

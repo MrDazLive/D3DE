@@ -112,5 +112,5 @@ namespace Core {
     virtual void  PrintBreak    (                  ) {}
   };
 
-  #define LOG Log::Instance()
+  #define LOG Core::Log::Instance()
 }
