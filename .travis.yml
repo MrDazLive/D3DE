@@ -28,6 +28,7 @@ jobs:
       script:
         - make -d Types-Test
         - ./bin/Types-Test
-      - script:
+    - 
+      script:
         - make -d Core-Test
         - ./bin/Core-Test
