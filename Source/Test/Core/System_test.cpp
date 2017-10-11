@@ -1,7 +1,6 @@
 #include "declerations.h"
 
 #include <Core/System.h>
-#include <Core/Log.h>
 
 enum  ModuleState { INIT = 0, START = 1, UPDATE = 2, QUIT = 3, STOP = 4 };
 int   counter[5]  { 0,0,0,0,0 };
@@ -69,10 +68,6 @@ namespace Core_Test {
   void System::Examine() {
     TestCase([]() {
       SYSTEM->Initialise(Module_Dumby_3::Instance());
-
-      LOG->PrintMessage(std::to_string(Module_Dumby_1::Instance()->getCounter(INIT)));
-      LOG->PrintMessage(std::to_string(Module_Dumby_2::Instance()->getCounter(INIT)));
-      LOG->PrintMessage(std::to_string(Module_Dumby_3::Instance()->getCounter(INIT)));
 
       return Module_Dumby_3::Instance()->getCounter(INIT) == 2
         && Module_Dumby_2::Instance()->getCounter(INIT) == 1

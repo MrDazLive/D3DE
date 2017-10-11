@@ -1,5 +1,8 @@
 #include "String.h"
 
+#include <algorithm>
+#include <cstdarg>
+
 namespace DTU {
 
   String::String(const char* val) {
@@ -54,12 +57,12 @@ namespace DTU {
 
   bool String::operator!=(const std::string& o) {
     return size() != o.size()
-      || m_data.compare(o) == 0;
+      || m_data.compare(o) != 0;
   }
 
   bool String::operator!=(const String& o) {
     return size() != o.size()
-      || m_data.compare(o.str()) == 0;
+      || m_data.compare(o.str()) != 0;
   }
 
   String String::operator+(const String& o) {
@@ -80,4 +83,52 @@ namespace DTU {
     return m_data.size();
   }
 
+  String String::upper() const {
+    String s(*this);
+    return s.toUpper();
+  }
+
+  String String::lower() const {
+    String s(*this);
+    return s.toLower();
+  }
+
+  String& String::toUpper() {
+    std::transform(m_data.begin(), m_data.end(), m_data.begin(),
+      [](unsigned char c){ return std::toupper(c); });
+    return *this;
+  }
+
+  String& String::toLower() {
+    std::transform(m_data.begin(), m_data.end(), m_data.begin(),
+      [](unsigned char c){ return std::tolower(c); });
+    return *this;
+  }
+
+  String String::Format(const String& text...) {
+    char b[1024];
+    va_list list;
+    va_start(list, text);
+    vsprintf(b, text.c_str(), list);
+    va_end(list);
+    return String(b);
+  }
+
+  bool String::startsWith(const String& text) const {
+    const size_t c = m_data.find_first_of(text.str());
+    return c == 0;
+  }
+
+  bool String::startsWithText(const String& text) const {
+    return m_data.find(text.str()) == 0;
+  }
+
+  bool String::endsWith(const String& text) const {
+    const size_t c = m_data.find_last_of(text.str());
+    return c == size() - 1;
+  }
+
+  bool String::endsWithText(const String& text) const {
+    return m_data.rfind(text.str()) == size() - text.size();
+  }
 }
