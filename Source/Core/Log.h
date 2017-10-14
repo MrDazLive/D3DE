@@ -1,10 +1,10 @@
 #pragma once
 
-#include <string>
-
 #include "Flags.h"
 #include "Observer.h"
 #include "Singleton.h"
+
+#include <Types/String.h>
 
 namespace Core {
 
@@ -45,35 +45,35 @@ namespace Core {
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify how the message is distributed.</param>
-    void  Print         (const std::string&, const Flag_& = Flag::MESSAGE | Log::MEDIUM | s_logTargets);
+    void  Print         (const DTU::String&, const Flag_& = Flag::MESSAGE | Log::MEDIUM | s_logTargets);
 
     /// <summary>
     /// Logs the provided message.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintMessage  (const std::string&, const Flag_& = Log::MEDIUM | s_logTargets);
+    void  PrintMessage  (const DTU::String&, const Flag_& = Log::MEDIUM | s_logTargets);
 
     /// <summary>
     /// Logs the provided message as in the "success" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintSuccess  (const std::string&, const Flag_& = Log::MEDIUM | s_logTargets);
+    void  PrintSuccess  (const DTU::String&, const Flag_& = Log::MEDIUM | s_logTargets);
 
     /// <summary>
     /// Logs the provided message as in the "warning" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintWarning  (const std::string&, const Flag_& = Log::MEDIUM | s_logTargets);
+    void  PrintWarning  (const DTU::String&, const Flag_& = Log::MEDIUM | s_logTargets);
 
     /// <summary>
     /// Logs the provided message as in the "error" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintError    (const std::string&, const Flag_& = Log::MEDIUM | s_logTargets);
+    void  PrintError    (const DTU::String&, const Flag_& = Log::MEDIUM | s_logTargets);
 
     /// <summary>
     /// Checks assert condition, logging an arror message if assert fails.
@@ -81,7 +81,7 @@ namespace Core {
     /// <param name = "condition">The assert condition.</param>
     /// <param name = "message">The error message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintAssert   (bool, const std::string& = "", const Flag_& = Log::MEDIUM | s_logTargets);
+    void  PrintAssert   (bool, const DTU::String& = "", const Flag_& = Log::MEDIUM | s_logTargets);
 
     /// <summary>
     /// Prints a break line into the log.
@@ -102,13 +102,13 @@ namespace Core {
   public:
                   Observer      (const Log::Flag_& flags = Log::Flag_(~Log::UNIT_TEST));
 
-            void  Print         (const std::string&, const Log::Flag_&);
+            void  Print         (const DTU::String&, const Log::Flag_&);
   protected:
-    virtual void  PrintMessage  (const std::string&) {}
-    virtual void  PrintSuccess  (const std::string&) {}
-    virtual void  PrintWarning  (const std::string&) {}
-    virtual void  PrintError    (const std::string&) {}
-    virtual void  PrintAssert   (const std::string&) {}
+    virtual void  PrintMessage  (const DTU::String&) {}
+    virtual void  PrintSuccess  (const DTU::String&) {}
+    virtual void  PrintWarning  (const DTU::String&) {}
+    virtual void  PrintError    (const DTU::String&) {}
+    virtual void  PrintAssert   (const DTU::String&) {}
     virtual void  PrintBreak    (                  ) {}
   };
 

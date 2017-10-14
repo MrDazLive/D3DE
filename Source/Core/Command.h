@@ -1,7 +1,7 @@
 #pragma once
 
+#include <Types/String.h>
 #include <set>
-#include <string>
 
 namespace Core {
 
@@ -20,13 +20,13 @@ namespace Core {
     /// <i>Static funciton.</i><br/>
     /// Fetches the command argument from the provided index.
     /// </summary>
-    static const std::string&     Fetch       (const int);
+    static const DTU::String&     Fetch       (const int);
 
     /// <summary>
     /// <i>Static funciton.</i><br/>
     /// Checks that the provided command argument exists.
     /// </summary>
-    static bool                   Check       (const std::string&);
+    static bool                   Check       (const DTU::String&);
   private:
                                   /// <summary>
                                   /// Delete constructor.
@@ -38,7 +38,7 @@ namespace Core {
                                   /// </summary>
                                   ~Command    () = delete;
 
-    static std::set<std::string>  s_commands;
+    static std::set<DTU::String>  s_commands;
   };
 
 }

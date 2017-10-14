@@ -1,9 +1,9 @@
 #pragma once
 
+#include "Log.h"
+
 #include <vector>
 #include <functional>
-
-#include "Log.h"
 
 namespace Core {
 

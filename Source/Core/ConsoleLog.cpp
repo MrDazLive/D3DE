@@ -8,23 +8,23 @@ namespace Core {
     system("color");
   }
 
-  void ConsoleLog::PrintMessage(const std::string& message) {
+  void ConsoleLog::PrintMessage(const DTU::String& message) {
     Log(message, 37);
   }
 
-  void ConsoleLog::PrintSuccess(const std::string& message) {
+  void ConsoleLog::PrintSuccess(const DTU::String& message) {
     Log(message, 32);
   }
 
-  void ConsoleLog::PrintWarning(const std::string& message) {
+  void ConsoleLog::PrintWarning(const DTU::String& message) {
     Log(message, 33);
   }
 
-  void ConsoleLog::PrintError(const std::string& message) {
+  void ConsoleLog::PrintError(const DTU::String& message) {
     Log(message, 31);
   }
 
-  void ConsoleLog::PrintAssert(const std::string& message) {
+  void ConsoleLog::PrintAssert(const DTU::String& message) {
     Log(message, 35);
   }
 
@@ -32,8 +32,8 @@ namespace Core {
     std::cout << std::endl;
   }
 
-  void ConsoleLog::Log(const std::string& message, const unsigned int colour) {
-    std::cout << "\033[1;" << colour << "m" << message << "\033[0m" << std::endl;
+  void ConsoleLog::Log(const DTU::String& message, const unsigned int colour) {
+    std::cout << "\033[1;" << colour << "m" << message.c_str() << "\033[0m" << std::endl;
   }
 
 }

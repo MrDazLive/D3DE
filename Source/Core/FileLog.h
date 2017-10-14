@@ -12,11 +12,11 @@ namespace Core {
   protected:
           FileLog       ();
 
-    void  PrintMessage  (const std::string&) final override;
-    void  PrintSuccess  (const std::string&) final override;
-    void  PrintWarning  (const std::string&) final override;
-    void  PrintError    (const std::string&) final override;
-    void  PrintAssert   (const std::string&) final override;
+    void  PrintMessage  (const DTU::String&) final override;
+    void  PrintSuccess  (const DTU::String&) final override;
+    void  PrintWarning  (const DTU::String&) final override;
+    void  PrintError    (const DTU::String&) final override;
+    void  PrintAssert   (const DTU::String&) final override;
     void  PrintBreak    (                  ) final override;
   private:
     void CreateFile();
@@ -26,7 +26,7 @@ namespace Core {
     /// </summary>
     /// <param = "message">The message to be printed to the console.</param>
     /// <param = "type">The type of message being logged to the file.</param>
-    void  Log           (const std::string&, const std::string&);
+    void  Log           (const DTU::String&, const DTU::String&);
 
     File* m_file        { nullptr };
   };

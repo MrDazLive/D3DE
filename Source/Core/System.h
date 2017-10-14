@@ -112,7 +112,7 @@ namespace Core {
     /// </summary>
     /// <param name = "module">The module being configured.</param>
     /// <param name = "name"></param>
-    void  ConfigureModule       (Module* const, const std::string&);
+    void  ConfigureModule       (Module* const, const DTU::String&);
 
     /// <summary>
     /// Establishes the startup priority level of the named module.
@@ -121,7 +121,7 @@ namespace Core {
     /// </summary>
     /// <param name = "name">The name of the module having its priority level set.</param>
     /// <param name = "priority">The new priority level of the module.</param>
-    void  ConfigurePriortiy     (const std::string&, const int8_t);
+    void  ConfigurePriortiy     (const DTU::String&, const int8_t);
 
     /// <summary>
     /// Establishes dependencies between the two provided modules.
@@ -135,7 +135,7 @@ namespace Core {
     /// A container class to hold information required to manage modules.
     /// </summary>
     struct ModuleConfig {
-      std::string         name          { "" };
+      DTU::String         name          { "" };
       std::set<Module*>   requirements  {};
       std::set<Module*>   dependents    {};
       System::State       state         { State::INACTIVE };

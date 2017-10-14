@@ -9,11 +9,11 @@ namespace Core {
   protected:
           ConsoleLog    ();
 
-    void  PrintMessage  (const std::string&) final override;
-    void  PrintSuccess  (const std::string&) final override;
-    void  PrintWarning  (const std::string&) final override;
-    void  PrintError    (const std::string&) final override;
-    void  PrintAssert   (const std::string&) final override;
+    void  PrintMessage  (const DTU::String&) final override;
+    void  PrintSuccess  (const DTU::String&) final override;
+    void  PrintWarning  (const DTU::String&) final override;
+    void  PrintError    (const DTU::String&) final override;
+    void  PrintAssert   (const DTU::String&) final override;
     void  PrintBreak    (                  ) final override;
   private:
     /// <summary>
@@ -21,6 +21,6 @@ namespace Core {
     /// </summary>
     /// <param = "message">The message to be printed to the console.</param>
     /// <param = "colour">The value used for specifying the print colour.</param>
-    void  Log           (const std::string&, const unsigned int);
+    void  Log           (const DTU::String&, const unsigned int);
   };
 }

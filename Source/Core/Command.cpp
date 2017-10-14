@@ -4,7 +4,7 @@
 
 namespace Core {
 
-  std::set<std::string> Command::s_commands;
+  std::set<DTU::String> Command::s_commands;
 
   void Command::Collect(const int argc, char** const args) {
     for (int idx = 0; idx < argc; ++idx) {
@@ -12,12 +12,12 @@ namespace Core {
     }
   }
 
-  const std::string& Command::Fetch(const int index) {
+  const DTU::String& Command::Fetch(const int index) {
     LOG->PrintAssert(index < s_commands.size(), "Command index out of bounds.");
     return *(std::next(s_commands.begin(), index));
   }
 
-  bool Command::Check(const std::string& command) {
+  bool Command::Check(const DTU::String& command) {
     return s_commands.find(command) != s_commands.end();
   }
 

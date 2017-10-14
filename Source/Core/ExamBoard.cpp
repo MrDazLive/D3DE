@@ -3,10 +3,9 @@
 #include "Log.h"
 #include "File.h"
 #include "UnitTest.h"
-#include "StringUtil.h"
 
 namespace Core {
-  ExamBoard::ExamBoard(const std::string& name) : m_name(name) {}
+  ExamBoard::ExamBoard(const DTU::String& name) : m_name(name) {}
 
   void ExamBoard::Examine(UnitTest* const unitTest) {
     LOG->PrintAssert(unitTest != nullptr, "Provided object is not a valid UnitTest.");
@@ -27,7 +26,7 @@ namespace Core {
 
   bool ExamBoard::Results() {
     Log::Flag_ logType = Log::MESSAGE;
-    std::string messageNote = "";
+    DTU::String messageNote = "";
 
     if (m_examCount == 0) {
       messageNote = "         No tests provided!         ";
@@ -43,11 +42,11 @@ namespace Core {
     }
 
     LOG->PrintBreak();
-    LOG->Print(String::Format(
+    LOG->Print(DTU::String::Format(
       "////////////////////////////////////\n%s\n////////////////////////////////////\n%s\n%s\n////////////////////////////////////",
       messageNote.c_str(),
-      String::Format(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount).c_str(),
-      String::Format(" Function test results: %i out of %i.", m_testPassCount, m_testCount).c_str()
+      DTU::String::Format(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount).c_str(),
+      DTU::String::Format(" Function test results: %i out of %i.", m_testPassCount, m_testCount).c_str()
     ), logType | Log::UNIT_TEST | Log::LOW);
 
     File::DestroyAll();
@@ -64,7 +63,7 @@ namespace Core {
     }
 
     LOG->Print(
-      String::Format("%s: %i out of %i passed.",
+      DTU::String::Format("%s: %i out of %i passed.",
         unitTest->getName().c_str(),
         unitTest->getPassCount(),
         unitTest->getTestCount()),

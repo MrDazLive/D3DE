@@ -1,7 +1,5 @@
 #include "System.h"
 
-#include "StringUtil.h"
-
 #include <algorithm>
 
 namespace Core {
@@ -106,13 +104,13 @@ namespace Core {
     m_moduleConfig[module].state = State::SHUTTING_DOWN;
   }
 
-  void System::ConfigureModule(Module* const module, const std::string& name) {
+  void System::ConfigureModule(Module* const module, const DTU::String& name) {
     m_moduleConfig[module].name = name;
   }
 
-  void System::ConfigurePriortiy(const std::string& name, const int8_t priority) {
+  void System::ConfigurePriortiy(const DTU::String& name, const int8_t priority) {
     for (auto& config : m_moduleConfig) {
-      if (String::Equals(config.second.name, name)) {
+      if (config.second.name == name) {
         config.second.priority = priority;
       }
     }

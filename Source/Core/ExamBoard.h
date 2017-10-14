@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-
 #include "Singleton.h"
+
+#include <Types/String.h>
 
 namespace Core {
   class UnitTest;
@@ -34,7 +34,7 @@ namespace Core {
                         /// The expected constructor of Core::ExamBoard. Providing a name identifier.
                         /// </summary>
                         /// <param name = "name">The name used to identify the examination being undertaken.</param>
-                        ExamBoard       (const std::string&);
+                        ExamBoard       (const DTU::String&);
 
     /// <summary>
     /// Enacts and prints the results of the provided Core::UnitTest.
@@ -48,7 +48,7 @@ namespace Core {
     /// <param name = "unitTest">The Core::UnitTest to print the results of."</param>
     void                PrintOutcome    (UnitTest* const);
 
-    const std::string   m_name          { " ____ " };
+    const DTU::String   m_name          { " ____ " };
 
     unsigned int        m_examCount     { 0 };
     unsigned int        m_examPassCount { 0 };

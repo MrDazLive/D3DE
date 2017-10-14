@@ -1,7 +1,7 @@
 #include "String.h"
 
-#include <algorithm>
 #include <cstdarg>
+#include <algorithm>
 
 namespace DTU {
 
@@ -37,35 +37,43 @@ namespace DTU {
     return m_data[idx];
   }
 
-  bool String::operator==(const char* o) {
+  bool String::operator==(const char* o) const {
     return m_data.compare(o) == 0;
   }
 
-  bool String::operator==(const std::string& o) {
+  bool String::operator==(const std::string& o) const {
     return size() == o.size()
       && m_data.compare(o) == 0;
   }
 
-  bool String::operator==(const String& o) {
+  bool String::operator==(const String& o) const {
     return size() == o.size()
       && m_data.compare(o.str()) == 0;
   }
 
-  bool String::operator!=(const char* o) {
+  bool String::operator!=(const char* o) const {
     return m_data.compare(o) != 0;
   }
 
-  bool String::operator!=(const std::string& o) {
+  bool String::operator!=(const std::string& o) const {
     return size() != o.size()
       || m_data.compare(o) != 0;
   }
 
-  bool String::operator!=(const String& o) {
+  bool String::operator!=(const String& o) const {
     return size() != o.size()
       || m_data.compare(o.str()) != 0;
   }
 
-  String String::operator+(const String& o) {
+  bool String::operator<(const String& o) const {
+    return m_data < o.m_data;
+  }
+
+  bool String::operator>(const String& o) const {
+    return m_data > o.m_data;
+  }
+
+  String String::operator+(const String& o) const {
     return String(m_data + o.str());
   }
 

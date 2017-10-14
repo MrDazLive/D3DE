@@ -1,9 +1,8 @@
 #pragma once
 
-#include <string>
-#include <functional>
-
 #include "ExamBoard.h"
+
+#include <functional>
 
 namespace Core {
   /// <summary>
@@ -22,7 +21,7 @@ namespace Core {
             /// <summary>
             /// Collects the name of the unit test.
             /// </summary>
-            const std::string&    getName       () const;
+            const DTU::String&    getName       () const;
 
             /// <summary>
             /// Checks whether the unit test performed all of its tests successfully.
@@ -44,7 +43,7 @@ namespace Core {
                                   /// Constructor of the object.
                                   /// </summary>
                                   /// <param name = "name">The name of the unit test being performed.</param>
-                                  UnitTest      (const std::string&);
+                                  UnitTest      (const DTU::String&);
 
 
 
@@ -53,14 +52,14 @@ namespace Core {
             /// </summary>
             /// <param name = "testMethod">The test method to be performed; returning <b>true</b> if successful.</param>
             /// <param name = "message">A label to identify the purpose of the test case.</param>
-            void                  TestCase      (const std::function<bool()>&, const std::string& = "");
+            void                  TestCase      (const std::function<bool()>&, const DTU::String& = "");
 
             /// <summary>
             /// Resets the test environment if necessary. Some objects may otherwise allow for data to carry over.
             /// </summary>
     virtual void                  Reset         () = 0;
   private:
-    const std::string             m_name        { " _____ " };
+    const DTU::String             m_name        { " _____ " };
 
     unsigned int                  m_testCount   { 0 };
     unsigned int                  m_passCount   { 0 };

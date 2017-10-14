@@ -3,6 +3,8 @@
 #include "Singleton.h"
 #include "Observer.h"
 
+#include <Types/String.h>
+
 namespace Core {
 
   /// <summary>
@@ -66,7 +68,7 @@ namespace Core {
                         /// Constructor.
                         /// </summary>
                         /// <param name = "name">The name of the class.</param>
-                        Module          (const std::string&);
+                        Module          (const DTU::String&);
                         
                         /// <summary>
                         /// Default virtual constructor.

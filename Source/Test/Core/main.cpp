@@ -12,7 +12,6 @@ int main(int argc, char **args) {
 
   Core::Command::Collect(argc, args);
 
-  EXAMINATION(String);
   EXAMINATION(Handler);
   EXAMINATION(File);
   EXAMINATION(Flags);

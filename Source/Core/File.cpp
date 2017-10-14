@@ -5,8 +5,6 @@
 #include <fstream>
 #include <iostream>
 
-#include "StringUtil.h"
-
 #ifdef _WIN32
 #define stat _stat
 #else
@@ -18,7 +16,7 @@ struct file_status {
   struct stat status;
 };
 
-const file_status& details(const std::string& path) {
+const file_status& details(const DTU::String& path) {
   static file_status file;
   file.success = stat(path.c_str(), &file.status) == 0;
   return file;
@@ -26,7 +24,7 @@ const file_status& details(const std::string& path) {
 
 namespace Core {
 
-  File::File(const std::string& fullPath) : m_file(new std::fstream(fullPath)) {
+  File::File(const DTU::String& fullPath) : m_file(new std::fstream(fullPath.str())) {
     SplitPath(fullPath);
   }
 
@@ -50,7 +48,7 @@ namespace Core {
 
   bool File::Open(bool create) {
     if (isOpen()) {
-      LOG->PrintWarning(String::Format("File {%s} is already open.", getFullPath().c_str()));
+      LOG->PrintWarning(DTU::String::Format("File {%s} is already open.", getFullPath().c_str()));
       return false;
     }
     
@@ -80,20 +78,20 @@ namespace Core {
     return false;
   }
 
-  void File::InsertLine(const std::string& content) {
+  void File::InsertLine(const DTU::String& content) {
     if (isOpen()) {
-      *m_file << content;
+      *m_file << content.str();
 
-      if (!String::EndsWith(content, "\n"))
+      if (!content.endsWith("\n"))
         *m_file << "\n";
       m_file->flush();
     }
     else {
-      LOG->PrintWarning(String::Format("Contents was not written to file: %s", getFullPath().c_str()));
+      LOG->PrintWarning(DTU::String::Format("Contents was not written to file: %s", getFullPath().c_str()));
     }
   }
 
-  void File::InsertLine(const std::string& content, const size_t line) {
+  void File::InsertLine(const DTU::String& content, const size_t line) {
     LOG->PrintAssert("Function (File::InsertLine) not implemented.");
   }
 
@@ -119,13 +117,13 @@ namespace Core {
     return m_file->peek() == std::string::npos;
   }
 
-  void File::getContent(std::string& buffer) {
+  void File::getContent(DTU::String& buffer) {
     m_file->seekg(0, std::ios::beg);
     buffer = std::string(std::istreambuf_iterator<char>(*m_file),
       std::istreambuf_iterator<char>());
   }
 
-  void File::getContent(std::vector<std::string>& buffer) {
+  void File::getContent(std::vector<DTU::String>& buffer) {
     m_file->seekg(0, std::ios::beg);
     buffer.clear();
     std::string line;
@@ -134,40 +132,40 @@ namespace Core {
     }
   }
 
-  const std::string& File::getName() const {
+  const DTU::String& File::getName() const {
     return m_fullPath[NAME];
   }
 
-  const std::string& File::getLocation() const {
+  const DTU::String& File::getLocation() const {
     return m_fullPath[PATH];
   }
 
-  const std::string& File::getExtension() const {
+  const DTU::String& File::getExtension() const {
     return m_fullPath[EXT];
   }
 
-  const std::string File::getFullPath() const {
+  const DTU::String File::getFullPath() const {
     return m_fullPath[PATH] + m_fullPath[NAME] + m_fullPath[EXT];
   }
 
-  void File::SplitPath(const std::string& fullPath) {
-    size_t extStart = fullPath.find_last_of('.');
+  void File::SplitPath(const DTU::String& fullPath) {
+    size_t extStart = fullPath.str().find_last_of('.');
     LOG->PrintAssert(extStart != std::string::npos, "File path requires a valid extension.");
 
-    size_t dirEnd = fullPath.find_last_of("/\\");
+    size_t dirEnd = fullPath.str().find_last_of("/\\");
     dirEnd = dirEnd != std::string::npos ? dirEnd + 1 : 0;
 
-    m_fullPath[PATH] = fullPath.substr(0, dirEnd);
-    m_fullPath[NAME] = fullPath.substr(dirEnd, extStart - dirEnd);
-    m_fullPath[EXT] = fullPath.substr(extStart, fullPath.size() - extStart);
+    m_fullPath[PATH] = fullPath.str().substr(0, dirEnd);
+    m_fullPath[NAME] = fullPath.str().substr(dirEnd, extStart - dirEnd);
+    m_fullPath[EXT] = fullPath.str().substr(extStart, fullPath.size() - extStart);
   }
 
   void File::BuildDirectory() {
     if (!details(m_fullPath[PATH]).success) {
 #ifdef _WIN32 
-      system(String::Format("md \"%s\"", m_fullPath[PATH].c_str()).c_str());
+      system(DTU::String::Format("md \"%s\"", m_fullPath[PATH].c_str()).c_str());
 #else
-      system(String::Format("mkdir -p \"%s\"", m_fullPath[PATH].c_str()).c_str());
+      system(DTU::String::Format("mkdir -p \"%s\"", m_fullPath[PATH].c_str()).c_str());
 #endif
     }
   }

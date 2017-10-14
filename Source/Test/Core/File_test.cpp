@@ -1,7 +1,6 @@
 #include "declerations.h"
 
 #include <Core/File.h>
-#include <Core/StringUtil.h>
 
 Core::File test_file("File/File2/test.txt");
 
@@ -43,18 +42,18 @@ namespace Core_Test {
       test_file.Create();
       test_file.InsertLine("LineA");
       test_file.InsertLine("LineB");
-      std::string content;
+      DTU::String content;
       test_file.getContent(content, true);
-      return content.size() == 12 && Core::String::Equals(content, "LineA\nLineB\n");
+      return content.size() == 12 && content == "LineA\nLineB\n";
     }, "File::getContent(string)");
 
     TestCase([]() {
       test_file.Create();
       test_file.InsertLine("LineA");
       test_file.InsertLine("LineB");
-      std::vector<std::string> content;
+      std::vector<DTU::String> content;
       test_file.getContent(content, true);
-      return content.size() == 2 && Core::String::Equals(content[1], "LineB");
+      return content.size() == 2 && content[1] == "LineB";
     }, "File::getContent(vector)");
 
     TestCase([]() {
@@ -76,19 +75,19 @@ namespace Core_Test {
     }, "File::Open(false)");
 
     TestCase([]() {
-      return Core::String::Equals(test_file.getLocation(), "File/File2/");
+      return test_file.getLocation() == "File/File2/";
     }, "File::getLocation");
 
     TestCase([]() {
-      return Core::String::Equals(test_file.getName(), "test");
+      return test_file.getName() == "test";
     }, "File::getName");
 
     TestCase([]() {
-      return Core::String::Equals(test_file.getExtension(), ".txt");
+      return test_file.getExtension() == ".txt";
     }, "File::getExtension");
 
     TestCase([]() {
-      return Core::String::Equals(test_file.getFullPath(), "File/File2/test.txt");
+      return test_file.getFullPath() == "File/File2/test.txt";
     }, "File::getFullPath");
 
   }

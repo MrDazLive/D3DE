@@ -1,12 +1,11 @@
 #include "UnitTest.h"
 
 #include "Log.h"
-#include "StringUtil.h"
 
 namespace Core {
-  UnitTest::UnitTest(const std::string& name) : m_name(name) {}
+  UnitTest::UnitTest(const DTU::String& name) : m_name(name) {}
 
-  const std::string& UnitTest::getName() const {
+  const DTU::String& UnitTest::getName() const {
     return m_name;
   }
 
@@ -22,7 +21,7 @@ namespace Core {
     return m_passCount;
   }
 
-  void UnitTest::TestCase(const std::function<bool()>& testMethod, const std::string& message) {
+  void UnitTest::TestCase(const std::function<bool()>& testMethod, const DTU::String& message) {
     ++m_testCount;
     Reset();
     try {
@@ -31,6 +30,6 @@ namespace Core {
         return;
       }
     } catch (std::exception&) {}
-    LOG->PrintError(String::Format("%s: Test %i failed. [%s]", m_name.c_str(), m_testCount, message.c_str()), Log::UNIT_TEST);
+    LOG->PrintError(DTU::String::Format("%s: Test %i failed. [%s]", m_name.c_str(), m_testCount, message.c_str()), Log::UNIT_TEST);
   }
 }

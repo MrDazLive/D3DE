@@ -17,7 +17,7 @@ namespace Core {
                         /// Constructor.
                         /// </summary>
                         /// <param name = "fullPath">The full path to the desired file.</param>
-                        File            (const std::string&);
+                        File            (const DTU::String&);
 
                         /// <summary>
                         /// Virtual destructor.
@@ -59,7 +59,7 @@ namespace Core {
     /// Adds the desired contents to the end of the file.
     /// </summary>
     /// <param name = "content">The content to be inserted.</param>
-    void                InsertLine      (const std::string&);
+    void                InsertLine      (const DTU::String&);
 
 
     /// <summary>
@@ -67,7 +67,7 @@ namespace Core {
     /// </summary>
     /// <param name = "content">The content to be inserted.</param>
     /// <param name = "line">The location to insert the new content.</param>
-    void                InsertLine      (const std::string&, const size_t);
+    void                InsertLine      (const DTU::String&, const size_t);
 
     /// <summary>
     /// Removes the last line of the file.
@@ -108,22 +108,22 @@ namespace Core {
     /// <summary>
     /// Returns the name of the file.
     /// </summary>
-    const std::string&  getName         () const;
+    const DTU::String&  getName         () const;
 
     /// <summary>
     /// Returns the path to the file.
     /// </summary>
-    const std::string&  getLocation     () const;
+    const DTU::String&  getLocation     () const;
 
     /// <summary>
     /// Returns the file extension.
     /// </summary>
-    const std::string&  getExtension    () const;
+    const DTU::String&  getExtension    () const;
 
     /// <summary>
     /// Returns the full path to the file.
     /// </summary>
-    const std::string   getFullPath     () const;
+    const DTU::String   getFullPath     () const;
   protected:
   private:
     enum                /*anonymous*/   { PATH = 0, NAME = 1, EXT = 2 };
@@ -132,18 +132,18 @@ namespace Core {
     /// Collects the conent of the file.
     /// </summary>
     /// <param name = "buffer">The string to be provided with the content of the file.</param>
-    void                getContent(std::string&);
+    void                getContent(DTU::String&);
 
     /// <summary>
     /// Collects the conent of the file.
     /// </summary>
     /// <param name = "buffer">The vector to be provided with the content of the file.</param>
-    void                getContent(std::vector<std::string>&);
+    void                getContent(std::vector<DTU::String>&);
 
     /// <summary>
     /// Splits the provided path into; path, name and extension.
     /// </summary>
-    void                SplitPath       (const std::string&);
+    void                SplitPath       (const DTU::String&);
 
     /// <summary>
     /// Constructs the directory hierarchy if necessary.
@@ -152,7 +152,7 @@ namespace Core {
 
     size_t              m_length        { 0 };
     time_t              m_lastCheck     { 0 };
-    std::string         m_fullPath[3]   {};
+    DTU::String         m_fullPath[3]   {};
     std::fstream* const m_file          { nullptr };
   };
 

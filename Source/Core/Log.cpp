@@ -16,27 +16,27 @@ namespace Core {
     AddObserver(ConsoleLog::Instance());
   }
 
-  void Log::Print(const std::string& message, const Flag_& logTargets) {
+  void Log::Print(const DTU::String& message, const Flag_& logTargets) {
     NOTIFY_OBSERVERS(Print(message, logTargets));
   }
 
-  void Log::PrintMessage(const std::string& message, const Flag_& logTargets) {
+  void Log::PrintMessage(const DTU::String& message, const Flag_& logTargets) {
     Print(message, MESSAGE | logTargets);
   }
 
-  void Log::PrintSuccess(const std::string& message, const Flag_& logTargets) {
+  void Log::PrintSuccess(const DTU::String& message, const Flag_& logTargets) {
     Print(message, SUCCESS | logTargets);
   }
 
-  void Log::PrintWarning(const std::string& message, const Flag_& logTargets) {
+  void Log::PrintWarning(const DTU::String& message, const Flag_& logTargets) {
     Print(message, WARNING | logTargets);
   }
 
-  void Log::PrintError(const std::string& message, const Flag_& logTargets) {
+  void Log::PrintError(const DTU::String& message, const Flag_& logTargets) {
     Print(message, ERROR | logTargets);
   }
 
-  void Log::PrintAssert(bool condition, const std::string& message, const Flag_& logTargets) {
+  void Log::PrintAssert(bool condition, const DTU::String& message, const Flag_& logTargets) {
     if (!condition) {
       Print(message, ASSERT | logTargets);
       assert(false);
@@ -54,7 +54,7 @@ namespace Core {
     SetFlags(flags);
   }
 
-  void Log::Observer::Print(const std::string& message, const Log::Flag_& flags) {
+  void Log::Observer::Print(const DTU::String& message, const Log::Flag_& flags) {
     if (CheckFlags(flags, true)) {
       const Log::Flag_ flags_ = GetFlags();
       if (flags & Log::MESSAGE) PrintMessage(message);
