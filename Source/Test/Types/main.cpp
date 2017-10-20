@@ -13,5 +13,6 @@ int main(int argc, char **args) {
   Core::Command::Collect(argc, args);
 
   EXAMINATION(String);
+  EXAMINATION(Vector2);
   return EXAMBOARD->Results() ? 0 : 1;
 }

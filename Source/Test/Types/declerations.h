@@ -4,6 +4,7 @@
 
 namespace Types_Test {
 
-  UNIT_TEST(String  , "String Utilities"  );
+  UNIT_TEST(String  , "String"  );
+  UNIT_TEST(Vector2 , "Vector2" );
 
 }
