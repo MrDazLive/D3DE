@@ -2,6 +2,8 @@
 
 #include <cfloat>
 
+#define PI 3.14159265359
+
 #define MATH_TYPES(T)             \
   typedef T<int>           T##i;  \
   typedef T<unsigned int>  T##u;  \

@@ -124,5 +124,49 @@ namespace Types_Test {
       v /= Vector2d(4, 2);
       return v == Vector2d(0.05, 0.2);
     }, "Vector2/=(const DTU::Vector2&)");
+    
+    TestCase([](){
+      Vector2d v(2, 3);
+      Vector2d w = v.normalised();
+      return v == Vector2d(2, 3) && w == Vector2d(0.4, 0.6);
+    }, "Vector2::normalised");
+    
+    TestCase([](){
+      Vector2d v(2, 3);
+      v.normalise();
+      return v == Vector2d(0.4, 0.6);
+    }, "Vector2::normalise");
+    
+    TestCase([](){
+      Vector2d v(3, 4);
+      return v.magnitude() == 5;
+    }, "Vector2::magnitude");
+    
+    TestCase([](){
+      Vector2d v(3, 4);
+      return v.magnitudeSquared() == 25;
+    }, "Vector2::magnitudeSquared");
+    
+    TestCase([](){
+      Vector2d v(3, 4);
+      Vector2d w(2, -5);
+      return v.dot(w) == -14;
+    }, "Vector2::dot(const Vector2<T>&)");
+    
+    TestCase([](){
+      Vector2d v(3, 4);
+      Vector2d w(2, -5);
+      return Vector2d::dot(v, w) == -14;
+    }, "Vector2::dot(const Vector2<T>&, const Vector2<T>&)");
+    
+    TestCase([](){
+      Vector2d v(3, 3);
+      return APPROX_EQUALS(v.angle(Vector2d::right), PI / 4);
+    }, "Vector2::angle(const Vector2<T>&)");
+    
+    TestCase([](){
+      Vector2d v(5, 5);
+      return APPROX_EQUALS(Vector2d::angle(v, Vector2d::left), 3 * PI / 4);
+    }, "Vector2::angle(const Vector2<T>&, const Vector2<T>&)");
   }
 }
