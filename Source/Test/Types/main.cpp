@@ -14,5 +14,7 @@ int main(int argc, char **args) {
 
   EXAMINATION(String);
   EXAMINATION(Vector2);
+  EXAMINATION(Vector3);
+  EXAMINATION(Vector4);
   return EXAMBOARD->Results() ? 0 : 1;
 }

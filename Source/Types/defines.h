@@ -1,6 +1,8 @@
 #pragma once
 
+#include <cmath>
 #include <cfloat>
+#include <stdexcept>
 
 #define PI 3.14159265359
 

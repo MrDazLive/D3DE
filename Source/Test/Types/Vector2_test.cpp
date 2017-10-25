@@ -1,7 +1,6 @@
 #include "declerations.h"
 
-#include <Types/Vector2.h>
-#include <Core/Log.h>
+#include <Types/Vector4.h>
 
 using namespace DTU;
 
@@ -29,6 +28,18 @@ namespace Types_Test {
       Vector2d v(w);
       return v.x == 0.2 && v.y == 0.2;
     }, "Vector2(const DTU::Vector2&)");
+    
+    TestCase([](){
+      Vector3d w(0.2, 0.1, 0.5);
+      Vector2d v(w);
+      return v.x == 0.2 && v.y == 0.1;
+    }, "Vector2(const DTU::Vector3&)");
+    
+    TestCase([](){
+      Vector4d w(0.2, 0.3, 0.5, 0.8);
+      Vector2d v(w);
+      return v.x == 0.2 && v.y == 0.3;
+    }, "Vector2(const DTU::Vector4&)");
     
     TestCase([](){
       double a[2] = { 0.2, 0.4 };

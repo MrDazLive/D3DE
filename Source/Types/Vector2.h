@@ -1,7 +1,6 @@
 #pragma once
 
 #include "defines.h"
-#include <cmath>
 
 namespace DTU {
 
@@ -108,7 +107,7 @@ namespace DTU {
     /// <params name = "r">The right hand vector to get the angle from.</params>
     static double       angle             (const Vector2<T>&, const Vector2<T>&);
   };
-
+  
   MATH_TYPES(Vector2)
 
   template <typename T>
@@ -167,14 +166,10 @@ namespace DTU {
   }
 
   template <>
-  bool Vector2<float>::operator == (const Vector2<float>& o) const {
-    return APPROX_EQUALS(x, o.x) && APPROX_EQUALS(y, o.y);
-  }
+  bool Vector2<float>::operator == (const Vector2<float>& o) const;
 
   template <>
-  bool Vector2<double>::operator == (const Vector2<double>& o) const {
-    return APPROX_EQUALS(x, o.x) && APPROX_EQUALS(y, o.y);
-  }
+  bool Vector2<double>::operator == (const Vector2<double>& o) const;
 
   template <typename T>
   bool Vector2<T>::operator == (const Vector2<T>& o) const {
@@ -187,15 +182,13 @@ namespace DTU {
   }
 
   template <typename T>
-  bool Vector2<T>::operator < (const Vector2<T>&) const {
-    throw std::domain_error("");
-    return false;
+  bool Vector2<T>::operator < (const Vector2<T>& o) const {
+    return magnitudeSquared() < o.magnitudeSquared();
   }
 
   template <typename T>
-  bool Vector2<T>::operator > (const Vector2<T>&) const {
-    throw std::domain_error("");
-    return false;
+  bool Vector2<T>::operator > (const Vector2<T>& o) const {
+    return magnitudeSquared() > o.magnitudeSquared();
   }
 
   template <typename T>
@@ -291,14 +284,10 @@ namespace DTU {
   }
 
   template <>
-  Vector2<int>& Vector2<int>::normalise() {
-    throw std::domain_error("Integral vectors can not be normalised");
-  }
+  Vector2<int>& Vector2<int>::normalise();
 
   template <>
-  Vector2<unsigned int>& Vector2<unsigned int>::normalise() {
-    throw std::domain_error("Integral vectors can not be normalised");
-  }
+  Vector2<unsigned int>& Vector2<unsigned int>::normalise();
 
   template <typename T>
   Vector2<T>& Vector2<T>::normalise() {
