@@ -4,7 +4,9 @@
 
 namespace DTU {
 
-  class String {
+  struct String {
+  private:
+    std::string           m_data          { "" };
   public:
                           /// <summary>
                           /// Default constructor.
@@ -193,8 +195,6 @@ namespace DTU {
     /// true
     /// </code>
     bool                  endsWithText    (const String&) const;
-  private:
-    std::string m_data { "" };
   };
 
   template <typename ... V>

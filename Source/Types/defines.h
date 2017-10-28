@@ -13,7 +13,6 @@
   typedef T<double>        T##d;  \
   
 
-
 #define APPROX_EQUALS(A, B)           \
   abs(A - B) <= abs(A) * FLT_EPSILON  \
 
