@@ -7,33 +7,78 @@ namespace DTU {
   template <typename T, size_t Y, size_t X>
   struct Matrix {
   private:
-    T                             m_data[Y][X]      {{ 0 }};
+    T                             m_data[Y][X]          {{ 0 }};
   public:
-                                  Matrix            () = default;
-                                  Matrix            (const T&);
+                                  /// <summary>
+                                  /// Default constructor.
+                                  /// </summary>
+                                  Matrix                () = default;
+
+                                  /// <summary>
+                                  /// Constructs a matrix, setting elements along the diagonal with the provided value.
+                                  /// </summary>
+                                  Matrix                (const T&);
+
+                                  /// <summary>
+                                  /// Copy constructor produces a Matrix, setting each element with the same value as that provided.
+                                  /// </summary>
                                   template<size_t V, size_t U>
-                                  Matrix            (const Matrix<T, V, U>&);
-                                  Matrix            (const T*);
+                                  Matrix                (const Matrix<T, V, U>&);
 
-                      operator    T* const          ();
-    T* const          operator    []                (const size_t) const;
+                                  /// <summary>
+                                  /// Constructs a Matrix, setting each element repsectively with the elements of the provided array.
+                                  /// </summary>
+                                  Matrix                (const T*);
+
+                      operator    T* const              ();
+    T* const          operator    []                    (const size_t) const;
 
     template<size_t V, size_t U> 
-    bool              operator    ==                (const Matrix<T, V, U>&) const;
+    bool              operator    ==                    (const Matrix<T, V, U>&) const;
     template<size_t V, size_t U> 
-    bool              operator    !=                (const Matrix<T, V, U>&) const;
+    bool              operator    !=                    (const Matrix<T, V, U>&) const;
     
     template<size_t V, size_t U> 
-    Matrix<T, Y, U>   operator    *                 (const Matrix<T, V, U>&) const;
-
-    Matrix&           operator    =                 (const Matrix<T, Y, X>&);
+    Matrix<T, Y, U>   operator    *                     (const Matrix<T, V, U>&) const;
+    Matrix&           operator    =                     (const Matrix<T, Y, X>&);
 
     template<size_t U> 
-    Matrix&           operator    *=                (const Matrix<T, X, U>&);
+    Matrix&           operator    *=                    (const Matrix<T, X, U>&);
 
-    const size_t                  Rows              () const { return Y; }
-    const size_t                  Columns           () const { return X; }
-    const bool                    Sqaure            () const { return X == Y; }
+    /// <summary>
+    /// Gets the row count of the matrix.
+    /// </summary>
+    const size_t                  Rows                  () const { return Y; }
+    
+    /// <summary>
+    /// Gets the column count of the matrix.
+    /// </summary>
+    const size_t                  Columns               () const { return X; }
+    
+    /// <summary>
+    /// Checks whether the matrix is square.
+    /// </summary>
+    const bool                    Square                () const { return X == Y; }
+    
+    /// <summary>
+    /// Checks whether the matrix is symmetrical.
+    /// </summary>
+    const bool                    Symmetric             () const;
+
+    /// <summary>
+    /// Produces a transposed copy of the matrix. Mirroring each value along the diagonal.
+    /// </summary>
+    Matrix<T, X, Y>               transposed            () const;
+
+    /// <summary>
+    /// Transposes the Matrix. Mirroring each value along the diagonal.
+    /// </summary>
+    Matrix&                       transpose             ();
+
+    /// <summary>
+    /// Normalises each row in the matrix independently.
+    /// </summary>
+    Matrix&                       normaliseEigenvectors ();
   };
 
   #define MATRIX_DEF(X, Y)                    \
@@ -142,6 +187,49 @@ namespace DTU {
   template<size_t U> 
   Matrix<T, Y, X>& Matrix<T, Y, X>::operator *= (const Matrix<T, X, U>& o) {
     *this = *this * o;
+    return *this;
+  }
+
+  template <typename T, size_t Y, size_t X>
+  const bool Matrix<T, Y, X>::Symmetric() const {
+    if(!Square())
+      throw std::logic_error("Invalid method for non-square matrix");
+
+    for(size_t y = 0; y < Y; ++y)
+    for(size_t x = y; x < X; ++x)
+      if(m_data[y][x] != m_data[x][y])
+        return false;
+    return true;
+  }
+
+  template <typename T, size_t Y, size_t X>
+  Matrix<T, X, Y> Matrix<T, Y, X>::transposed() const {
+    Matrix<T, X, Y> matrix;
+    for(size_t y = 0; y < Y; ++y)
+    for(size_t x = 0; x < X; ++x)
+      matrix[x][y] = m_data[y][x];
+    return matrix;
+  }
+
+  template <typename T, size_t Y, size_t X>
+  Matrix<T, Y, X>& Matrix<T, Y, X>::Matrix::transpose() {
+    if(!Square())
+      throw std::logic_error("Invalid method for non-square matrix");
+
+    *this = transposed();
+    return *this;
+  }
+
+  template <typename T, size_t Y, size_t X>
+  Matrix<T, Y, X>& Matrix<T, Y, X>::normaliseEigenvectors() {
+    for(size_t y = 0; y < Y; ++y) {
+      T row = 0;
+      for(size_t x = 0; x < X; ++x)
+        row += m_data[y][x] * m_data[y][x];
+      row = sqrt(row);
+      for(size_t x = 0; x < X; ++x)
+        m_data[y][x] /= row;
+    }
     return *this;
   }
 

@@ -91,5 +91,29 @@ namespace Types_Test {
 
       return n == m;
     }, "Matrix3x4=(const MatrixXxY&)");
+
+    TestCase([]() {
+      float m_[3][4] = {{1,2,1,3}, {0,2,0,1}, {2,0,1,1}};
+      Matrix3x4f m(&m_[0][0]);
+      Matrix3x4f n(&m_[0][0]);
+
+      Matrix4x3f t = n.transposed();
+
+      float o_[4][3] = {{1,0,2}, {2,2,0}, {1,0,1}, {3,1,1}};
+      Matrix4x3f o(&o_[0][0]);
+
+      return m == n && t == o;
+    }, "Matrix3x4::transposed");
+
+    TestCase([]() {
+      float m_[3][4] = {{3,0,4,0}, {0,0,2,0}, {6,0,8,0}};
+      Matrix3x4f m(&m_[0][0]);
+      m.normaliseEigenvectors();
+
+      float o_[3][4] = {{0.6f,0.0f,0.8f,0.0f}, {0.0f,0.0f,1.0f,0.0f}, {0.6f,0.0f,0.8f,0.0f}};
+      Matrix3x4f o(&o_[0][0]);
+
+      return m == o;
+    }, "Matrix3x4::normaliseEigenvectors");
   }
 }

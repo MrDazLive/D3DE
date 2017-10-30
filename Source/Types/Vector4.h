@@ -42,7 +42,7 @@ namespace DTU {
                         Vector4           (const Vector4<T>&);
 
                         /// <summary>
-                        /// Constructs a Vectors, setting seach element repsectively with the first two elements of the provided array.
+                        /// Constructs a Vector4, setting each element repsectively with the first two elements of the provided array.
                         /// </summary>
                         Vector4           (const T*);
 

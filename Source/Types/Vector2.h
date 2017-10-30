@@ -32,7 +32,7 @@ namespace DTU {
                         Vector2           (const Vector2<T>&);
 
                         /// <summary>
-                        /// Constructs a Vectors, setting seach element repsectively with the first two elements of the provided array.
+                        /// Constructs a Vector2, setting seach element repsectively with the first two elements of the provided array.
                         /// </summary>
                         Vector2           (const T*);
 

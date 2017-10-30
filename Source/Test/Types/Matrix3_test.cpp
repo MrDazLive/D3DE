@@ -102,5 +102,47 @@ namespace Types_Test {
 
       return m == o;
     }, "Matrix3*=(const MatrixN&)");
+
+    TestCase([]() {
+      float m_[3][3] = {{1,2,1}, {2,4,0}, {1,0,1}};
+      Matrix3f m(&m_[0][0]);
+
+      return m.Symmetric();
+    }, "Matrix3::Symmetric");
+
+    TestCase([]() {
+      float m_[3][3] = {{1,2,1}, {0,2,0}, {2,0,1}};
+      Matrix3f m(&m_[0][0]);
+      Matrix3f n(&m_[0][0]);
+
+      Matrix3f t = n.transposed();
+
+      float o_[3][3] = {{1,0,2}, {2,2,0}, {1,0,1}};
+      Matrix3f o(&o_[0][0]);
+
+      return m == n && t == o;
+    }, "Matrix3::transposed");
+
+    TestCase([]() {
+      float m_[3][3] = {{1,2,1}, {0,2,0}, {2,0,1}};
+      Matrix3f m(&m_[0][0]);
+      m.transpose();
+
+      float o_[3][3] = {{1,0,2}, {2,2,0}, {1,0,1}};
+      Matrix3f o(&o_[0][0]);
+
+      return m == o;
+    }, "Matrix3::transpose");
+
+    TestCase([]() {
+      float m_[3][3] = {{3,0,4}, {0,2,0}, {6,8,0}};
+      Matrix3f m(&m_[0][0]);
+      m.normaliseEigenvectors();
+
+      float o_[3][3] = {{0.6f,0.0f,0.8f}, {0.0f,1.0f,0.0f}, {0.6f,0.8f,0.0f}};
+      Matrix3f o(&o_[0][0]);
+
+      return m == o;
+    }, "Matrix3::normaliseEigenvectors");
   }
 }

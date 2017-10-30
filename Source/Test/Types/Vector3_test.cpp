@@ -1,7 +1,7 @@
 #include "declerations.h"
 
 #include <Types/Vector4.h>
-
+#include <iostream>
 using namespace DTU;
 
 namespace Types_Test {
@@ -69,7 +69,7 @@ namespace Types_Test {
     
     TestCase([](){
       Vector3d v(0.2, 0.4, 0.4);
-      return v - Vector3d(0.1, 0.0, 0.3) == Vector3d(0.1, 0.4, 0.7);
+      return v - Vector3d(0.1, 0.0, 0.3) == Vector3d(0.1, 0.4, 0.1);
     }, "Vector3-(const DTU::Vector3&)");
     
     TestCase([](){
@@ -137,15 +137,15 @@ namespace Types_Test {
     }, "Vector3/=(const DTU::Vector3&)");
     
     TestCase([](){
-      Vector3d v(2, 3, 5);
+      Vector3d v(6, 8, 0);
       Vector3d w = v.normalised();
-      return v == Vector3d(2, 3, 5) && w == Vector3d(0.2, 0.3, 0.5);
+      return v == Vector3d(6, 8, 0) && w == Vector3d(0.6, 0.8, 0.0);
     }, "Vector3::normalised");
     
     TestCase([](){
-      Vector3d v(2, 3, 5);
+      Vector3d v(4, 0, 3);
       v.normalise();
-      return v == Vector3d(0.2, 0.3, 0.5);
+      return v == Vector3d(0.8, 0.0, 0.6);
     }, "Vector3::normalise");
     
     TestCase([](){
@@ -177,7 +177,7 @@ namespace Types_Test {
     
     TestCase([](){
       Vector3d v(0, 5, 5);
-      return APPROX_EQUALS(Vector3d::angle(v, Vector3d::left), 3 * PI / 4);
+      return APPROX_EQUALS(Vector3d::angle(v, Vector3d::left), PI / 2);
     }, "Vector3::angle(const Vector3<T>&, const Vector3<T>&)");
   }
 }

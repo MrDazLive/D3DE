@@ -69,7 +69,7 @@ namespace Types_Test {
     
     TestCase([](){
       Vector4d v(0.2, 0.4, 0.4, 0.1);
-      return v - Vector4d(0.1, 0.0, 0.3, -0.1) == Vector4d(0.1, 0.4, 0.7, 0.2);
+      return v - Vector4d(0.1, 0.0, 0.3, -0.1) == Vector4d(0.1, 0.4, 0.1, 0.2);
     }, "Vector4-(const DTU::Vector4&)");
     
     TestCase([](){
@@ -137,15 +137,15 @@ namespace Types_Test {
     }, "Vector4/=(const DTU::Vector4&)");
     
     TestCase([](){
-      Vector4d v(2, 3, 5, 10);
+      Vector4d v(4, 4, 4, 4);
       Vector4d w = v.normalised();
-      return v == Vector4d(2, 3, 5, 10) && w == Vector4d(0.1, 0.15, 0.25, 0.5);
+      return v == Vector4d(4, 4, 4, 4) && w == Vector4d(0.5, 0.5, 0.5, 0.5);
     }, "Vector4::normalised");
     
     TestCase([](){
-      Vector4d v(2, 3, 5, 10);
+      Vector4d v(0.3, 0, 0, 0.4);
       v.normalise();
-      return v == Vector4d(0.1, 0.15, 0.25, 0.5);
+      return v == Vector4d(0.6, 0.0, 0.0, 0.8);
     }, "Vector4::normalise");
     
     TestCase([](){

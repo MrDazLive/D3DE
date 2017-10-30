@@ -2,6 +2,8 @@
 
 #include <Types/Vector4.h>
 
+#include <iostream>
+
 using namespace DTU;
 
 namespace Types_Test {
@@ -137,15 +139,15 @@ namespace Types_Test {
     }, "Vector2/=(const DTU::Vector2&)");
     
     TestCase([](){
-      Vector2d v(2, 3);
+      Vector2d v(4, 3);
       Vector2d w = v.normalised();
-      return v == Vector2d(2, 3) && w == Vector2d(0.4, 0.6);
+      return v == Vector2d(4, 3) && w == Vector2d(0.8, 0.6);
     }, "Vector2::normalised");
     
     TestCase([](){
-      Vector2d v(2, 3);
+      Vector2d v(4, 3);
       v.normalise();
-      return v == Vector2d(0.4, 0.6);
+      return v == Vector2d(0.8, 0.6);
     }, "Vector2::normalise");
     
     TestCase([](){

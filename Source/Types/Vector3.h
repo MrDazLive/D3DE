@@ -38,7 +38,7 @@ namespace DTU {
                         Vector3           (const Vector3<T>&);
 
                         /// <summary>
-                        /// Constructs a Vectors, setting seach element repsectively with the first two elements of the provided array.
+                        /// Constructs a Vector3, setting each element repsectively with the first two elements of the provided array.
                         /// </summary>
                         Vector3           (const T*);
 
