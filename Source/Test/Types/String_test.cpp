@@ -118,7 +118,7 @@ namespace Types_Test {
 
     TestCase([]() {
       DTU::String s("%s is %.2f.");
-      s.format("Pi", "Pi", 3.142f);
+      s.format("Pi", 3.142f);
       return s == "Pi is 3.14.";
     }, "String::format");
 

@@ -122,7 +122,7 @@ namespace DTU {
     /// <code>
     /// 3 is an interger and 0.142 is a float.
     /// </code>
-    static String         Format          (const String&...);
+    static String         Format          (const String...);
 
     /// <summary>
     /// Checks if the current string starts with one of the provided characters.

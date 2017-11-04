@@ -1,5 +1,6 @@
 #include "String.h"
 
+#include <cctype>
 #include <cstdarg>
 #include <algorithm>
 
@@ -113,7 +114,7 @@ namespace DTU {
     return *this;
   }
 
-  String String::Format(const String& text...) {
+  String String::Format(const String text...) {
     char b[1024];
     va_list list;
     va_start(list, text);
