@@ -38,7 +38,7 @@ namespace Core {
     dirEnd = dirEnd != std::string::npos ? dirEnd + 1 : 0;
     const std::string& appName = appPath.str().substr(dirEnd, extStart - dirEnd);
 
-    m_file = Handler<File>::Create(DTU::String::Format("../Logs/%s.html", appName.c_str()));
+    m_file = Handler<File>::Create(DTU::String::Format("%s%s.html", LOG_OUTPUT_DIRECTORY, appName.c_str()));
     m_file->Create(true);
 
     auto createStyle = [](const char* type, const char* colour1, const char* colour2) -> DTU::String {
