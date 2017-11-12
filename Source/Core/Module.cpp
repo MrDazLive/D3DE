@@ -16,23 +16,23 @@ namespace Core {
   }
 
   void Module::Initialise() {
-    NOTIFY_OBSERVERS(onInitialise(this));
+    NotifyObservers(&Observer::onInitialise, this);
   }
   
   void Module::Startup() {
-    NOTIFY_OBSERVERS(onStartup(this));
+    NotifyObservers(&Observer::onStartup, this);
   }
     
   void Module::Update() {
-    NOTIFY_OBSERVERS(onUpdate(this));
+    NotifyObservers(&Observer::onUpdate, this);
   }
 
   void Module::Quit() {
-    NOTIFY_OBSERVERS(onQuit(this));
+    NotifyObservers(&Observer::onQuit, this);
   }
   
   void Module::Shutdown() {
-    NOTIFY_OBSERVERS(onShutdown(this));
+    NotifyObservers(&Observer::onShutdown, this);
   }
 
 }

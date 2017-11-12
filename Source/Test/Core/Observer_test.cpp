@@ -16,7 +16,7 @@ namespace Core {
 
 class Observable_Dumby : public Core::Observable<Observable_Dumby> {
 public:
-  void        setVal  (const int v) { NOTIFY_OBSERVERS(setVal(v)); }
+  void        setVal  (const int v) { NotifyObservers(&Observer::setVal, v); }
 };
 
 template <>

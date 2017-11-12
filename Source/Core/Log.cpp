@@ -17,7 +17,7 @@ namespace Core {
   }
 
   void Log::Print(const DTU::String& message, const Flag_& logTargets) {
-    NOTIFY_OBSERVERS(Print(message, logTargets));
+    NotifyObservers(&Observer::Print, message, logTargets);
   }
 
   void Log::PrintMessage(const DTU::String& message, const Flag_& logTargets) {

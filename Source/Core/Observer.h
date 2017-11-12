@@ -78,8 +78,10 @@ namespace Core {
     /// <summary>
     /// Calls the provided method, passing each observer (from the local and global lists) as a parameter.
     /// </summary>
-    /// <param name = "function">The function to called.</param>
-    void                                NotifyObservers       (ObserverMethod);
+    /// <param name = "function">A pointer to the observer function that is to be called.</param>
+    /// <param name = "args">The arguments to be passed to the provided function.</param>
+    template <typename F, typename ... V>
+    void                                NotifyObservers       (F, V...);
 
     /// <summary>
     /// Calls the provided method, passing each observer (from the provided list) as a parameter.
@@ -158,9 +160,11 @@ namespace Core {
   }
 
   template <typename T>
-  void Observable<T>::NotifyObservers(ObserverMethod function) {
-    NotifyObservers(m_observers, function);
-    NotifyObservers(s_globalObservers, function);
+  template <typename F, typename ... V>
+  void Observable<T>::NotifyObservers(F function, V... args) {
+    ObserverMethod func = std::bind(function, std::placeholders::_1, args...);
+    NotifyObservers(m_observers, func);
+    NotifyObservers(s_globalObservers, func);
   }
 
   template <typename T>
@@ -169,8 +173,5 @@ namespace Core {
       function(ptr);
     }
   }
-
-#define NOTIFY_OBSERVERS(FUNC)                          \
-  NotifyObservers([&](Observer* const ptr) { ptr->FUNC; }); \
 
 }
