@@ -29,6 +29,11 @@ namespace Types_Test {
     }, "String(const DTU::String&)");
 
     TestCase([]() {
+      DTU::String w("The %s is %i.", "word", 1);
+      return w == "The word is 1.";
+    }, "String(const char*, ...");
+
+    TestCase([]() {
       DTU::String s("word");
       return s[1] == 'o';
     }, "String[]");

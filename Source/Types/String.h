@@ -28,6 +28,9 @@ namespace DTU {
                           /// </summary>
                           String          (const String&);
 
+                          template <typename ... V>
+                          String          (const char *, V...);
+
     /// <summary>
     /// Gets the contents of the string as a const char*.
     /// </summary>
@@ -196,6 +199,12 @@ namespace DTU {
     /// </code>
     bool                  endsWithText    (const String&) const;
   };
+
+
+  template <typename ... V>
+  String::String(const char * o, V... args) {
+    *this = Format(o, args...);
+  }
 
   template <typename ... V>
   String& String::format(V... args) {

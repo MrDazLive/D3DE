@@ -42,11 +42,11 @@ namespace Core {
     }
 
     LOG->PrintBreak();
-    LOG->Print(DTU::String::Format(
+    LOG->Print(DTU::String(
       "////////////////////////////////////\n%s\n////////////////////////////////////\n%s\n%s\n////////////////////////////////////",
       messageNote.c_str(),
-      DTU::String::Format(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount).c_str(),
-      DTU::String::Format(" Function test results: %i out of %i.", m_testPassCount, m_testCount).c_str()
+      DTU::String(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount).c_str(),
+      DTU::String(" Function test results: %i out of %i.", m_testPassCount, m_testCount).c_str()
     ), logType | Log::UNIT_TEST | Log::LOW);
 
     File::DestroyAll();
@@ -63,7 +63,7 @@ namespace Core {
     }
 
     LOG->Print(
-      DTU::String::Format("%s: %i out of %i passed.",
+      DTU::String("%s: %i out of %i passed.",
         unitTest->getName().c_str(),
         unitTest->getPassCount(),
         unitTest->getTestCount()),

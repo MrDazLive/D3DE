@@ -36,7 +36,7 @@ namespace Core {
       UNIT_TEST = FLAG(15)
     };
 
-    static Flag_        s_logMessages;
+    static Flag_        s_logTypes;
     static Flag_        s_logPriorities;
     static Flag_        s_logTargets;
     

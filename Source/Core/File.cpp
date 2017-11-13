@@ -48,7 +48,7 @@ namespace Core {
 
   bool File::Open(bool create) {
     if (isOpen()) {
-      LOG->PrintWarning(DTU::String::Format("File {%s} is already open.", getFullPath().c_str()));
+      LOG->PrintWarning(DTU::String("File {%s} is already open.", getFullPath().c_str()));
       return false;
     }
     
@@ -87,7 +87,7 @@ namespace Core {
       m_file->flush();
     }
     else {
-      LOG->PrintWarning(DTU::String::Format("Contents was not written to file: %s", getFullPath().c_str()));
+      LOG->PrintWarning(DTU::String("Contents was not written to file: %s", getFullPath().c_str()));
     }
   }
 
@@ -163,9 +163,9 @@ namespace Core {
   void File::BuildDirectory() {
     if (!details(m_fullPath[PATH]).success) {
 #ifdef _WIN32 
-      system(DTU::String::Format("md \"%s\"", m_fullPath[PATH].c_str()).c_str());
+      system(DTU::String("md \"%s\"", m_fullPath[PATH].c_str()).c_str());
 #else
-      system(DTU::String::Format("mkdir -p \"%s\"", m_fullPath[PATH].c_str()).c_str());
+      system(DTU::String("mkdir -p \"%s\"", m_fullPath[PATH].c_str()).c_str());
 #endif
     }
   }

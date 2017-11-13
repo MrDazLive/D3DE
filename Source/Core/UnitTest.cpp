@@ -30,6 +30,6 @@ namespace Core {
         return;
       }
     } catch (std::exception&) {}
-    LOG->PrintError(DTU::String::Format("%s: Test %i failed. [%s]", m_name.c_str(), m_testCount, message.c_str()), Log::UNIT_TEST);
+    LOG->PrintError(DTU::String("%s: Test %i failed. [%s]", m_name.c_str(), m_testCount, message.c_str()), Log::UNIT_TEST);
   }
 }

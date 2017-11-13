@@ -38,11 +38,11 @@ namespace Core {
     dirEnd = dirEnd != std::string::npos ? dirEnd + 1 : 0;
     const std::string& appName = appPath.str().substr(dirEnd, extStart - dirEnd);
 
-    m_file = Handler<File>::Create(DTU::String::Format("%s%s.html", LOG_OUTPUT_DIRECTORY, appName.c_str()));
+    m_file = Handler<File>::Create(DTU::String("%s%s.html", LOG_OUTPUT_DIRECTORY, appName.c_str()));
     m_file->Create(true);
 
     auto createStyle = [](const char* type, const char* colour1, const char* colour2) -> DTU::String {
-      return DTU::String::Format(
+      return DTU::String(
         ".%s, .%s *{ border-color: #%s; color: #%s; background-color: #%s; }",
         type, type, colour1, colour1, colour2
       );
@@ -69,7 +69,7 @@ namespace Core {
       CreateFile();
     }
 
-    m_file->InsertLine(DTU::String::Format(
+    m_file->InsertLine(DTU::String(
       "<div class = '%s'><h3>%s</h3><hr/><p>%s</p></div>",
       type.c_str(), type.c_str(), message.c_str()
       )
