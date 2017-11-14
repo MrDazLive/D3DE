@@ -16,19 +16,38 @@ before_script:
  - mkdir build
  - cd build
  - cmake ..
-jobs:
-  include:
-    - stage: Library - Tier 1
-      script:
-        - make -d Types
-    - stage: Library - Tier 2
-      script:
-        - make -d Core
-    - stage: Tests
-      script:
-        - make -d Types-Test
-        - ./bin/Types-Test
-    - 
-      script:
-        - make -d Core-Test
-        - ./bin/Core-Test
+matrix:
+  jobs:
+    include:
+      - os: linux
+      - stage: Library - Tier 1
+        script:
+          - make -d Types
+      - stage: Library - Tier 2
+        script:
+          - make -d Core
+      - stage: Tests
+        script:
+          - make -d Types-Test
+          - ./bin/Types-Test
+      - 
+        script:
+          - make -d Core-Test
+          - ./bin/Core-Test
+  jobs:
+    include:
+      - os: osx
+      - stage: Library - Tier 1
+        script:
+          - make -d Types
+      - stage: Library - Tier 2
+        script:
+          - make -d Core
+      - stage: Tests
+        script:
+          - make -d Types-Test
+          - ./bin/Types-Test
+      - 
+        script:
+          - make -d Core-Test
+          - ./bin/Core-Test
