@@ -4,8 +4,10 @@
 
 namespace Core {
 
-  ConsoleLog::ConsoleLog() : Log::Observer(~Log::Flag_(0)) {
+  ConsoleLog::ConsoleLog() : Log::Observer(Log::Observer::ALL) {
+#ifdef _WIN32
     system("color");
+#endif
   }
 
   void ConsoleLog::PrintMessage(const DTU::String& message) {

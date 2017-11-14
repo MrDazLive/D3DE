@@ -5,7 +5,16 @@
 #include "UnitTest.h"
 
 namespace Core {
-  ExamBoard::ExamBoard(const DTU::String& name) : m_name(name) {}
+  const char* partition = "/////////////////////////////////////////\n";
+
+  ExamBoard::ExamBoard(const DTU::String& name) : m_name(name) {
+    LOG->PrintMessage(DTU::String(
+      "%s%s%s",
+      partition,
+      DTU::String(" Examboard:              %s\n", m_name.c_str()).c_str(),
+      partition
+    ), Log::UNIT_TEST | Log::LOW);
+  }
 
   void ExamBoard::Examine(UnitTest* const unitTest) {
     LOG->PrintAssert(unitTest != nullptr, "Provided object is not a valid UnitTest.");
@@ -25,7 +34,7 @@ namespace Core {
   }
 
   bool ExamBoard::Results() {
-    Log::Flag_ logType = Log::MESSAGE;
+    Log::Flags logType = Log::MESSAGE;
     DTU::String messageNote = "";
 
     if (m_examCount == 0) {
@@ -43,19 +52,22 @@ namespace Core {
 
     LOG->PrintBreak();
     LOG->Print(DTU::String(
-      "////////////////////////////////////\n%s\n////////////////////////////////////\n%s\n%s\n////////////////////////////////////",
+      "%s%s\n%s%s%s%s%s",
+      partition,
       messageNote.c_str(),
-      DTU::String(" Unit test results:     %i out of %i.", m_examPassCount, m_examCount).c_str(),
-      DTU::String(" Function test results: %i out of %i.", m_testPassCount, m_testCount).c_str()
+      partition,
+      DTU::String(" Examboard:              %s.\n", m_name.c_str()).c_str(),
+      DTU::String(" Unit test results:      %i out of %i.\n", m_examPassCount, m_examCount).c_str(),
+      DTU::String(" Function test results:  %i out of %i.\n", m_testPassCount, m_testCount).c_str(),
+      partition
     ), logType | Log::UNIT_TEST | Log::LOW);
 
     File::DestroyAll();
-    system("pause");
     return logType == Log::SUCCESS;
   }
 
   void ExamBoard::PrintOutcome(UnitTest* const unitTest) {
-    Log::Flag_ logType = Log::WARNING;
+    Log::Flags logType = Log::WARNING;
     if (unitTest->getPassed()) {
       logType = Log::SUCCESS;
     } else if (unitTest->getPassCount() == 0) {

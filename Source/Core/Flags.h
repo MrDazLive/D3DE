@@ -63,7 +63,7 @@ namespace Core {
     /// Compares the status of the desired flags.
     /// </summary>
     /// <param name = "flags">The flags to be checked.</param>
-    /// <param name = "strict">Defines whether the the checked flags all need to be raised.</param>
+    /// <param name = "strict">Defines whether the checked flags all need to be raised.</param>
     /// <returns>Returns whether the checked flags are risen or not.</returns>
     const bool  CheckFlags    (const T&, bool = false) const;
   protected:

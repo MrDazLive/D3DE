@@ -18,10 +18,9 @@ function(define_configuration _DEFINE _VAL _TYPE _DESC)
   add_definitions(-D${_DEFINE}="${${_DEFINE}}")
 endfunction()
 
-define_configuration(LOG_OUTPUT_DIRECTORY "Log/" STRING "Specifies the output directory for log files.")
+define_configuration      (LOG_OUTPUT_DIRECTORY "Log/" STRING "Specifies the output directory for log files.")
 
 add_subdirectory          (Source/Types)
 add_subdirectory          (Source/Core)
 
-add_subdirectory          (Source/Test/Types)
-add_subdirectory          (Source/Test/Core)
+add_subdirectory          (Source/Test)

@@ -16,12 +16,12 @@ namespace Core {
     public Observable<Log> {
     friend Singleton;
   public:
-    typedef Flag16 Flag_;
+    typedef Flag16 Flags;
 
     /// <summary>
     /// Enumerator used for identifying the message type.
     /// </summary>
-    enum Flag {
+    enum Flag : Flags {
       MESSAGE   = FLAG(0),
       SUCCESS   = FLAG(1),
       WARNING   = FLAG(2),
@@ -36,44 +36,44 @@ namespace Core {
       UNIT_TEST = FLAG(15)
     };
 
-    static Flag_        s_logTypes;
-    static Flag_        s_logPriorities;
-    static Flag_        s_logTargets;
+    static Flags        s_logTypes;
+    static Flags        s_logPriorities;
+    static Flags        s_logTargets;
     
     /// <summary>
     /// Logs the provided message according to the provided log type.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify how the message is distributed.</param>
-    void  Print         (const DTU::String&, const Flag_& = Flag::MESSAGE | Log::MEDIUM | s_logTargets);
+    void  Print         (const DTU::String&, const Flags& = Flag::MESSAGE | Log::MEDIUM | s_logTargets);
 
     /// <summary>
     /// Logs the provided message.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintMessage  (const DTU::String&, const Flag_& = Log::MEDIUM | s_logTargets);
+    void  PrintMessage  (const DTU::String&, const Flags& = Log::MEDIUM | s_logTargets);
 
     /// <summary>
     /// Logs the provided message as in the "success" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintSuccess  (const DTU::String&, const Flag_& = Log::MEDIUM | s_logTargets);
+    void  PrintSuccess  (const DTU::String&, const Flags& = Log::MEDIUM | s_logTargets);
 
     /// <summary>
     /// Logs the provided message as in the "warning" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintWarning  (const DTU::String&, const Flag_& = Log::MEDIUM | s_logTargets);
+    void  PrintWarning  (const DTU::String&, const Flags& = Log::MEDIUM | s_logTargets);
 
     /// <summary>
     /// Logs the provided message as in the "error" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintError    (const DTU::String&, const Flag_& = Log::MEDIUM | s_logTargets);
+    void  PrintError    (const DTU::String&, const Flags& = Log::MEDIUM | s_logTargets);
 
     /// <summary>
     /// Checks assert condition, logging an arror message if assert fails.
@@ -81,13 +81,13 @@ namespace Core {
     /// <param name = "condition">The assert condition.</param>
     /// <param name = "message">The error message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintAssert   (bool, const DTU::String& = "", const Flag_& = Log::MEDIUM | s_logTargets);
+    void  PrintAssert   (bool, const DTU::String& = "", const Flags& = Log::MEDIUM | s_logTargets);
 
     /// <summary>
     /// Prints a break line into the log.
     /// </summary>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message break.</param>
-    void  PrintBreak    (const Flag_& = Log::MEDIUM | s_logTargets);
+    void  PrintBreak    (const Flags& = Log::MEDIUM | s_logTargets);
   protected:
           /// <summary>
           /// Default constructor.
@@ -98,11 +98,11 @@ namespace Core {
   /// <summary>
   /// Base class used to distribute log messages.
   /// </summary>
-  OBSERVER_CLASS(Log), public Flags<Log::Flag_> {
+  OBSERVER_CLASS(Log), public Flags<Log::Flags> {
   public:
-                  Observer      (const Log::Flag_& flags = Log::Flag_(~Log::UNIT_TEST));
+                  Observer      (const Log::Flags& flags = Log::Flags(~Log::UNIT_TEST));
 
-            void  Print         (const DTU::String&, const Log::Flag_&);
+            void  Print         (const DTU::String&, const Log::Flags&);
   protected:
     virtual void  PrintMessage  (const DTU::String&) {}
     virtual void  PrintSuccess  (const DTU::String&) {}
