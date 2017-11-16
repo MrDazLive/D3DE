@@ -13,6 +13,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/bin)
 
+add_definitions(-DOUTPUT_DIRECTORY="${CMAKE_BINARY_DIR}/bin")
+
 function(define_configuration _DEFINE _VAL _TYPE _DESC)
   set(${_DEFINE} ${_VAL} CACHE ${_TYPE} "${_DESC}")
   add_definitions(-D${_DEFINE}="${${_DEFINE}}")
