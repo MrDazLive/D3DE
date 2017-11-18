@@ -1,11 +1,12 @@
-file                (GLOB OBJS *.c *.h *.cpp *.hpp)
-
-add_executable      (ALL_TESTS ${OBJS})
-
-function(add_test_directory _TEST)
-  add_subdirectory  (${_TEST})
-  add_dependencies  (ALL_TESTS Test-${_TEST})
+function(add_test_project _TEST)
+  file                    (GLOB OBJS ${_TEST}/*(.c|.h|.cpp|.hpp))
+  add_executable          (Test-${_TEST} ${OBJS})
+  target_link_libraries   (Test-${_TEST} ${_TEST} Core)
+  add_dependencies        (ALL_TESTS Test-${_TEST})
 endfunction()
 
-add_test_directory  (Types)
-add_test_directory  (Core)
+file              (GLOB OBJS main.cpp)
+add_executable    (ALL_TESTS ${OBJS})
+
+add_test_project  (Types)
+add_test_project  (Core)
