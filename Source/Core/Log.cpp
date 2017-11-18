@@ -7,9 +7,8 @@
 
 namespace Core {
 
-  Log::Flags Log::s_logTypes = Log::MESSAGE | Log::SUCCESS | Log::WARNING | Log::ERROR | Log::ASSERT | Log::BREAK;
-  Log::Flags Log::s_logPriorities = Log::LOW | Log::MEDIUM | Log::HIGH;
-  Log::Flags Log::s_logTargets = ~(s_logTargets | s_logPriorities) & !Log::UNIT_TEST;
+  Log::Flags Log::s_logTypes    = Log::MESSAGE | Log::SUCCESS | Log::WARNING | Log::ERROR | Log::ASSERT | Log::BREAK;
+  Log::Flags Log::s_logTargets  = ~(s_logTargets) & !Log::UNIT_TEST;
 
   Log::Log() {
     AddObserver(FileLog::Instance());
@@ -17,10 +16,7 @@ namespace Core {
   }
 
   void Log::Print(const DTU::String& message, const Flags& logFlags) {
-    if(logFlags & s_logPriorities == 0)
-      NotifyObservers(&Observer::Print, message, logFlags | Log::MEDIUM);
-    else
-      NotifyObservers(&Observer::Print, message, logFlags);
+    NotifyObservers(&Observer::Print, message, logFlags);
   }
 
   void Log::PrintMessage(const DTU::String& message, const Flags& logFlags) {

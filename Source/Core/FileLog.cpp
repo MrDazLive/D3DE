@@ -5,7 +5,7 @@
 
 namespace Core {
 
-  FileLog::FileLog() : Log::Observer(~(Log::LOW)) {
+  FileLog::FileLog() : Log::Observer(~Log::Flags(0)) {
 
   }
 

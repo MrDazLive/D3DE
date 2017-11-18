@@ -13,7 +13,7 @@ namespace Core {
       partition,
       DTU::String(" Examboard:              %s\n", m_name.c_str()).c_str(),
       partition
-    ), Log::UNIT_TEST | Log::LOW);
+    ), Log::UNIT_TEST);
   }
 
   void ExamBoard::Examine(UnitTest* const unitTest) {
@@ -60,7 +60,7 @@ namespace Core {
       DTU::String(" Unit test results:      %i out of %i.\n", m_examPassCount, m_examCount).c_str(),
       DTU::String(" Function test results:  %i out of %i.\n", m_testPassCount, m_testCount).c_str(),
       partition
-    ), logType | Log::UNIT_TEST | Log::LOW);
+    ), logType | Log::UNIT_TEST);
 
     File::DestroyAll();
     return logType == Log::SUCCESS;
@@ -79,6 +79,6 @@ namespace Core {
         unitTest->getName().c_str(),
         unitTest->getPassCount(),
         unitTest->getTestCount()),
-      logType | Log::UNIT_TEST | Log::MEDIUM);
+      logType | Log::UNIT_TEST);
   }
 }

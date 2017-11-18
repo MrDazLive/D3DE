@@ -29,15 +29,10 @@ namespace Core {
       ASSERT    = FLAG(4),
       BREAK     = FLAG(5),
 
-      LOW       = FLAG(6),
-      MEDIUM    = FLAG(7),
-      HIGH      = FLAG(8),
-
       UNIT_TEST = FLAG(15)
     };
 
     static Flags        s_logTypes;
-    static Flags        s_logPriorities;
     static Flags        s_logTargets;
     
     /// <summary>
@@ -45,35 +40,35 @@ namespace Core {
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify how the message is distributed.</param>
-    void  Print         (const DTU::String&, const Flags& = Flag::MESSAGE | Log::MEDIUM | s_logTargets);
+    void  Print         (const DTU::String&, const Flags& = Flag::MESSAGE | s_logTargets);
 
     /// <summary>
     /// Logs the provided message.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintMessage  (const DTU::String&, const Flags& = Log::MEDIUM | s_logTargets);
+    void  PrintMessage  (const DTU::String&, const Flags& = s_logTargets);
 
     /// <summary>
     /// Logs the provided message as in the "success" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintSuccess  (const DTU::String&, const Flags& = Log::MEDIUM | s_logTargets);
+    void  PrintSuccess  (const DTU::String&, const Flags& = s_logTargets);
 
     /// <summary>
     /// Logs the provided message as in the "warning" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintWarning  (const DTU::String&, const Flags& = Log::MEDIUM | s_logTargets);
+    void  PrintWarning  (const DTU::String&, const Flags& = s_logTargets);
 
     /// <summary>
     /// Logs the provided message as in the "error" formatting.
     /// </summary>
     /// <param name = "message">The message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintError    (const DTU::String&, const Flags& = Log::MEDIUM | s_logTargets);
+    void  PrintError    (const DTU::String&, const Flags& = s_logTargets);
 
     /// <summary>
     /// Checks assert condition, logging an arror message if assert fails.
@@ -81,13 +76,13 @@ namespace Core {
     /// <param name = "condition">The assert condition.</param>
     /// <param name = "message">The error message to be logged.</param>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message.</param>
-    void  PrintAssert   (bool, const DTU::String& = "", const Flags& = Log::MEDIUM | s_logTargets);
+    void  PrintAssert   (bool, const DTU::String& = "", const Flags& = s_logTargets);
 
     /// <summary>
     /// Prints a break line into the log.
     /// </summary>
     /// <param name = "logTargets">The flags used to specify the targets for distributing the message break.</param>
-    void  PrintBreak    (const Flags& = Log::MEDIUM | s_logTargets);
+    void  PrintBreak    (const Flags& = s_logTargets);
   protected:
           /// <summary>
           /// Default constructor.
