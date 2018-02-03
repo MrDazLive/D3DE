@@ -12,6 +12,7 @@ std::string run = "./Test-";
 #endif
 
 std::list<const char*> tests {
+  "Platform",
   "Types",
   "Core"
 };

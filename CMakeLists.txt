@@ -22,6 +22,7 @@ endfunction()
 
 define_configuration      (LOG_OUTPUT_DIRECTORY "Log/" STRING "Specifies the output directory for log files.")
 
+add_subdirectory          (Source/Platform)
 add_subdirectory          (Source/Types)
 add_subdirectory          (Source/Core)
 

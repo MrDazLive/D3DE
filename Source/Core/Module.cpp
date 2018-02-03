@@ -4,9 +4,6 @@
 
 namespace Core {
 
-  template <>
-  std::set<Observable<Module>::Observer*> Observable<Module>::s_globalObservers = {};
-
   Module::Module(const DTU::String& name) {
     SYSTEM->ConfigureModule(this, name);
   }

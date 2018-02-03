@@ -19,9 +19,6 @@ public:
   void        setVal  (const int v) { NotifyObservers(&Observer::setVal, v); }
 };
 
-template <>
-std::set <Core::Observable<Observable_Dumby>::Observer*> Core::Observable<Observable_Dumby>::s_globalObservers = {};
-
 namespace Core_Test {
 
   void Observer::Reset() {

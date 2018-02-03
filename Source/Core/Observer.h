@@ -91,11 +91,15 @@ namespace Core {
     void                                NotifyObservers       (const ObserverList&, ObserverMethod&);
   private:
            ObserverList                 m_observers           {};
-    static ObserverList                 s_globalObservers;
     static ObservableList               s_observables;
+
+    static ObserverList&                GlobalObservers       () {
+      static ObserverList list;
+      return list;
+    }
   };
 
-  #define OBSERVER_CLASS(T) template<> class Core::Observable<T>::Observer : public Core::Observable<T>::ObserverDestructor
+  #define OBSERVER_CLASS(T) template <> class Core::Observable<T>::Observer : public Core::Observable<T>::ObserverDestructor
 
   template <typename T>
   std::vector<Observable<T>*> Observable<T>::s_observables = {};
@@ -136,12 +140,12 @@ namespace Core {
 
   template <typename T>
   void Observable<T>::AddGlobalObserver(Observer* const ptr) {
-    s_globalObservers.emplace(ptr);
+    GlobalObservers().emplace(ptr);
   }
 
   template <typename T>
   void Observable<T>::RemoveGlobalObserver(Observer* const ptr) {
-    s_globalObservers.erase(ptr);
+    GlobalObservers().erase(ptr);
   }
 
   template <typename T>
@@ -151,7 +155,7 @@ namespace Core {
 
   template <typename T>
   const size_t Observable<T>::GlobalObserverCount() {
-    return s_globalObservers.size();
+    return GlobalObservers().size();
   }
 
   template <typename T>
@@ -164,7 +168,7 @@ namespace Core {
   void Observable<T>::NotifyObservers(F function, V... args) {
     ObserverMethod func = std::bind(function, std::placeholders::_1, args...);
     NotifyObservers(m_observers, func);
-    NotifyObservers(s_globalObservers, func);
+    NotifyObservers(GlobalObservers(), func);
   }
 
   template <typename T>

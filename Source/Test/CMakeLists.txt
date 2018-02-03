@@ -8,5 +8,6 @@ endfunction()
 file              (GLOB OBJS main.cpp)
 add_executable    (ALL_TESTS ${OBJS})
 
+add_test_project  (Platform)
 add_test_project  (Types)
 add_test_project  (Core)
