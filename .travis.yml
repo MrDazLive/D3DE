@@ -20,11 +20,18 @@ jobs:
   include:
     - stage: Library - Tier 1
       script:
+        - make -d Platform
+    -
+      script:
         - make -d Types
     - stage: Library - Tier 2
       script:
         - make -d Core
     - stage: Tests
+      script:
+        - make -d Test-Platform
+        - ./bin/Test-Platform
+    - 
       script:
         - make -d Test-Types
         - ./bin/Test-Types
