@@ -29,10 +29,6 @@ jobs:
         - make -d Core
     - stage: Tests
       script:
-        - make -d Test-Platform
-        - ./bin/Test-Platform
-    - 
-      script:
         - make -d Test-Types
         - ./bin/Test-Types
     - 
