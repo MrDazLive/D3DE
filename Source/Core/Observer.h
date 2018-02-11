@@ -74,7 +74,7 @@ namespace Core {
     /// Gets a the list of all exisitng observables.
     /// </summary>
     static const ObservableList&        GetObservables        ();
-  protected:
+
     /// <summary>
     /// Calls the provided method, passing each observer (from the local and global lists) as a parameter.
     /// </summary>
@@ -82,7 +82,7 @@ namespace Core {
     /// <param name = "args">The arguments to be passed to the provided function.</param>
     template <typename F, typename ... V>
     void                                NotifyObservers       (F, V...);
-
+  protected:
     /// <summary>
     /// Calls the provided method, passing each observer (from the provided list) as a parameter.
     /// </summary>

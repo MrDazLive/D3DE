@@ -12,24 +12,4 @@ namespace Core {
     SYSTEM->ConfigureRequirement(this, req);
   }
 
-  void Module::Initialise() {
-    NotifyObservers(&Observer::onInitialise, this);
-  }
-  
-  void Module::Startup() {
-    NotifyObservers(&Observer::onStartup, this);
-  }
-    
-  void Module::Update() {
-    NotifyObservers(&Observer::onUpdate, this);
-  }
-
-  void Module::Quit() {
-    NotifyObservers(&Observer::onQuit, this);
-  }
-  
-  void Module::Shutdown() {
-    NotifyObservers(&Observer::onShutdown, this);
-  }
-
 }

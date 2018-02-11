@@ -34,35 +34,35 @@ namespace Core {
     /// Used to establish core functionality required by dependent systems.
     /// To be called up following construction.
     /// </summary>
-    virtual void        Initialise      ();
+    virtual void        Initialise      () {}
 
     /// <summary>
     /// The base startup function for each module.
     /// Used to prepare non-core aspects of the module prior to the core loop.
     /// To be called prior to update.
     /// </summary>
-    virtual void        Startup         ();
+    virtual void        Startup         () {}
 
     /// <summary>
     /// The base update function for each module.
     /// Used to perform the ongoing functionality of the module.
     /// To be continuously called throughout the lifespan of the applicaiton.
     /// </summary>
-    virtual void        Update          ();
+    virtual void        Update          () {}
 
     /// <summary>
     /// The base quit function for each module.
     /// Used to cleanup non-fundamental aspects of the module.
     /// To be called following the termination of update.
     /// </summary>
-    virtual void        Quit            ();
+    virtual void        Quit            () {}
 
     /// <summary>
     /// The base shutdown module for each module.
     /// Used to ensure that the module is safely cleaned up prior to termination of the process.
     /// To be called prior to terminating the application process.
     /// </summary>
-    virtual void        Shutdown        ();
+    virtual void        Shutdown        () {}
   protected:
                         /// <summary>
                         /// Constructor.

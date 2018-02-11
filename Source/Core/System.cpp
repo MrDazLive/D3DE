@@ -20,6 +20,7 @@ namespace Core {
         Initialise(req);
       }
     }
+    module->NotifyObservers(&Module::Observer::onInitialise, module);
     module->Initialise();
   }
 
@@ -38,6 +39,7 @@ namespace Core {
 
     // Startup each module.
     for (auto& module : modules) {
+      module->NotifyObservers(&Module::Observer::onStartup, module);
       module->Startup();
     }
 
@@ -48,7 +50,9 @@ namespace Core {
     // TODO: Check condition of each module and the associated threads.
     for (auto& config : m_moduleConfig) {
       if (config.second.state == State::ACTIVE) {
-        config.first->Update();
+        auto module = config.first;
+        module->NotifyObservers(&Module::Observer::onUpdate, module);
+        module->Update();
       }
     }
   }
@@ -63,11 +67,13 @@ namespace Core {
 
   void System::Shutdown() {
     for (auto& config : m_moduleConfig) {
+      auto module = config.first;
       // Esnure that the module has quit safely before shutting down.
       if (config.second.state < State::QUITTING) {
-        Quit(config.first);
+        Quit(module);
       }
-      config.first->Shutdown();
+      module->NotifyObservers(&Module::Observer::onShutdown, module);
+      module->Shutdown();
       config.second.state = State::INACTIVE;
     }
   }
@@ -81,6 +87,7 @@ namespace Core {
       }
     }
     // TODO: Stop the thread associated with the module.
+    module->NotifyObservers(&Module::Observer::onQuit, module);
     module->Quit();
   }
 

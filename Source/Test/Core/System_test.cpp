@@ -17,32 +17,32 @@ private:
 MODULE(Module_Dumby_1), public Module_Ticker {
   MODULE_REQUIRES(Module_Dumby_1, void)
 public:
-  void  Initialise  () override { Core::Module::Initialise(); Tick(INIT);   }
-  void  Startup     () override { Core::Module::Startup();    Tick(START);  }
-  void  Update      () override { Core::Module::Update();     Tick(UPDATE); }
-  void  Quit        () override { Core::Module::Quit();       Tick(QUIT);   }
-  void  Shutdown    () override { Core::Module::Shutdown();   Tick(STOP);   }
+  void  Initialise  () override { Tick(INIT);   }
+  void  Startup     () override { Tick(START);  }
+  void  Update      () override { Tick(UPDATE); }
+  void  Quit        () override { Tick(QUIT);   }
+  void  Shutdown    () override { Tick(STOP);   }
 };
 
 MODULE(Module_Dumby_2), public Module_Ticker {
   MODULE_REQUIRES(Module_Dumby_2, Module_Dumby_1)
 public:
-  void  Initialise  () override { Core::Module::Initialise(); Tick(INIT);   }
-  void  Startup     () override { Core::Module::Startup();    Tick(START);  }
-  void  Update      () override { Core::Module::Update();     Tick(UPDATE); }
-  void  Quit        () override { Core::Module::Quit();       Tick(QUIT);   }
-  void  Shutdown    () override { Core::Module::Shutdown();   Tick(STOP);   }
+  void  Initialise  () override { Tick(INIT);   }
+  void  Startup     () override { Tick(START);  }
+  void  Update      () override { Tick(UPDATE); }
+  void  Quit        () override { Tick(QUIT);   }
+  void  Shutdown    () override { Tick(STOP);   }
 protected:
 };
 
 MODULE(Module_Dumby_3), public Module_Ticker {
   MODULE_REQUIRES(Module_Dumby_3, Module_Dumby_1, Module_Dumby_2)
 public:
-  void  Initialise  () override { Core::Module::Initialise(); Tick(INIT);   }
-  void  Startup     () override { Core::Module::Startup();    Tick(START);  }
-  void  Update      () override { Core::Module::Update();     Tick(UPDATE); }
-  void  Quit        () override { Core::Module::Quit();       Tick(QUIT);   }
-  void  Shutdown    () override { Core::Module::Shutdown();   Tick(STOP);   }
+  void  Initialise  () override { Tick(INIT);   }
+  void  Startup     () override { Tick(START);  }
+  void  Update      () override { Tick(UPDATE); }
+  void  Quit        () override { Tick(QUIT);   }
+  void  Shutdown    () override { Tick(STOP);   }
 protected:
 };
 

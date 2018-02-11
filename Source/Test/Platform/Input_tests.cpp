@@ -13,6 +13,10 @@ public:
   void  ButtonReleased    (const unsigned int b, const unsigned int f) override {
     button = b; released = true;
   }
+  
+  void  CharacterPressed  (const char c) override {
+    character = c;
+  }
 
   void  KeyboardPressed   (const unsigned int k, const unsigned int f) override {
     key = (char)k; pressed = true;
@@ -27,6 +31,7 @@ public:
   int   y                 { -1 };
   int   button            { -1 };
   char  key               { ' ' };
+  char  character         { ' ' };
   bool  pressed           { false };
   bool  released          { false };
 } input_dumby;
@@ -47,18 +52,6 @@ namespace Platform_Test {
     }, "Event::Listener::CursorMove()");
 
     TestCase([]() {
-      Platform::SimulateKeyboard(input_dumby.index, 'a', 0);
-      Flush();
-      return input_dumby.pressed && input_dumby.key == 'a';
-    }, "Event::Listener::KeyboardPressed()");
-
-    TestCase([]() {
-      Platform::SimulateKeyboard(input_dumby.index, 'b', 0, true);
-      Flush();
-      return input_dumby.released && input_dumby.key == 'b';
-    }, "Event::Listener::KeyboardReleased()");
-
-    TestCase([]() {
       Platform::SimulateButton(input_dumby.index, 1, 0);
       Flush();
       return input_dumby.pressed && input_dumby.button == 1;
@@ -69,5 +62,23 @@ namespace Platform_Test {
       Flush();
       return input_dumby.released && input_dumby.button == 2;
     }, "Event::Listener::ButtonReleased()");
+
+    TestCase([]() {
+      Platform::SimulateKeyboard(input_dumby.index, 'a', 1);
+      Flush();
+      return input_dumby.character == 'A';
+    }, "Event::Listener::CharacterPressed()");
+
+    TestCase([]() {
+      Platform::SimulateKeyboard(input_dumby.index, 'a', 0);
+      Flush();
+      return input_dumby.pressed && input_dumby.key == 'a';
+    }, "Event::Listener::KeyboardPressed()");
+
+    TestCase([]() {
+      Platform::SimulateKeyboard(input_dumby.index, 'b', 0, true);
+      Flush();
+      return input_dumby.released && input_dumby.key == 'b';
+    }, "Event::Listener::KeyboardReleased()");
   }
 }

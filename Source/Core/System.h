@@ -90,7 +90,7 @@ namespace Core {
     void  onStartup             (Module* const) final override;
 
     /// <summary>
-    /// Acknowledges that a module is updatting.
+    /// Acknowledges that a module is updating.
     /// </summary>
     /// <param name = "module">The module that is updating.</param>
     void  onUpdate              (Module* const) final override;

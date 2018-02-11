@@ -32,12 +32,16 @@ class Listener : public Platform::Event::Listener {
     LOG->PrintMessage(String("Button Release: %i", b));
   }
 
+  void  CharacterPressed   (const char c) override {
+    LOG->PrintMessage(String("Character Press: '%c'", c));
+  }
+
   void  KeyboardPressed   (const unsigned int k, const unsigned int f) override {
-    LOG->PrintMessage(String("Key Press: %c", (char)k));
+    LOG->PrintMessage(String("Key Press: '%c'(%i), Mask: %i", (char)k, k, f));
   }
 
   void  KeyboardReleased  (const unsigned int k, const unsigned int f) override {
-    LOG->PrintMessage(String("Key Release: %c", (char)k));
+    LOG->PrintMessage(String("Key Release: '%c'(%i), Mask: %i", (char)k, k, f));
   }
 };
 

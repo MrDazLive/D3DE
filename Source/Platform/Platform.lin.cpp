@@ -3,9 +3,13 @@
 #include "Platform.h"
 
 #include <X11/Xlib.h>
+#include <X11/keysym.h>
 #include <functional>
 #include <map>
 #include <set>
+
+#define AltMask Mod1Mask
+#define WinMask Mod4Mask
 
 struct DisplayContext {
   Display* const display;
@@ -157,6 +161,16 @@ namespace Platform {
     }
   }
 
+  void SignalCharacterEvent(XKeyEvent& xkey) {
+    if(xkey.state & (AltMask | ControlMask | WinMask))
+      return;
+
+    bool shift = (bool)(xkey.state & ShiftMask) ^ (bool)(xkey.state & LockMask);
+    auto key = XLookupKeysym(&xkey, shift);
+    if(XK_space <= key && key <= XK_asciitilde)
+      SignalEvent(&Event::Listener::CharacterPressed, (char)key);
+  }
+
   void Event::Check() {
     XEvent event;
     for(auto ctx : contextMap) {
@@ -179,12 +193,14 @@ namespace Platform {
             XPeekEvent(display, &next);
             if (next.type == KeyPress && next.xkey.time == event.xkey.time && next.xkey.keycode == event.xkey.keycode) {
               XNextEvent(display, &next);
+              SignalCharacterEvent(event.xkey);
               break;
             }
           }
           SignalEvent(&Event::Listener::KeyboardReleased, (unsigned int)XLookupKeysym(&(event.xkey), 0), event.xkey.state);
           break;
         case KeyPress:
+          SignalCharacterEvent(event.xkey);
           SignalEvent(&Event::Listener::KeyboardPressed, (unsigned int)XLookupKeysym(&(event.xkey), 0), event.xkey.state);
           break;
         case ButtonPress:

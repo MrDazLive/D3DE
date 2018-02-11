@@ -100,6 +100,7 @@ namespace Platform {
       virtual void  ButtonPressed     (const unsigned int, const unsigned int) {}
       virtual void  ButtonReleased    (const unsigned int, const unsigned int) {}
 
+      virtual void  CharacterPressed  (const char) {}
       virtual void  KeyboardPressed   (const unsigned int, const unsigned int) {}
       virtual void  KeyboardReleased  (const unsigned int, const unsigned int) {}
     };
