@@ -17,6 +17,6 @@ struct DisplayContext {
 };
 
 std::map<int, DisplayContext>& ContextMap();
-DisplayContext* const GetContext(int idx);
+DisplayContext* const GetContext(int);
 
 #endif

@@ -25,6 +25,7 @@ public:
 namespace Platform_Test {
   void Window::Reset() {
     Platform::CloseWindow(window_dumby.index);
+    Flush();
     window_dumby = WindowEvent_Dumby();
     Platform::CreateWindow(&window_dumby.index, 0, 0, 100, 100);
     Flush();

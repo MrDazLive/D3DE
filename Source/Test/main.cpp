@@ -22,4 +22,5 @@ int main(int argc, char **args) {
     if(system((run + test).c_str()))
       std::cin.ignore();
   }
+  std::cin.ignore();
 }

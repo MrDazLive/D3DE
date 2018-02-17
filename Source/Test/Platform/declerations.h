@@ -3,7 +3,6 @@
 #include <Core/UnitTest.h>
 
 #include <Platform/Platform.h>
-#include <unistd.h>
 
 namespace Platform_Test {
 
@@ -12,9 +11,6 @@ namespace Platform_Test {
 
   int DemoMode();
   
-  static void Flush() {
-    usleep(200000);
-    Platform::Event::Check();
-  }
+  void Flush();
 
 }

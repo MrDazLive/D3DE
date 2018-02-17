@@ -2,6 +2,16 @@
 
 #include <Core/Log.h>
 
+#ifdef _WIN32
+#include <Windows.h>
+#define wait Sleep(200)
+#undef CreateWindow
+#else
+#include <unistd.h>
+#define wait usleep(200000)
+#endif
+
+
 int displayIndex { -1 };
 
 using namespace DTU;
@@ -54,5 +64,10 @@ namespace Platform_Test {
       Platform::Event::Check();
     }
     return 0;
+  }
+
+   void Flush() {
+     wait;
+     Platform::Event::Check();
   }
 }
