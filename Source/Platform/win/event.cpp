@@ -40,6 +40,27 @@ LRESULT CALLBACK WindowProc(HWND ctx, UINT msg, WPARAM wParam, LPARAM lParam)
   case WM_MOUSEMOVE:
     SignalEvent(&Event::Listener::CursorMove, (int)LOWORD(lParam), (int)HIWORD(lParam));
     return 0;
+  case WM_CHAR:
+    SignalEvent(&Event::Listener::CharacterPressed, (char)wParam);
+    return 0;
+  case WM_SYSKEYDOWN:
+  case WM_KEYDOWN:
+    if(!(lParam & (1 << 30)))
+      SignalEvent(&Event::Listener::KeyboardPressed, (unsigned int)wParam, 0);
+    return 0;
+  case WM_SYSKEYUP:
+  case WM_KEYUP:
+    SignalEvent(&Event::Listener::KeyboardReleased, (unsigned int)wParam, 0);
+    return 0;
+  case WM_LBUTTONDOWN:
+    SignalEvent(&Event::Listener::ButtonPressed, 0, 0);
+    return 0;
+  case WM_MBUTTONDOWN:
+    SignalEvent(&Event::Listener::ButtonPressed, 0, 0);
+    return 0;
+  case WM_RBUTTONDOWN:
+    SignalEvent(&Event::Listener::ButtonPressed, 0, 0);
+    return 0;
 
   case WM_PAINT:
   {

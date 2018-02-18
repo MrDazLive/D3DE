@@ -6,12 +6,12 @@ namespace Platform {
 
   static unsigned int convertModMask(const unsigned int mask) {
     unsigned int mask_ = 0;
-    mask_ |= (mask & ShiftMask)    ? Event::ModiferMask::SHIFT      : 0;
-    mask_ |= (mask & ControlMask)  ? Event::ModiferMask::CTRL       : 0;
-    mask_ |= (mask & AltMask)      ? Event::ModiferMask::ALT        : 0;
-    mask_ |= (mask & WinMask)      ? Event::ModiferMask::WIN        : 0;
-    mask_ |= (mask & LockMask)     ? Event::ModiferMask::CAPS_LOCK  : 0;
-    mask_ |= (mask & NumMask)      ? Event::ModiferMask::NUM_LOCK   : 0;
+    mask_ |= (mask & ShiftMask)   ? Event::ModifierMask::SHIFT      : 0;
+    mask_ |= (mask & ControlMask) ? Event::ModifierMask::CTRL       : 0;
+    mask_ |= (mask & AltMask)     ? Event::ModifierMask::ALT        : 0;
+    mask_ |= (mask & WinMask)     ? Event::ModifierMask::WIN        : 0;
+    mask_ |= (mask & LockMask)    ? Event::ModifierMask::CAPS_LOCK  : 0;
+    mask_ |= (mask & NumMask)     ? Event::ModifierMask::NUM_LOCK   : 0;
     return mask_;
   }
 

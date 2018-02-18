@@ -70,15 +70,15 @@ namespace Platform_Test {
     }, "Event::Listener::CharacterPressed()");
 
     TestCase([]() {
-      Platform::SimulateKeyboard(input_dumby.index, 'a', 0);
+      Platform::SimulateKeyboard(input_dumby.index, 'b', 0);
       Flush();
-      return input_dumby.pressed && input_dumby.key == 'a';
+      return input_dumby.pressed && input_dumby.key == 'b';
     }, "Event::Listener::KeyboardPressed()");
 
     TestCase([]() {
-      Platform::SimulateKeyboard(input_dumby.index, 'b', 0, true);
+      Platform::SimulateKeyboard(input_dumby.index, 'c', 0, true);
       Flush();
-      return input_dumby.released && input_dumby.key == 'b';
+      return input_dumby.released && input_dumby.key == 'c';
     }, "Event::Listener::KeyboardReleased()");
   }
 }

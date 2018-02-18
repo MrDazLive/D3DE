@@ -4,4 +4,4 @@ include_directories (${X11_INCLUDE_DIR})
 
 set                 (EXT *(.c|.h|.cpp|.hpp))
 file                (GLOB OBJS (${EXT})|(win/${EXT})|(lin/${EXT}))
-add_library         (Platform ${OBJS})
+add_library         (Platform SHARED ${OBJS})

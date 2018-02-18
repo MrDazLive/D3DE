@@ -11,7 +11,7 @@ namespace Platform {
   }
 
   void SimulateCursor(int idx, const int x, const int y) {
-
+    SendMessage(*GetContext(idx), WM_MOUSEMOVE, 0, MAKELPARAM(x, y));
   }
 
   void SimulateButton(int idx, const unsigned int button, const unsigned int mask, bool release) {
@@ -19,7 +19,7 @@ namespace Platform {
   }
 
   void SimulateKeyboard(int idx, const unsigned int key, const unsigned int mask, bool release) {
-
+    keybd_event(key, 0, release ? KEYEVENTF_KEYUP : 0, 0);
   }
 
 }
