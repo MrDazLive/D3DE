@@ -1,3 +1,5 @@
+#ifdef __linux__
+
 #include <X11/keysym.h>
 
 namespace System {
@@ -55,3 +57,5 @@ namespace System {
   };
 
 };
+
+#endif

@@ -1,6 +1,6 @@
 #ifdef __linux__
 
-#include "context.h"
+#include "context.lin.h"
 
 std::map<int, DisplayContext>& ContextMap() {
   static std::map<int, DisplayContext> map;

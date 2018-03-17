@@ -20,7 +20,7 @@ function(define_configuration _DEFINE _VAL _TYPE _DESC)
   add_definitions(-D${_DEFINE}="${${_DEFINE}}")
 endfunction()
 
-define_configuration      (LOG_OUTPUT_DIRECTORY "Log/" STRING "Specifies the output directory for log files.")
+define_configuration      (LOG_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Log" PATH "Specifies the output directory for log files.")
 
 add_subdirectory          (Source/Platform)
 add_subdirectory          (Source/Types)

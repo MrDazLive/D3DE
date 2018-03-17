@@ -19,18 +19,18 @@ public:
   }
 
   void  KeyboardPressed   (const System::KeyCode k, const unsigned int f) override {
-    key = (char)k; pressed = true;
+    key = (int)k; pressed = true;
   }
 
   void  KeyboardReleased  (const System::KeyCode k, const unsigned int f) override {
-    key = (char)k; released = true;
+    key = (int)k; released = true;
   }
 
   int   index             { -1 };
   int   x                 { -1 };
   int   y                 { -1 };
   int   button            { -1 };
-  char  key               { ' ' };
+  int   key               { -1 };
   char  character         { ' ' };
   bool  pressed           { false };
   bool  released          { false };
@@ -64,7 +64,7 @@ namespace Platform_Test {
     }, "Event::Listener::ButtonReleased()");
 
     TestCase([]() {
-      Platform::SimulateKeyboard(input_dumby.index, System::KeyCode::A, 1);
+      Platform::SimulateKeyboard(input_dumby.index, System::KeyCode::A, System::ModMask::SHIFT);
       Flush();
       return input_dumby.character == 'A';
     }, "Event::Listener::CharacterPressed()");
@@ -72,13 +72,13 @@ namespace Platform_Test {
     TestCase([]() {
       Platform::SimulateKeyboard(input_dumby.index, System::KeyCode::B, 0);
       Flush();
-      return input_dumby.pressed && input_dumby.key == 'b';
+      return input_dumby.pressed && input_dumby.key == System::KeyCode::B;
     }, "Event::Listener::KeyboardPressed()");
 
     TestCase([]() {
       Platform::SimulateKeyboard(input_dumby.index, System::KeyCode::C, 0, true);
       Flush();
-      return input_dumby.released && input_dumby.key == 'c';
+      return input_dumby.released && input_dumby.key == System::KeyCode::C;
     }, "Event::Listener::KeyboardReleased()");
   }
 }

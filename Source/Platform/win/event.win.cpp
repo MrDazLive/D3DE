@@ -1,6 +1,6 @@
 #ifdef _WIN32
 
-#include "context.h"
+#include "context.win.h"
 
 using namespace Platform;
 
@@ -41,25 +41,38 @@ LRESULT CALLBACK WindowProc(HWND ctx, UINT msg, WPARAM wParam, LPARAM lParam)
     SignalEvent(&Event::Listener::CursorMove, (int)LOWORD(lParam), (int)HIWORD(lParam));
     return 0;
   case WM_CHAR:
-    SignalEvent(&Event::Listener::CharacterPressed, (char)wParam);
+  {
+    auto mask = GetModMask();
+    char c = mask & System::ModMask::SHIFT ^ mask & System::ModMask::CAPS_LOCK ? toupper((char)wParam) : tolower((char)wParam);
+    SignalEvent(&Event::Listener::CharacterPressed, c);
     return 0;
+  }
   case WM_SYSKEYDOWN:
   case WM_KEYDOWN:
     if(!(lParam & (1 << 30)))
-      SignalEvent(&Event::Listener::KeyboardPressed, (unsigned int)wParam, 0);
+      SignalEvent(&Event::Listener::KeyboardPressed, (System::KeyCode)wParam, GetModMask());
     return 0;
   case WM_SYSKEYUP:
   case WM_KEYUP:
-    SignalEvent(&Event::Listener::KeyboardReleased, (unsigned int)wParam, 0);
+    SignalEvent(&Event::Listener::KeyboardReleased, (System::KeyCode)wParam, GetModMask());
     return 0;
   case WM_LBUTTONDOWN:
-    SignalEvent(&Event::Listener::ButtonPressed, 0, 0);
+    SignalEvent(&Event::Listener::ButtonPressed, System::ButtonCode::LEFT_MOUSE, GetModMask());
     return 0;
   case WM_MBUTTONDOWN:
-    SignalEvent(&Event::Listener::ButtonPressed, 0, 0);
+    SignalEvent(&Event::Listener::ButtonPressed, System::ButtonCode::MIDDLE_MOUSE, GetModMask());
     return 0;
   case WM_RBUTTONDOWN:
-    SignalEvent(&Event::Listener::ButtonPressed, 0, 0);
+    SignalEvent(&Event::Listener::ButtonPressed, System::ButtonCode::RIGHT_MOUSE, GetModMask());
+    return 0;
+  case WM_LBUTTONUP:
+    SignalEvent(&Event::Listener::ButtonReleased, System::ButtonCode::LEFT_MOUSE, GetModMask());
+    return 0;
+  case WM_MBUTTONUP:
+    SignalEvent(&Event::Listener::ButtonReleased, System::ButtonCode::MIDDLE_MOUSE, GetModMask());
+    return 0;
+  case WM_RBUTTONUP:
+    SignalEvent(&Event::Listener::ButtonReleased, System::ButtonCode::RIGHT_MOUSE, GetModMask());
     return 0;
 
   case WM_PAINT:

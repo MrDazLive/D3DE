@@ -15,5 +15,6 @@ using DisplayContext = HWND;
 std::map<int, DisplayContext>& ContextMap();
 DisplayContext* const GetContext(int);
 int GetContext(const DisplayContext&);
+int GetModMask();
 
 #endif
