@@ -14,11 +14,11 @@ namespace Platform {
     SendMessage(*GetContext(idx), WM_MOUSEMOVE, 0, MAKELPARAM(x, y));
   }
 
-  void SimulateButton(int idx, const unsigned int button, const unsigned int mask, bool release) {
+  void SimulateButton(int idx, const System::ButtonCode button, const unsigned int mask, bool release) {
 
   }
 
-  void SimulateKeyboard(int idx, const unsigned int key, const unsigned int mask, bool release) {
+  void SimulateKeyboard(int idx, const System::KeyCode key, const unsigned int mask, bool release) {
     keybd_event(key, 0, release ? KEYEVENTF_KEYUP : 0, 0);
   }
 

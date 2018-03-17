@@ -6,23 +6,23 @@ public:
     this->x = x; this->y = y;
   }
 
-  void  ButtonPressed     (const unsigned int b, const unsigned int f) override {
-    button = b; pressed = true;
+  void  ButtonPressed     (const System::ButtonCode b, const unsigned int f) override {
+    button = (int)b; pressed = true;
   }
 
-  void  ButtonReleased    (const unsigned int b, const unsigned int f) override {
-    button = b; released = true;
+  void  ButtonReleased    (const System::ButtonCode b, const unsigned int f) override {
+    button = (int)b; released = true;
   }
   
   void  CharacterPressed  (const char c) override {
     character = c;
   }
 
-  void  KeyboardPressed   (const unsigned int k, const unsigned int f) override {
+  void  KeyboardPressed   (const System::KeyCode k, const unsigned int f) override {
     key = (char)k; pressed = true;
   }
 
-  void  KeyboardReleased  (const unsigned int k, const unsigned int f) override {
+  void  KeyboardReleased  (const System::KeyCode k, const unsigned int f) override {
     key = (char)k; released = true;
   }
 
@@ -52,31 +52,31 @@ namespace Platform_Test {
     }, "Event::Listener::CursorMove()");
 
     TestCase([]() {
-      Platform::SimulateButton(input_dumby.index, 1, 0);
+      Platform::SimulateButton(input_dumby.index, System::ButtonCode::LEFT_MOUSE, 0);
       Flush();
-      return input_dumby.pressed && input_dumby.button == 1;
+      return input_dumby.pressed && input_dumby.button == System::ButtonCode::LEFT_MOUSE;
     }, "Event::Listener::ButtonPressed()");
 
     TestCase([]() {
-      Platform::SimulateButton(input_dumby.index, 2, 0, true);
+      Platform::SimulateButton(input_dumby.index, System::ButtonCode::RIGHT_MOUSE, 0, true);
       Flush();
-      return input_dumby.released && input_dumby.button == 2;
+      return input_dumby.released && input_dumby.button == System::ButtonCode::RIGHT_MOUSE;
     }, "Event::Listener::ButtonReleased()");
 
     TestCase([]() {
-      Platform::SimulateKeyboard(input_dumby.index, 'a', 1);
+      Platform::SimulateKeyboard(input_dumby.index, System::KeyCode::A, 1);
       Flush();
       return input_dumby.character == 'A';
     }, "Event::Listener::CharacterPressed()");
 
     TestCase([]() {
-      Platform::SimulateKeyboard(input_dumby.index, 'b', 0);
+      Platform::SimulateKeyboard(input_dumby.index, System::KeyCode::B, 0);
       Flush();
       return input_dumby.pressed && input_dumby.key == 'b';
     }, "Event::Listener::KeyboardPressed()");
 
     TestCase([]() {
-      Platform::SimulateKeyboard(input_dumby.index, 'c', 0, true);
+      Platform::SimulateKeyboard(input_dumby.index, System::KeyCode::C, 0, true);
       Flush();
       return input_dumby.released && input_dumby.key == 'c';
     }, "Event::Listener::KeyboardReleased()");

@@ -6,12 +6,12 @@ namespace Platform {
 
   static unsigned int convertModMask(const unsigned int mask) {
     unsigned int mask_ = 0;
-    mask_ |= (mask & ShiftMask)   ? Event::ModifierMask::SHIFT      : 0;
-    mask_ |= (mask & ControlMask) ? Event::ModifierMask::CTRL       : 0;
-    mask_ |= (mask & AltMask)     ? Event::ModifierMask::ALT        : 0;
-    mask_ |= (mask & WinMask)     ? Event::ModifierMask::WIN        : 0;
-    mask_ |= (mask & LockMask)    ? Event::ModifierMask::CAPS_LOCK  : 0;
-    mask_ |= (mask & NumMask)     ? Event::ModifierMask::NUM_LOCK   : 0;
+    mask_ |= (mask & ShiftMask)   ? System::ModMask::SHIFT      : 0;
+    mask_ |= (mask & ControlMask) ? System::ModMask::CTRL       : 0;
+    mask_ |= (mask & AltMask)     ? System::ModMask::ALT        : 0;
+    mask_ |= (mask & WinMask)     ? System::ModMask::WIN        : 0;
+    mask_ |= (mask & LockMask)    ? System::ModMask::CAPS_LOCK  : 0;
+    mask_ |= (mask & NumMask)     ? System::ModMask::NUM_LOCK   : 0;
     return mask_;
   }
 
@@ -51,17 +51,17 @@ namespace Platform {
               break;
             }
           }
-          SignalEvent(&Event::Listener::KeyboardReleased, (unsigned int)XLookupKeysym(&(event.xkey), 0), convertModMask(event.xkey.state));
+          SignalEvent(&Event::Listener::KeyboardReleased, (System::KeyCode)XLookupKeysym(&(event.xkey), 0), convertModMask(event.xkey.state));
           break;
         case KeyPress:
           SignalCharacterEvent(event.xkey);
-          SignalEvent(&Event::Listener::KeyboardPressed, (unsigned int)XLookupKeysym(&(event.xkey), 0), convertModMask(event.xkey.state));
+          SignalEvent(&Event::Listener::KeyboardPressed, (System::KeyCode)XLookupKeysym(&(event.xkey), 0), convertModMask(event.xkey.state));
           break;
         case ButtonPress:
-          SignalEvent(&Event::Listener::ButtonPressed, event.xbutton.button, convertModMask(event.xbutton.state));
+          SignalEvent(&Event::Listener::ButtonPressed, (System::ButtonCode)event.xbutton.button, convertModMask(event.xbutton.state));
           break;
         case ButtonRelease:
-          SignalEvent(&Event::Listener::ButtonReleased, event.xbutton.button, convertModMask(event.xbutton.state));
+          SignalEvent(&Event::Listener::ButtonReleased, (System::ButtonCode)event.xbutton.button, convertModMask(event.xbutton.state));
           break;
         case MotionNotify:
           SignalEvent(&Event::Listener::CursorMove, event.xmotion.x, event.xmotion.y);

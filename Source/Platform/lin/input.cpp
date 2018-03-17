@@ -6,12 +6,12 @@ namespace Platform {
 
   static unsigned int convertModMask(const unsigned int mask) {
     unsigned int mask_ = 0;
-    mask_ |= (mask & Event::ModifierMask::SHIFT)      ? ShiftMask   : 0;
-    mask_ |= (mask & Event::ModifierMask::CTRL)       ? ControlMask : 0;
-    mask_ |= (mask & Event::ModifierMask::ALT)        ? AltMask     : 0;
-    mask_ |= (mask & Event::ModifierMask::WIN)        ? WinMask     : 0;
-    mask_ |= (mask & Event::ModifierMask::CAPS_LOCK)  ? LockMask    : 0;
-    mask_ |= (mask & Event::ModifierMask::NUM_LOCK)   ? NumMask     : 0;
+    mask_ |= (mask & System::ModMask::SHIFT)      ? ShiftMask   : 0;
+    mask_ |= (mask & System::ModMask::CTRL)       ? ControlMask : 0;
+    mask_ |= (mask & System::ModMask::ALT)        ? AltMask     : 0;
+    mask_ |= (mask & System::ModMask::WIN)        ? WinMask     : 0;
+    mask_ |= (mask & System::ModMask::CAPS_LOCK)  ? LockMask    : 0;
+    mask_ |= (mask & System::ModMask::NUM_LOCK)   ? NumMask     : 0;
     return mask_;
   }
 
@@ -29,7 +29,7 @@ namespace Platform {
     }
   }
 
-  void SimulateButton(int idx, const unsigned int button, const unsigned int mask, bool release) {
+  void SimulateButton(int idx, const System::ButtonCode button, const unsigned int mask, bool release) {
     if(auto ctx = GetContext(idx)) {
       XButtonEvent event;
       event.display     = ctx->display;
@@ -43,7 +43,7 @@ namespace Platform {
     }
   }
 
-  void SimulateKeyboard (int idx, const unsigned int key, const unsigned int mask, bool release) {
+  void SimulateKeyboard (int idx, const System::KeyCode key, const unsigned int mask, bool release) {
     if(auto ctx = GetContext(idx)) 
     {
       XKeyEvent event;

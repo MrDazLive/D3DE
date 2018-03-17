@@ -4,6 +4,8 @@
 #define PLATFORM_API 
 #endif
 
+#include "enums.h"
+
 namespace Platform {
 
   /// <summary>
@@ -70,7 +72,7 @@ namespace Platform {
   /// <param name = "button">The index of the button being simulated.</param>
   /// <param name = "mask">The desired modifier mask to accompany the simlation.</param>
   /// <param name = "release">Simulates a release event.</param>
-  PLATFORM_API  void              SimulateButton    (int, const unsigned int, const unsigned int = 0, bool = false);
+  PLATFORM_API  void              SimulateButton    (int, const System::ButtonCode, const unsigned int = 0, bool = false);
 
   /// <summary>
   /// Simulates a key press event.
@@ -79,7 +81,7 @@ namespace Platform {
   /// <param name = "key">The index of the key being simulated.</param>
   /// <param name = "mask">The desired modifier mask to accompan the simulation.</param>
   /// <param name = "release">Simulates a release event.</param>
-  PLATFORM_API  void              SimulateKeyboard  (int, const unsigned int, const unsigned int = 0, bool = false);
+  PLATFORM_API  void              SimulateKeyboard  (int, const System::KeyCode, const unsigned int = 0, bool = false);
 
   /// <summary>
   /// A namespace used for managing platform related events.
@@ -90,20 +92,6 @@ namespace Platform {
     /// Checks for pending platform event messages that are yet to be processed.
     /// </summary>
     PLATFORM_API  void            Check             ();
-
-    /// <summary>
-    /// Mask indices for input modifier states.
-    /// </summary>
-    enum ModifierMask {
-      SHIFT       = 1 << 0,
-      CTRL        = 1 << 1,
-      ALT         = 1 << 2,
-      WIN         = 1 << 3,
-
-      CAPS_LOCK   = 1 << 4,
-      SCRL_LOCK   = 1 << 5,
-      NUM_LOCK    = 1 << 6
-    };
 
     /// <summary>
     /// Base class used for receiving platform related events.
@@ -117,12 +105,12 @@ namespace Platform {
       PLATFORM_API  virtual void  WindowFocusChange (const int, const bool) {}
 
       PLATFORM_API  virtual void  CursorMove        (const int, const int) {}
-      PLATFORM_API  virtual void  ButtonPressed     (const unsigned int, const unsigned int) {}
-      PLATFORM_API  virtual void  ButtonReleased    (const unsigned int, const unsigned int) {}
+      PLATFORM_API  virtual void  ButtonPressed     (const System::ButtonCode, const unsigned int) {}
+      PLATFORM_API  virtual void  ButtonReleased    (const System::ButtonCode, const unsigned int) {}
 
       PLATFORM_API  virtual void  CharacterPressed  (const char) {}
-      PLATFORM_API  virtual void  KeyboardPressed   (const unsigned int, const unsigned int) {}
-      PLATFORM_API  virtual void  KeyboardReleased  (const unsigned int, const unsigned int) {}
+      PLATFORM_API  virtual void  KeyboardPressed   (const System::KeyCode, const unsigned int) {}
+      PLATFORM_API  virtual void  KeyboardReleased  (const System::KeyCode, const unsigned int) {}
     };
   };
 }

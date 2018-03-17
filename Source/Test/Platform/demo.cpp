@@ -34,24 +34,24 @@ class Listener : public Platform::Event::Listener {
     LOG->PrintMessage(String("Cursor Move: %i, %i", x, y));
   }
 
-  void  ButtonPressed     (const unsigned int b, const unsigned int f) override {
-    LOG->PrintMessage(String("Button Press: %i", b));
+  void  ButtonPressed     (const System::ButtonCode b, const unsigned int f) override {
+    LOG->PrintMessage(String("Button Press: %i", (int)b));
   }
 
-  void  ButtonReleased    (const unsigned int b, const unsigned int f) override {
-    LOG->PrintMessage(String("Button Release: %i", b));
+  void  ButtonReleased    (const System::ButtonCode b, const unsigned int f) override {
+    LOG->PrintMessage(String("Button Release: %i", (int)b));
   }
 
   void  CharacterPressed   (const char c) override {
     LOG->PrintMessage(String("Character Press: '%c'", c));
   }
 
-  void  KeyboardPressed   (const unsigned int k, const unsigned int f) override {
-    LOG->PrintMessage(String("Key Press: '%c'(%i), Mask: %i", (char)k, k, f));
+  void  KeyboardPressed   (const System::KeyCode k, const unsigned int f) override {
+    LOG->PrintMessage(String("Key Press: '%c'(%i), Mask: %i", (char)k, (int)k, f));
   }
 
-  void  KeyboardReleased  (const unsigned int k, const unsigned int f) override {
-    LOG->PrintMessage(String("Key Release: '%c'(%i), Mask: %i", (char)k, k, f));
+  void  KeyboardReleased  (const System::KeyCode k, const unsigned int f) override {
+    LOG->PrintMessage(String("Key Release: '%c'(%i), Mask: %i", (char)k, (int)k, f));
   }
 };
 
