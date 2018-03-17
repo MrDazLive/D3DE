@@ -59,7 +59,7 @@ class Listener : public Platform::Event::Listener {
 namespace Platform_Test {
   int DemoMode() {
     Listener listener;
-    Platform::CreateWindow(&displayIndex, 0, 0, 100, 100);
+    Platform::CreateWindow(&displayIndex, 0, 0, 100, 100, "Test-Platform (Demo Mode)");
     while(Platform::ValidateWindow(displayIndex)) {
       Platform::Event::Check();
     }

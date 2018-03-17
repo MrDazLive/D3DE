@@ -19,7 +19,9 @@ namespace Platform {
   }
 
   void SimulateCursor(int idx, const int x, const int y) {
-    SendMessage(*GetContext(idx), WM_MOUSEMOVE, 0, MAKELPARAM(x, y));
+    POINT p{ x, y };
+    ClientToScreen(*GetContext(idx), &p);
+    SetCursorPos(p.x, p.y);
   }
 
   void SimulateButton(int idx, const System::ButtonCode button, const unsigned int mask, bool release) {

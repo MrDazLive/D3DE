@@ -40,15 +40,16 @@ namespace Platform_Test {
   void Input::Reset() {
     Platform::CloseWindow(input_dumby.index);
     input_dumby = InputEvent_Dumby();
-    Platform::CreateWindow(&input_dumby.index, 0, 0, 100, 100);
+    Platform::CreateWindow(&input_dumby.index, 0, 0, 300, 200, "Test-Platform (Inputs)");
+    Platform::RaiseWindow(input_dumby.index);
     Flush();
   }
 
   void Input::Examine() {
     TestCase([]() {
-      Platform::SimulateCursor(input_dumby.index, 200, 300);
+      Platform::SimulateCursor(input_dumby.index, 160, 120);
       Flush();
-      return input_dumby.x == 200 && input_dumby.y == 300;
+      return input_dumby.x == 160 && input_dumby.y == 120;
     }, "Event::Listener::CursorMove()");
 
     TestCase([]() {

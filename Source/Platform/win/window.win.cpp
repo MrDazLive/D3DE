@@ -8,24 +8,24 @@ namespace Platform {
     return idx != -1 && ContextMap().find(idx) != ContextMap().end();
   }
 
-  void CreateWindow(int* const idx, unsigned int left, unsigned int top, unsigned int width, unsigned int height) {
+  void CreateWindow(int* const idx, unsigned int left, unsigned int top, unsigned int width, unsigned int height, const char* name/* = "New Window"*/) {
     static auto handle = GetModuleHandle(NULL);
 
     WNDCLASS wc = {};
     wc.lpfnWndProc = WindowProc;
     wc.hInstance = handle;
-    wc.lpszClassName = "Sample Window Class";
+    wc.lpszClassName = "D3DE Application";
     RegisterClass(&wc);
 
     // Create the window.
     DisplayContext ctx = CreateWindowEx(
       0,                              // Optional window styles.
-      "Sample Window Class",          // Window class
-      "Learn to Program Windows",     // Window text
+      "D3DE Application",             // Window class
+      name,                           // Window text
       WS_OVERLAPPEDWINDOW,            // Window style
 
-                                      // Size and position
-      (int)left, (int)top, (int)width, (int)height,
+      (int)left,  (int)top,           // Window position
+      (int)width, (int)height,        // Window size
 
       NULL,       // Parent window    
       NULL,       // Menu
@@ -38,7 +38,6 @@ namespace Platform {
       ContextMap().emplace(*idx, ctx);
 
       ShowWindow(ctx, SW_SHOW);
-      //SetWindowPos(ctx, NULL, left, top, width, height, SWP_NOMOVE);
     }
     else
       *idx = -1;
@@ -66,6 +65,7 @@ namespace Platform {
   void RaiseWindow(const int idx) {
     if (auto ctx = GetContext(idx)) {
       SetActiveWindow(*ctx);
+      SetFocus(*ctx);
     }
   }
 

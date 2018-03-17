@@ -22,7 +22,8 @@ namespace Platform {
   /// <param name = "top">The inital top position of the window.</param>
   /// <param name = "width">The initial width of the window.</param>
   /// <param name = "height">The initial height of the window.</param>
-  PLATFORM_API  void              CreateWindow      (int* const, unsigned int, unsigned int, unsigned int, unsigned int);
+  /// <param name = "name">The displayed name of the window.</param>
+  PLATFORM_API  void              CreateWindow      (int* const, unsigned int, unsigned int, unsigned int, unsigned int, const char* = "New Window");
 
   /// <summary>
   /// Closes the specified window.

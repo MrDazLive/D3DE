@@ -8,7 +8,7 @@ namespace Platform {
     return idx != -1 && ContextMap().find(idx) != ContextMap().end();
   }
 
-  void CreateWindow(int* const idx, unsigned int left, unsigned int top, unsigned int width, unsigned int height) {
+  void CreateWindow(int* const idx, unsigned int left, unsigned int top, unsigned int width, unsigned int height, const char* name/* = "New Window"*/) {
     // Open a display.
     Display *d = XOpenDisplay(0);
     
@@ -22,9 +22,14 @@ namespace Platform {
           nullptr, StructureNotifyMask, nullptr)
       };
 
+      // Name the window
+      XStoreName(ctx.display, ctx.window, name);
+
+      // Store the display context
       *idx = ContextMap().empty() ? 0 : ContextMap().rbegin()->first + 1;
       ContextMap().emplace(*idx, ctx);
       
+      // Register event listeners
       auto atom = XInternAtom(d, WM_DELETE_WINDOW, false);
       XSetWMProtocols(d, ctx.window, &atom, 1);
       XSelectInput(d, ctx.window, PointerMotionMask | ButtonPressMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask | FocusChangeMask | StructureNotifyMask);

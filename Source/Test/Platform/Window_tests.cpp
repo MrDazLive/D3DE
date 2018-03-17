@@ -27,7 +27,7 @@ namespace Platform_Test {
     Platform::CloseWindow(window_dumby.index);
     Flush();
     window_dumby = WindowEvent_Dumby();
-    Platform::CreateWindow(&window_dumby.index, 0, 0, 100, 100);
+    Platform::CreateWindow(&window_dumby.index, 0, 0, 100, 100, "Test-Platform (Windows)");
     Flush();
   }
 
