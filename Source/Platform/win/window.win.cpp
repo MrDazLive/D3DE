@@ -8,6 +8,11 @@ namespace Platform {
     return idx != -1 && ContextMap().find(idx) != ContextMap().end();
   }
 
+  void* const WindowContext(const int idx) {
+    auto it = ContextMap().find(idx);
+    return it != ContextMap().end() ? (void*)(&it->second) : nullptr;
+  }
+
   void CreateWindow(int* const idx, unsigned int left, unsigned int top, unsigned int width, unsigned int height, const char* name/* = "New Window"*/) {
     static auto handle = GetModuleHandle(NULL);
 

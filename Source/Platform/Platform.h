@@ -12,7 +12,13 @@ namespace Platform {
   /// Checks for the existance of a window.
   /// </summary>
   /// <param name = "idx">The index of the window being validated.</param>
-  PLATFORM_API  bool              ValidateWindow    (int);
+  PLATFORM_API  bool              ValidateWindow    (const int);
+
+  /// <summary>
+  /// Gets the raw pointer to the platform's window context.
+  /// </summary>
+  /// <param name = "idx">The index of the window to collect.</param>
+  PLATFORM_API  void* const       WindowContext     (const int);
 
   /// <summary>
   /// Creates a new window to be displayed, positioned using the provided parameters.

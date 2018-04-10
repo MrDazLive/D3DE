@@ -28,7 +28,7 @@ namespace Platform {
   void Event::Check() {
     XEvent event;
     for(auto ctx : ContextMap()) {
-      auto display = ctx.second.display;
+      auto display = ctx.second;
       while(ValidateWindow(ctx.first) && XPending(display)) {
         XNextEvent(display, &event);
         switch(event.type) {

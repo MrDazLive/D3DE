@@ -18,28 +18,28 @@ namespace Platform {
   void SimulateCursor(int idx, const int x, const int y) {
     if(auto ctx = GetContext(idx)) {
       XMotionEvent event;
-      event.display     = ctx->display;
-      event.window      = ctx->window;
+      event.display     = *ctx;
+      event.window      = (XID)idx;
       event.x           = x;
       event.y           = y;
       event.type        = MotionNotify;
 
-      XSendEvent(ctx->display, ctx->window, True, PointerMotionMask, (XEvent*)&event);
-      XFlush(ctx->display);
+      XSendEvent(event.display, event.window, True, PointerMotionMask, (XEvent*)&event);
+      XFlush(event.display);
     }
   }
 
   void SimulateButton(int idx, const System::ButtonCode button, const unsigned int mask, bool release) {
     if(auto ctx = GetContext(idx)) {
       XButtonEvent event;
-      event.display     = ctx->display;
-      event.window      = ctx->window;
+      event.display     = *ctx;
+      event.window      = (XID)idx;
       event.button      = button;
       event.state       = convertModMask(mask);
       event.type        = release ? ButtonRelease : ButtonPress;
 
-      XSendEvent(ctx->display, ctx->window, True, ButtonPressMask | ButtonReleaseMask, (XEvent*)&event);
-      XFlush(ctx->display);
+      XSendEvent(event.display, event.window, True, ButtonPressMask | ButtonReleaseMask, (XEvent*)&event);
+      XFlush(event.display);
     }
   }
 
@@ -47,14 +47,14 @@ namespace Platform {
     if(auto ctx = GetContext(idx)) 
     {
       XKeyEvent event;
-      event.display     = ctx->display;
-      event.window      = ctx->window;
-      event.keycode     = XKeysymToKeycode(ctx->display, key);
+      event.display     = *ctx;
+      event.window      = (XID)idx;
+      event.keycode     = XKeysymToKeycode(event.display, key);
       event.state       = convertModMask(mask);
       event.type        = release ? KeyRelease : KeyPress;
 
-      XSendEvent(ctx->display, ctx->window, True, KeyPressMask | KeyReleaseMask, (XEvent*)&event);
-      XFlush(ctx->display);
+      XSendEvent(event.display, event.window, True, KeyPressMask | KeyReleaseMask, (XEvent*)&event);
+      XFlush(event.display);
     }
   }
 

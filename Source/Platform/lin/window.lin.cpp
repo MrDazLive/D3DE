@@ -8,35 +8,36 @@ namespace Platform {
     return idx != -1 && ContextMap().find(idx) != ContextMap().end();
   }
 
+  void* const WindowContext(const int idx) {
+    auto it = ContextMap().find(idx);
+    return it != ContextMap().end() ? (void*)(&it->second) : nullptr;
+  }
+
   void CreateWindow(int* const idx, unsigned int left, unsigned int top, unsigned int width, unsigned int height, const char* name/* = "New Window"*/) {
-    // Open a display.
-    Display *d = XOpenDisplay(0);
-    
-    if ( d ) {
+    // Open a display.    
+    if (DisplayContext ctx = XOpenDisplay(0)) {
+
       // Create the window
-      DisplayContext ctx {
-        d,
-        XCreateWindow(d, DefaultRootWindow(d),
-          left, top, width, height,
-          0, 0, 0, 
-          nullptr, StructureNotifyMask, nullptr)
-      };
+      XID window = XCreateWindow(ctx, DefaultRootWindow(ctx),
+        left, top, width, height,
+        0, 0, InputOutput, 
+        nullptr, StructureNotifyMask, nullptr);
 
       // Name the window
-      XStoreName(ctx.display, ctx.window, name);
+      XStoreName(ctx, window, name);
 
       // Store the display context
-      *idx = ContextMap().empty() ? 0 : ContextMap().rbegin()->first + 1;
+      *idx = (int)window;
       ContextMap().emplace(*idx, ctx);
       
       // Register event listeners
-      auto atom = XInternAtom(d, WM_DELETE_WINDOW, false);
-      XSetWMProtocols(d, ctx.window, &atom, 1);
-      XSelectInput(d, ctx.window, PointerMotionMask | ButtonPressMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask | FocusChangeMask | StructureNotifyMask);
+      auto atom = XInternAtom(ctx, WM_DELETE_WINDOW, false);
+      XSetWMProtocols(ctx, window, &atom, 1);
+      XSelectInput(ctx, window, PointerMotionMask | ButtonPressMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask | FocusChangeMask | StructureNotifyMask);
 
       // Show the window
-      XMapWindow(ctx.display, ctx.window);
-      XFlush(ctx.display);
+      XMapWindow(ctx, window);
+      XFlush(ctx);
     }
     else {
       *idx = -1;
@@ -45,37 +46,37 @@ namespace Platform {
 
   void CloseWindow(int idx) {
     if(auto ctx = GetContext(idx)) {
-      XDestroyWindow(ctx->display, ctx->window);
-      XCloseDisplay(ctx->display);
+      XDestroyWindow(*ctx, (XID)idx);
+      XCloseDisplay(*ctx);
       ContextMap().erase(idx);
     }
   }
 
   void PositionWindow(int idx, int left, int top) {
     if(auto ctx = GetContext(idx)) {
-      XMoveWindow(ctx->display, ctx->window, left, top);
-      XFlush(ctx->display);
+      XMoveWindow(*ctx, (XID)idx, left, top);
+      XFlush(*ctx);
     }
   }
 
   void ResizeWindow(int idx, unsigned int width, unsigned int height) {
     if(auto ctx = GetContext(idx)) {
-      XResizeWindow(ctx->display, ctx->window, width, height);
-      XFlush(ctx->display);
+      XResizeWindow(*ctx, (XID)idx, width, height);
+      XFlush(*ctx);
     }
   }
 
   void RaiseWindow(const int idx) {
     if(auto ctx = GetContext(idx)) {
-      XRaiseWindow(ctx->display, ctx->window);
-      XFlush(ctx->display);
+      XRaiseWindow(*ctx, (XID)idx);
+      XFlush(*ctx);
     }
   }
 
   void LowerWindow(const int idx) {
     if(auto ctx = GetContext(idx)) {
-      XLowerWindow(ctx->display, ctx->window);
-      XFlush(ctx->display);
+      XLowerWindow(*ctx, (XID)idx);
+      XFlush(*ctx);
     }
   }
 

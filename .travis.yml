@@ -23,6 +23,9 @@ jobs:
         - make -d Platform
     -
       script:
+        - make -d IRender
+    -
+      script:
         - make -d Types
     - stage: Library - Tier 2
       script:
@@ -35,3 +38,6 @@ jobs:
       script:
         - make -d Test-Core
         - ./bin/Test-Core
+    - stage: Application
+      script:
+        - make -d Application
