@@ -27,30 +27,72 @@ int main(int argc, char **args) {
   Platform::CreateWindow(&display, 0, 0, 480, 360, "Application");
   IRender::CreateContext(display, Platform::WindowContext(display));
 
+	// Create the shaders
+	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+	GLint Result = GL_FALSE;
+	int InfoLogLength;
+
+	const GLchar* VertexSourcePointer = 
+  "#version 130 \n"
+  "in vec3 vertexPosition_modelspace;\n"
+  "void main() {\n"
+  "  gl_Position.xyz = vertexPosition_modelspace;\n"
+  "  gl_Position.w = 1.0;\n"
+  "}";
+	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
+	glCompileShader(VertexShaderID);
+
+	char const * FragmentSourcePointer = 
+  "#version 130 \n"
+  "out vec3 color;\n"
+  "void main() {\n"
+  "  color = vec3(1,0,0);\n"
+  "}";
+	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
+	glCompileShader(FragmentShaderID);
+
+	GLuint ProgramID = glCreateProgram();
+	glAttachShader(ProgramID, VertexShaderID);
+	glAttachShader(ProgramID, FragmentShaderID);
+	glLinkProgram(ProgramID);
+	
+	glDetachShader(ProgramID, VertexShaderID);
+	glDetachShader(ProgramID, FragmentShaderID);
+	
+	glDeleteShader(VertexShaderID);
+	glDeleteShader(FragmentShaderID);
+
+GLuint VertexArrayID;
+glGenVertexArrays(1, &VertexArrayID);
+glBindVertexArray(VertexArrayID);
+
+int VAO = IRender::CreateVertexArray();
+IRender::SetActiveVertexArray(VAO);
+
+static const GLfloat verts[] = {
+   -1.0f, -1.0f, 0.0f,
+   1.0f, -1.0f, 0.0f,
+   0.0f,  1.0f, 0.0f,
+};
+
+int VBO = IRender::CreateArrayBuffer();
+IRender::SetActiveArrayBuffer(VBO);
+glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+IRender::AddVertexAttribute<float>(0, 3, 0, 0);
 
   while(Platform::ValidateWindow(display)) {
     Platform::Event::Check();
 
     if(dirty) {
-      glEnable(GL_DEPTH_TEST); 
+      IRender::EnableDepthTest();
 
-      glClearColor(1.0, 1.0, 1.0, 1.0);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      IRender::SetClearColour(0.2f, 0.2f, 0.4f, 1.0f);
+      IRender::ClearBuffer(IRender::BufferBit::COLOUR | IRender::BufferBit::DEPTH);
 
-      glMatrixMode(GL_PROJECTION);
-      glLoadIdentity();
-      glOrtho(-1., 1., -1., 1., 1., 20.);
-
-      glMatrixMode(GL_MODELVIEW);
-      glLoadIdentity();
-      gluLookAt(0., 0., 10., 0., 0., 0., 0., 1., 0.);
-
-      glBegin(GL_QUADS);
-        glColor3f(1., 0., 0.); glVertex3f(-.75, -.75, 0.);
-        glColor3f(0., 1., 0.); glVertex3f( .75, -.75, 0.);
-        glColor3f(0., 0., 1.); glVertex3f( .75,  .75, 0.);
-        glColor3f(1., 1., 0.); glVertex3f(-.75,  .75, 0.);
-      glEnd();
+      glUseProgram(ProgramID);
+      glDrawArrays(GL_TRIANGLES, 0, 3);
 
       IRender::SwapBuffer(display, Platform::WindowContext(display));
 
