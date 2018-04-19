@@ -1,5 +1,7 @@
-#define GL_GLEXT_PROTOTYPES
-#include <GL/glcorearb.h>
+#ifdef _WIN32
+#define APIENTRY __stdcall
+#endif
+#include <glad\glad.h>
 
 namespace IRender {
 

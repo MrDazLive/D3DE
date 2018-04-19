@@ -1,7 +1,9 @@
 #include "../IRender.h"
 
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
+#ifdef _WIN32
+#define APIENTRY __stdcall
+#endif
+#include <glad/glad.h>
 
 namespace IRender {
 
@@ -11,8 +13,8 @@ namespace IRender {
     return (int)index;
   }
 
-  int CreateArrayBuffer() {
-    return glGenBlock(glGenBuffers);
+  bool Initialise() {
+    return gladLoadGL() != 0;
   }
 
   void ClearBuffer(const unsigned int bits) {
@@ -25,6 +27,10 @@ namespace IRender {
 
   void EnableDepthTest() {
     glEnable(GL_DEPTH_TEST);
+  }
+
+  int CreateArrayBuffer() {
+    return glGenBlock((void(*)(GLsizei, GLuint*))glGenBuffers);
   }
 
   int CreateElementBuffer() {
@@ -85,7 +91,7 @@ namespace IRender {
 
   void AddVertexAttribute(const unsigned int index, const size_t attriuteSize, const size_t glenum, const size_t vertexSize, const size_t offset) {
     glEnableVertexAttribArray(index);
-    glVertexAttribPointer(index, attriuteSize, glenum, GL_FALSE, vertexSize, (void*)offset);
+    glVertexAttribPointer(index, (GLint)attriuteSize, (GLenum)glenum, GL_FALSE, (GLsizei)vertexSize, (void*)offset);
   }
 
   template <>

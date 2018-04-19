@@ -1,12 +1,14 @@
 #ifdef _WIN32
 #define IRENDER_API __declspec(dllexport)
 #else
-#define IRENDER_API 
+#define IRENDER_API
 #endif
 
 #include "OpenGL/enums.h"
 
 namespace IRender {
+
+  IRENDER_API bool  Initialise              ();
 
   /// <summary>
   /// Produces a rendering context and connects it to the provided window context.
@@ -53,10 +55,15 @@ namespace IRender {
 
   IRENDER_API void  DeleteVertexArray       (const int);
 
-              template <typename T> void  AddVertexAttribute                (const unsigned int, const size_t, const size_t, const size_t) {}
-  IRENDER_API template <>           void  AddVertexAttribute<int>           (const unsigned int, const size_t, const size_t, const size_t);
-  IRENDER_API template <>           void  AddVertexAttribute<unsigned int>  (const unsigned int, const size_t, const size_t, const size_t);
-  IRENDER_API template <>           void  AddVertexAttribute<float>         (const unsigned int, const size_t, const size_t, const size_t);
-  IRENDER_API template <>           void  AddVertexAttribute<double>        (const unsigned int, const size_t, const size_t, const size_t);
+              template <typename T>
+              void  AddVertexAttribute                (const unsigned int, const size_t, const size_t, const size_t) {}
+              template <>
+  IRENDER_API void  AddVertexAttribute<int>           (const unsigned int, const size_t, const size_t, const size_t);
+              template <>
+  IRENDER_API void  AddVertexAttribute<unsigned int>  (const unsigned int, const size_t, const size_t, const size_t);
+              template <>
+  IRENDER_API void  AddVertexAttribute<float>         (const unsigned int, const size_t, const size_t, const size_t);
+              template <>
+  IRENDER_API void  AddVertexAttribute<double>        (const unsigned int, const size_t, const size_t, const size_t);
 
 }

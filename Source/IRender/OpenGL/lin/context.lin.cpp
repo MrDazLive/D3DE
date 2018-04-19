@@ -1,3 +1,5 @@
+#ifdef __linux__
+
 #include "../../IRender.h"
 
 #include <GL/glx.h>
@@ -21,3 +23,5 @@ namespace IRender {
     glXSwapBuffers(display, window);
   }
 }
+
+#endif

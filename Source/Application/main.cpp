@@ -3,8 +3,10 @@
 #include <Core/Log.h>
 #include <Core/Command.h>
 
-#include <GL/gl.h>
-#include <GL/glu.h>
+#ifdef _WIN32
+#define APIENTRY __stdcall
+#endif
+#include <glad/glad.h>
 
 bool dirty = true;
 
@@ -21,18 +23,21 @@ class PEL : public Platform::Event::Listener {
 
 int main(int argc, char **args) {
   Core::Command::Collect(argc, args);
-  
-  PEL pel;
+
   int display;
   Platform::CreateWindow(&display, 0, 0, 480, 360, "Application");
   IRender::CreateContext(display, Platform::WindowContext(display));
+
+  if (!IRender::Initialise() || !gladLoadGL())
+    exit(-1);
+
+  PEL pel;
 
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
 	GLint Result = GL_FALSE;
-	int InfoLogLength;
 
 	const GLchar* VertexSourcePointer = 
   "#version 130 \n"
