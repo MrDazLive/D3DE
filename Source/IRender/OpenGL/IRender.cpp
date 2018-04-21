@@ -32,6 +32,10 @@ namespace IRender {
     glEnable(GL_DEPTH_TEST);
   }
 
+  void EnableCullFace() {
+    glEnable(GL_CULL_FACE);
+  }
+
   int CreateArrayBuffer() {
     return glGenBlock((void(*)(GLsizei, GLuint*))glGenBuffers);
   }

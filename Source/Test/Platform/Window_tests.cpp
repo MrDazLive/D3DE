@@ -37,9 +37,9 @@ namespace Platform_Test {
     }, "Platform::CreateWindow()");
 
     TestCase([]() {
-      Platform::ResizeWindow(window_dumby.index, 200, 300);
+      Platform::PositionWindow(window_dumby.index, 200, 300);
       Flush();
-      return window_dumby.width == 200 && window_dumby.height == 300;
+      return window_dumby.x == 200 && window_dumby.y == 300;
     }, "Event::Listener::WindowResized()");
 
     TestCase([]() {

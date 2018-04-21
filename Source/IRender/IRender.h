@@ -25,6 +25,8 @@ namespace IRender {
 
   IRENDER_API void  EnableDepthTest         ();
 
+  IRENDER_API void  EnableCullFace          ();
+
   IRENDER_API int   CreateArrayBuffer       ();
 
   IRENDER_API int   CreateElementBuffer     ();

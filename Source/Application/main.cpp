@@ -2,6 +2,7 @@
 #include <Platform/Platform.h>
 #include <Core/Log.h>
 #include <Core/Command.h>
+#include <Types/Vector3.h>
 #include <Types/Matrix.h>
 
 #ifdef _WIN32
@@ -12,9 +13,13 @@
 using namespace DTU;
 #include <ctime>
 #include <math.h>
+#include <vector>
 #define toRad(Deg) Deg * PI / 180.f
 
+int dir = 0;
+bool wireframe = false;
 bool dirty = true;
+Vector2u viewport;
 
 Matrix4f xRotation(float rads) {
   Matrix4f r(1.0f);
@@ -40,28 +45,94 @@ Matrix4f zRotation(float rads) {
   return r;
 }
 
+void cubeMesh(std::vector<Vector3f>& verts, std::vector<Vector3i>& elements) {
+  verts.push_back({ -0.5f, -0.5f, -0.5f });
+  verts.push_back({ -0.5f, -0.5f,  0.5f });
+  verts.push_back({ -0.5f,  0.5f, -0.5f });
+  verts.push_back({ -0.5f,  0.5f,  0.5f });
+  verts.push_back({  0.5f, -0.5f, -0.5f });
+  verts.push_back({  0.5f, -0.5f,  0.5f });
+  verts.push_back({  0.5f,  0.5f, -0.5f });
+  verts.push_back({  0.5f,  0.5f,  0.5f });
+
+  elements.push_back({ 1, 0, 2 });
+  elements.push_back({ 1, 2, 3 });
+
+  elements.push_back({ 4, 5, 6 });
+  elements.push_back({ 6, 5, 7 });
+
+  elements.push_back({ 2, 0, 4 });
+  elements.push_back({ 2, 4, 6 });
+
+  elements.push_back({ 1, 3, 5 });
+  elements.push_back({ 5, 3, 7 });
+
+  elements.push_back({ 0, 1, 4 });
+  elements.push_back({ 4, 1, 5 });
+
+  elements.push_back({ 3, 2, 6 });
+  elements.push_back({ 3, 6, 7 });
+}
+
+void sphereMesh(std::vector<Vector3f>& verts, std::vector<Vector3i>& element) {
+  int w = 100, h = 100;
+  float x = 1.0f / (float)w, y = 1.0f / (float)h;
+  for (int j = 0; j <= h; ++j) {
+    for (int i = 0; i <= w; ++i) {
+      const float HALF_PI = PI / 2.0f;
+      float a = 0.5f * cos((x * i * PI) + HALF_PI) * cos(y * j * PI * 2);
+      float b = 0.5f * cos((x * i * PI) + HALF_PI) * sin(y * j * PI * 2);
+      float c = 0.5f * sin((x * i * PI) + HALF_PI);
+      verts.push_back({ a, b, c });
+    }
+  }
+  for (int j = 0; j < h; ++j) {
+    for (int i = 0; i < w; ++i) {
+      int a = (j * (w + 1)) + i;
+      int b = a + 1;
+      int c = a + h + 1;
+      int d = c + 1;
+      element.push_back({ b, a, c });
+      element.push_back({ b, c, d });
+    }
+  }
+}
+
 class PEL : public Platform::Event::Listener {
   void  WindowClosed      (const int i) override {
     Platform::CloseWindow(i);
   }
 
   void  WindowResized     (const int i, const int x, const int y, const unsigned int w, const unsigned int h) override {
-    glViewport(0, 0, w, h);
+    viewport = Vector2u(w, h);
     dirty = true;
+  }
+
+  void  KeyboardPressed   (const System::KeyCode k, const unsigned int) override {
+    if (k == System::KeyCode::W) ++dir;
+    if (k == System::KeyCode::S) --dir;
+    if (k == System::KeyCode::Q) {
+      wireframe = !wireframe;
+      glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+    }
+  }
+
+  void  KeyboardReleased  (const System::KeyCode k, const unsigned int) override {
+    if (k == System::KeyCode::W) --dir;
+    if (k == System::KeyCode::S) ++dir;
   }
 };
 
 int main(int argc, char **args) {
   Core::Command::Collect(argc, args);
 
+  PEL pel;
   int display;
-  Platform::CreateWindow(&display, 0, 0, 480, 360, "Application");
+  Platform::CreateWindow(&display, 120, 120, 720, 540, "Application");
   IRender::CreateContext(display, Platform::WindowContext(display));
 
   if (!IRender::Initialise() || !gladLoadGL())
     exit(-1);
-
-  PEL pel;
 
   const char* ShaderVersion = "#version 130 \n";
 	const char* VertexSource[] = {
@@ -70,11 +141,12 @@ int main(int argc, char **args) {
     "out vec3 vt_pos;\n"
     "out float vt_z;\n"
     "uniform mat4 M;\n"
-    "uniform mat4 VP;\n"
+    "uniform mat4 V;\n"
+    "uniform mat4 P;\n"
     "void main() {\n"
       "float PI = 3.14159265359f;\n"
       "float S = 1/tan((45.0f * PI)/360.0f);\n"
-      "mat4 MVP = VP * M;\n"
+      "mat4 MVP = P * V * M;\n"
       "vt_pos = in_pos;\n"
       "vt_z = (M * vec4(in_pos, 1.0)).z;\n"
       "gl_Position = MVP * vec4(in_pos, 1.0);\n"
@@ -88,7 +160,8 @@ int main(int argc, char **args) {
     "in float vt_z;\n"
     "out vec4 color;\n"
     "void main() {\n"
-      "color = vec4(vec3(vt_z / 2.0f + 0.05f), 1.0f);\n"
+      "color = vec4(vt_pos / 2.0f + 0.5f, 1.0f);\n"
+      //"color = vec4(vec3(vt_z / 2.0f + 0.5f), 1.0f);\n"
     "}"
   };
 	int FragmentShaderID = IRender::CreateFragmentShader(FragmentSource, 2);
@@ -100,94 +173,77 @@ int main(int argc, char **args) {
   int VBO = IRender::CreateArrayBuffer();
   int VEA = IRender::CreateElementBuffer();
 
-  static const GLfloat verts[] = {
-    -1.0f, -1.0f, -1.0f,
-    -1.0f, -1.0f,  1.0f,
-    -1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f,  1.0f,
-     1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f,  1.0f,
-     1.0f,  1.0f, -1.0f,
-     1.0f,  1.0f,  1.0f
-  };
-
-  static const GLint elements[] = {
-    1, 0, 2,
-    1, 2, 3,
-
-    4, 5, 6,
-    6, 5, 7,
-
-    2, 0, 4,
-    2, 4, 6,
-
-    1, 3, 5,
-    5, 3, 7,
-
-    0, 1, 4,
-    4, 1, 5,
-
-    3, 2, 6,
-    3, 6, 7
-  };
+  std::vector<Vector3f> verts;
+  std::vector<Vector3i> elements;
+  //cubeMesh(verts, elements);
+  sphereMesh(verts, elements);
 
   IRender::SetActiveVertexArray(VAO);
   IRender::SetActiveElementBuffer(VEA);
-  IRender::SetElementBufferData(elements, sizeof(elements));
+  IRender::SetElementBufferData(elements.data(), sizeof(Vector3i) * elements.size());
   IRender::SetActiveArrayBuffer(VBO);
-  IRender::SetArrayBufferData(verts, sizeof(verts));
+  IRender::SetArrayBufferData(verts.data(), sizeof(Vector3f) * verts.size());
   IRender::AddVertexAttribute<float>(0, 3, 0, 0);
   IRender::SetActiveShaderProgram(ProgramID);
-  
-  {
-    Matrix4f V(1.0f);
-    V[3][2] = -5.0f;
-    /*GLuint uID = glGetUniformLocation(ProgramID, "V");
-    glUniformMatrix4fv(uID, 1, GL_FALSE, V);*/
-    
-    float S = 1.0f/tan(toRad(25.f));
-    float F = 1000.0f, N = 0.01f, R = 480.f / 360.f;
-    Matrix4f P(0.0f);
-    P[0][0] = S;
-    P[1][1] = S;
-    P[2][2] = (F + N) / (N - F);
-    P[2][3] = -1.0f;
-    P[3][2] = (F * N) / (N - F);
 
-    GLuint uID = glGetUniformLocation(ProgramID, "VP");
-    glUniformMatrix4fv(uID, 1, GL_FALSE, V * P);
-  }
+  IRender::SetClearColour(0.2f, 0.2f, 0.4f, 1.0f);
+  IRender::EnableDepthTest();
+  IRender::EnableCullFace();
+
+  double time = 0.0;
+  float z_offset = 0.0f;
 
   while(Platform::ValidateWindow(display)) {
-    if(true || dirty) {
-      IRender::EnableDepthTest();
+    if (dirty) {
+      {
+        Matrix4f V(1.0f);
+        V[3][2] = 2.0f;
+
+        GLuint uID = glGetUniformLocation(ProgramID, "V");
+        glUniformMatrix4fv(uID, 1, GL_FALSE, V);
+      }
+      {
+        float S = 1.0f / tan(toRad(25.f));
+        float F = 1000.0f, N = 0.01f, R = viewport.x / viewport.y;
+        Matrix4f P(0.0f);
+        P[0][0] = S / R;
+        P[1][1] = S;
+        P[2][2] = -(F + N) / (N - F);
+        P[2][3] = 1.0f;
+        P[3][2] = (F * N) / (N - F);
+
+        GLuint uID = glGetUniformLocation(ProgramID, "P");
+        glUniformMatrix4fv(uID, 1, GL_FALSE, P);
+      }
       
-      glDepthMask(GL_TRUE);
-      glDepthFunc(GL_LESS);
-      glEnable(GL_CULL_FACE);
-      glCullFace(GL_FRONT);
-
-      IRender::SetClearColour(0.2f, 0.2f, 0.4f, 1.0f);
-      IRender::ClearBuffer(IRender::BufferBit::COLOUR | IRender::BufferBit::DEPTH);
-
-      float secs = (((float)clock())/CLOCKS_PER_SEC * 60);
-      Matrix4f T = yRotation(secs) * xRotation(toRad(30.0f));
-      GLuint uID = glGetUniformLocation(ProgramID, "M");
-      
-      glUniformMatrix4fv(uID, 1, GL_FALSE, T);
-      glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (void*)0);
-
-      T[3][0] = 1.0f;
-      T[3][1] = 1.0f;
-      T[3][2] = 1.0f;
-      glUniformMatrix4fv(uID, 1, GL_FALSE, T);
-      glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (void*)0);
-
-      IRender::SwapBuffer(display, Platform::WindowContext(display));
-
-      LOG->PrintMessage("Display updated.");
+      glViewport(0, 0, viewport.x, viewport.y);
       dirty = false;
     }
+
+    IRender::ClearBuffer(IRender::BufferBit::COLOUR | IRender::BufferBit::DEPTH);
+
+    double secs = (((double)clock())/CLOCKS_PER_SEC);
+    double delta = secs - time;
+    z_offset += delta * dir;
+
+    LOG->PrintMessage(String("FPS: %.2f", 1.0f / delta));
+    time = secs;
+    Matrix4f M = yRotation(secs) * xRotation(toRad(330.f));
+    GLuint uID = glGetUniformLocation(ProgramID, "M");
+
+    glUniformMatrix4fv(uID, 1, GL_FALSE, M);
+    glDrawElements(GL_TRIANGLES, elements.size() * 3, GL_UNSIGNED_INT, (void*)0);
+
+    M[3][0] = 1.0f;
+    M[3][1] = 1.0f;
+    M[3][2] = z_offset;
+    glUniformMatrix4fv(uID, 1, GL_FALSE, M);
+    glDrawElements(GL_TRIANGLES, elements.size() * 3, GL_UNSIGNED_INT, (void*)0);
+
+    IRender::SwapBuffer(display, Platform::WindowContext(display));
+
+    LOG->PrintMessage("Display updated.");
+    dirty = false;
 
     Platform::Event::Check();
   }

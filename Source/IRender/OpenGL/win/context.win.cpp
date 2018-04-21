@@ -3,8 +3,19 @@
 #include "../../IRender.h"
 
 #include <windows.h>
+#include <map>
 
-#include <iostream>
+static HDC getDeviceContext(void* const ctx) {
+  static std::map<void*, HDC> contextMap;
+  auto it = contextMap.find(ctx);
+  if (it != contextMap.end())
+    return it->second;
+
+  HWND hwnd = *(HWND*)ctx;
+  HDC  hdc = GetDC(hwnd);
+  contextMap.emplace(ctx, hdc);
+  return hdc;
+}
 
 namespace IRender {
   void CreateContext(const int idx, void* const ctx) {
@@ -27,9 +38,7 @@ namespace IRender {
       0, 0, 0
     };
 
-    HWND hwnd = *(HWND*)ctx;
-    HDC  hdc  = GetDC(hwnd);
-
+    HDC  hdc  = getDeviceContext(ctx);
     GLint ipf = ChoosePixelFormat(hdc, &pfd);
     SetPixelFormat(hdc, ipf, &pfd);
 
@@ -38,9 +47,7 @@ namespace IRender {
   }
 
   void SwapBuffer(const int idx, void* const ctx) {
-    HWND hwnd = *(HWND*)ctx;
-    HDC  hdc  = GetDC(hwnd);
-    SwapBuffers(hdc);
+    SwapBuffers(getDeviceContext(ctx));
   }
 }
 
