@@ -53,9 +53,9 @@ namespace IRender {
 
   IRENDER_API void  SetArrayBufferData      (const void*, const size_t);
 
-  IRENDER_API void  SetElementBufferData     (const void*, const size_t);
+  IRENDER_API void  SetElementBufferData    (const void*, const size_t);
 
-  IRENDER_API void  SetUniformBufferData     (const void*, const size_t);
+  IRENDER_API void  SetUniformBufferData    (const void*, const size_t);
 
   IRENDER_API void  DeleteArrayBuffer       (const int);
 
@@ -66,6 +66,8 @@ namespace IRender {
   IRENDER_API void  DeleteVertexArray       (const int);
 
   IRENDER_API void  DeleteShaderProgram     (const int);
+
+  IRENDER_API void  DrawElements            (DrawMode, const size_t, const size_t);
 
               template <typename T>
               void  AddVertexAttribute                (const unsigned int, const size_t, const size_t, const size_t) {}

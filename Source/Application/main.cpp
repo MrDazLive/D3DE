@@ -80,9 +80,11 @@ void sphereMesh(std::vector<Vector3f>& verts, std::vector<Vector3i>& element) {
   for (int j = 0; j <= h; ++j) {
     for (int i = 0; i <= w; ++i) {
       const float HALF_PI = PI / 2.0f;
-      float a = 0.5f * cos((x * i * PI) + HALF_PI) * cos(y * j * PI * 2);
-      float b = 0.5f * cos((x * i * PI) + HALF_PI) * sin(y * j * PI * 2);
-      float c = 0.5f * sin((x * i * PI) + HALF_PI);
+      float u = (x * (float)i * PI) + HALF_PI;
+      float v = y * (float)j * PI * 2.0f;
+      float a = 0.5f * cos(u) * cos(v);
+      float b = 0.5f * cos(u) * sin(v);
+      float c = 0.5f * sin(u);
       verts.push_back({ a, b, c });
     }
   }
@@ -141,12 +143,12 @@ int main(int argc, char **args) {
     "out vec3 vt_pos;\n"
     "out float vt_z;\n"
     "uniform mat4 M;\n"
-    "uniform mat4 V;\n"
-    "uniform mat4 P;\n"
+    "uniform mat4 VP;\n"
+    //"uniform mat4 P;\n"
     "void main() {\n"
       "float PI = 3.14159265359f;\n"
       "float S = 1/tan((45.0f * PI)/360.0f);\n"
-      "mat4 MVP = P * V * M;\n"
+      "mat4 MVP = VP * M;\n"
       "vt_pos = in_pos;\n"
       "vt_z = (M * vec4(in_pos, 1.0)).z;\n"
       "gl_Position = MVP * vec4(in_pos, 1.0);\n"
@@ -192,29 +194,24 @@ int main(int argc, char **args) {
 
   double time = 0.0;
   float z_offset = 0.0f;
-
+  
+  Platform::Event::Check();
   while(Platform::ValidateWindow(display)) {
     if (dirty) {
-      {
-        Matrix4f V(1.0f);
-        V[3][2] = 2.0f;
+      Matrix4f V(1.0f);
+      V[3][2] = 2.0f;
 
-        GLuint uID = glGetUniformLocation(ProgramID, "V");
-        glUniformMatrix4fv(uID, 1, GL_FALSE, V);
-      }
-      {
-        float S = 1.0f / tan(toRad(25.f));
-        float F = 1000.0f, N = 0.01f, R = viewport.x / viewport.y;
-        Matrix4f P(0.0f);
-        P[0][0] = S / R;
-        P[1][1] = S;
-        P[2][2] = -(F + N) / (N - F);
-        P[2][3] = 1.0f;
-        P[3][2] = (F * N) / (N - F);
+      float S = 1.0f / tan(toRad(25.f));
+      float F = 1000.0f, N = 0.01f, R = viewport.x / viewport.y;
+      Matrix4f P(0.0f);
+      P[0][0] = S / R;
+      P[1][1] = S;
+      P[2][2] = -(F + N) / (N - F);
+      P[2][3] = 1.0f;
+      P[3][2] = (F * N) / (N - F);
 
-        GLuint uID = glGetUniformLocation(ProgramID, "P");
-        glUniformMatrix4fv(uID, 1, GL_FALSE, P);
-      }
+      GLuint uID = glGetUniformLocation(ProgramID, "VP");
+      glUniformMatrix4fv(uID, 1, GL_FALSE, V * P);
       
       glViewport(0, 0, viewport.x, viewport.y);
       dirty = false;
@@ -228,17 +225,17 @@ int main(int argc, char **args) {
 
     LOG->PrintMessage(String("FPS: %.2f", 1.0f / delta));
     time = secs;
-    Matrix4f M = yRotation(secs) * xRotation(toRad(330.f));
+    Matrix4f M = yRotation(secs) * xRotation(toRad(330.f)) * Matrix4f(2.0f);
     GLuint uID = glGetUniformLocation(ProgramID, "M");
 
     glUniformMatrix4fv(uID, 1, GL_FALSE, M);
-    glDrawElements(GL_TRIANGLES, elements.size() * 3, GL_UNSIGNED_INT, (void*)0);
+    IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
 
     M[3][0] = 1.0f;
     M[3][1] = 1.0f;
     M[3][2] = z_offset;
     glUniformMatrix4fv(uID, 1, GL_FALSE, M);
-    glDrawElements(GL_TRIANGLES, elements.size() * 3, GL_UNSIGNED_INT, (void*)0);
+    IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
 
     IRender::SwapBuffer(display, Platform::WindowContext(display));
 

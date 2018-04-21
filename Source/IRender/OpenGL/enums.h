@@ -10,5 +10,12 @@ namespace IRender {
     DEPTH   = GL_DEPTH_BUFFER_BIT,
     STENCIL = GL_STENCIL_BUFFER_BIT
   };
+  
+  enum DrawMode {
+    POINTS      = GL_POINTS,
+    LINES       = GL_LINES,
+    TRIANGLES   = GL_TRIANGLES,
+    QUADS       = GL_QUADS
+  };
 
 }

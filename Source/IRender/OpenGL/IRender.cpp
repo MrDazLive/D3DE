@@ -145,6 +145,10 @@ namespace IRender {
     glDeleteProgram((GLuint)index);
   }
 
+  void DrawElements(DrawMode mode, const size_t size, const size_t start) {
+    glDrawElements(mode, size, GL_UNSIGNED_INT, (void*)start);
+  }
+
   void AddVertexAttribute(const unsigned int index, const size_t attriuteSize, const size_t glenum, const size_t vertexSize, const size_t offset) {
     glEnableVertexAttribArray(index);
     glVertexAttribPointer(index, (GLint)attriuteSize, (GLenum)glenum, GL_FALSE, (GLsizei)vertexSize, (void*)offset);

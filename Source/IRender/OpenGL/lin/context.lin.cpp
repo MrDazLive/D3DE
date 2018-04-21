@@ -9,7 +9,12 @@ namespace IRender {
     Window    window  = (XID)idx;
     Display*  display = *(Display**)ctx;
     
-    GLint attl[] = { GLX_RGBA, GLX_DOUBLEBUFFER, None };
+    GLint attl[] = { 
+      GLX_RGBA, 
+      GLX_DEPTH_SIZE, 8, 
+      GLX_DOUBLEBUFFER, 
+      None
+    };
     XVisualInfo info = *glXChooseVisual(display, 0, attl);
 
     auto glc = glXCreateContext(display, &info, nullptr, GL_TRUE);
