@@ -19,7 +19,7 @@ namespace IRender {
       0,
       0,
       0, 0, 0, 0,
-      32,
+      24,
       8,
       0,
       PFD_MAIN_PLANE,

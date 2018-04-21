@@ -5,6 +5,9 @@
 #endif
 #include <glad/glad.h>
 
+#include <iostream>
+#include <vector>
+
 namespace IRender {
 
   int glGenBlock(void(*genFunc)(GLsizei, GLuint*)) {
@@ -41,12 +44,49 @@ namespace IRender {
     return glGenBlock(glGenBuffers);
   }
 
-  int CreateVertexBuffer() {
-    return glGenBlock(glGenBuffers);
-  }
-
   int CreateVertexArray() {
     return glGenBlock(glGenVertexArrays);
+  }
+
+  int CreateFragmentShader(const char** sourceArray, const size_t sourceCount) {
+    auto index = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(index, sourceCount, sourceArray , NULL);
+    glCompileShader(index);
+    return (int)index;
+  }
+
+  int CreateVertexShader(const char** sourceArray, const size_t sourceCount) {
+    auto index = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(index, sourceCount, sourceArray , NULL);
+    glCompileShader(index);
+
+
+	GLint Result = GL_FALSE;
+	int InfoLogLength;
+	glGetShaderiv(index, GL_COMPILE_STATUS, &Result);
+	glGetShaderiv(index, GL_INFO_LOG_LENGTH, &InfoLogLength);
+	if ( InfoLogLength > 0 ){
+		std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
+		glGetShaderInfoLog(index, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+		printf("%s\n", &VertexShaderErrorMessage[0]);
+	}
+    return (int)index;
+  }
+
+  int CreateShaderProgram(const int* shaderArray, size_t shaderCount) {
+    auto index = glCreateProgram();
+
+    auto loop = [&] (auto func) {
+      for(size_t i = 0; i < shaderCount; ++i)
+        func(shaderArray[(GLuint)i]);
+    };
+
+    loop([&](GLuint i){ glAttachShader(index, i); });
+    glLinkProgram(index);
+    loop([&](GLuint i){ glDetachShader(index, i); });
+    loop([&](GLuint i){ glDeleteShader(       i); });
+
+    return (int)index;
   }
 
   void SetActiveArrayBuffer(const int index) {
@@ -61,12 +101,24 @@ namespace IRender {
     glBindBuffer(GL_UNIFORM_BUFFER, (GLuint)index);
   }
 
-  void SetActiveVertexBuffer(const int index) {
-    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, (GLuint)index);
-  }
-
   void SetActiveVertexArray(const int index) {
     glBindVertexArray((GLuint)index);
+  }
+
+  void SetActiveShaderProgram(const int index) {
+    glUseProgram((GLuint)index);
+  }
+
+  void SetArrayBufferData(const void* data, const size_t dataSize) {
+  glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_STATIC_DRAW);
+  }
+
+  void SetElementBufferData(const void* data, const size_t dataSize) {
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, dataSize, data, GL_STATIC_DRAW);
+  }
+
+  void SetUniformBufferData(const void* data, const size_t dataSize) {
+  glBufferData(GL_UNIFORM_BUFFER, dataSize, data, GL_STATIC_DRAW);
   }
 
   void DeleteArrayBuffer(const int index) {
@@ -81,12 +133,12 @@ namespace IRender {
     glDeleteBuffers(1, (GLuint*)&index);
   }
 
-  void DeleteVertexBuffer(const int index) {
-    glDeleteBuffers(1, (GLuint*)&index);
-  }
-
   void DeleteVertexArray(const int index) {
     glDeleteVertexArrays(1, (GLuint*)&index);
+  }
+
+  void DeleteShaderProgram(const int index) {
+    glDeleteProgram((GLuint)index);
   }
 
   void AddVertexAttribute(const unsigned int index, const size_t attriuteSize, const size_t glenum, const size_t vertexSize, const size_t offset) {

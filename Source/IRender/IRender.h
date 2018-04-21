@@ -31,19 +31,29 @@ namespace IRender {
 
   IRENDER_API int   CreateUniformBuffer     ();
 
-  IRENDER_API int   CreateVertexBuffer      ();
-
   IRENDER_API int   CreateVertexArray       ();
+
+  IRENDER_API int   CreateFragmentShader    (const char**, const size_t);
+
+  IRENDER_API int   CreateVertexShader      (const char**, const size_t);
+
+  IRENDER_API int   CreateShaderProgram     (const int*, const size_t);
 
   IRENDER_API void  SetActiveArrayBuffer    (const int);
 
   IRENDER_API void  SetActiveElementBuffer  (const int);
 
   IRENDER_API void  SetActiveUniformBuffer  (const int);
-
-  IRENDER_API void  SetActiveVertexBuffer   (const int);
   
   IRENDER_API void  SetActiveVertexArray    (const int);
+
+  IRENDER_API void  SetActiveShaderProgram  (const int);
+
+  IRENDER_API void  SetArrayBufferData      (const void*, const size_t);
+
+  IRENDER_API void  SetElementBufferData     (const void*, const size_t);
+
+  IRENDER_API void  SetUniformBufferData     (const void*, const size_t);
 
   IRENDER_API void  DeleteArrayBuffer       (const int);
 
@@ -51,9 +61,9 @@ namespace IRender {
 
   IRENDER_API void  DeleteUniformBuffer     (const int);
 
-  IRENDER_API void  DeleteVertexBuffer      (const int);
-
   IRENDER_API void  DeleteVertexArray       (const int);
+
+  IRENDER_API void  DeleteShaderProgram     (const int);
 
               template <typename T>
               void  AddVertexAttribute                (const unsigned int, const size_t, const size_t, const size_t) {}
