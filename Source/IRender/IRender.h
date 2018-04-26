@@ -19,6 +19,8 @@ namespace IRender {
   
   IRENDER_API void  SwapBuffer              (const int, void* const);
 
+  IRENDER_API void  SetViewport             (const int, const int, const unsigned int, const unsigned int);
+
   IRENDER_API void  ClearBuffer             (const unsigned int);
 
   IRENDER_API void  SetClearColour          (const float&, const float&, const float&, const float&);

@@ -5,8 +5,9 @@
 #endif
 #include <glad/glad.h>
 
-#include <iostream>
 #include <vector>
+#include <iostream>
+#include <functional>
 
 namespace IRender {
 
@@ -18,6 +19,10 @@ namespace IRender {
 
   bool Initialise() {
     return gladLoadGL() != 0;
+  }
+
+  void SetViewport(const int x, const int y, const unsigned int width, const unsigned int height) {
+    glViewport(x, y, (GLsizei)width, (GLsizei)height);
   }
 
   void ClearBuffer(const unsigned int bits) {
@@ -80,7 +85,7 @@ namespace IRender {
   int CreateShaderProgram(const int* shaderArray, size_t shaderCount) {
     auto index = glCreateProgram();
 
-    auto loop = [&] (auto func) {
+    auto loop = [&] (std::function<void(GLuint)> func) {
       for(size_t i = 0; i < shaderCount; ++i)
         func(shaderArray[(GLuint)i]);
     };

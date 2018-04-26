@@ -1,6 +1,7 @@
 #include "declerations.h"
 
-#include <Types/Matrix.h>
+#include <Types/Matrix3.h>
+#include <Types/Matrix4.h>
 
 using namespace DTU;
 
@@ -14,6 +15,22 @@ namespace Types_Test {
           && m[1][0] == 0.0f && m[1][1] == 0.0f && m[1][2] == 0.0f && m[1][3] == 0.0f
           && m[2][0] == 0.0f && m[2][1] == 0.0f && m[2][2] == 0.0f && m[2][3] == 0.0f;
     }, "Matrix3x4()");
+
+    TestCase([]() {
+      float n[3][4] = {
+        { 0.0f, 0.0f, 0.0f, 0.0f },
+        { 1.3f, 0.0f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f, 0.0f }
+      };
+      Matrix3x4f m(
+        0.0f, 0.0f, 0.0f, 0.0f,
+        1.3f, 0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 0.0f
+      );
+      return m[0][0] == 0.0f && m[0][1] == 0.0f && m[0][2] == 0.0f && m[0][3] == 0.0f
+          && m[1][0] == 1.3f && m[1][1] == 0.0f && m[1][2] == 0.0f && m[1][3] == 0.0f
+          && m[2][0] == 0.0f && m[2][1] == 0.0f && m[2][2] == 0.0f && m[2][3] == 0.0f;
+    }, "Matrix3x4(T...)");
 
     TestCase([]() {
       Matrix3f n(1.0f);

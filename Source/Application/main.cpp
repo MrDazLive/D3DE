@@ -3,7 +3,7 @@
 #include <Core/Log.h>
 #include <Core/Command.h>
 #include <Types/Vector3.h>
-#include <Types/Matrix.h>
+#include <Types/Matrix4.h>
 
 #ifdef _WIN32
 #define APIENTRY __stdcall
@@ -16,7 +16,7 @@ using namespace DTU;
 #include <vector>
 #define toRad(Deg) Deg * PI / 180.f
 
-int dir = 0;
+int move = 0;
 bool wireframe = false;
 bool dirty = true;
 Vector2u viewport;
@@ -111,8 +111,8 @@ class PEL : public Platform::Event::Listener {
   }
 
   void  KeyboardPressed   (const System::KeyCode k, const unsigned int) override {
-    if (k == System::KeyCode::W) ++dir;
-    if (k == System::KeyCode::S) --dir;
+    if (k == System::KeyCode::W) ++move;
+    if (k == System::KeyCode::S) --move;
     if (k == System::KeyCode::Q) {
       wireframe = !wireframe;
       glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
@@ -120,8 +120,8 @@ class PEL : public Platform::Event::Listener {
   }
 
   void  KeyboardReleased  (const System::KeyCode k, const unsigned int) override {
-    if (k == System::KeyCode::W) --dir;
-    if (k == System::KeyCode::S) ++dir;
+    if (k == System::KeyCode::W) --move;
+    if (k == System::KeyCode::S) ++move;
   }
 };
 
@@ -144,7 +144,6 @@ int main(int argc, char **args) {
     "out float vt_z;\n"
     "uniform mat4 M;\n"
     "uniform mat4 VP;\n"
-    //"uniform mat4 P;\n"
     "void main() {\n"
       "float PI = 3.14159265359f;\n"
       "float S = 1/tan((45.0f * PI)/360.0f);\n"
@@ -185,7 +184,7 @@ int main(int argc, char **args) {
   IRender::SetElementBufferData(elements.data(), sizeof(Vector3i) * elements.size());
   IRender::SetActiveArrayBuffer(VBO);
   IRender::SetArrayBufferData(verts.data(), sizeof(Vector3f) * verts.size());
-  IRender::AddVertexAttribute<float>(0, 3, 0, 0);
+  IRender::AddVertexAttribute<float>(0, 3, sizeof(Vector3f), 0);
   IRender::SetActiveShaderProgram(ProgramID);
 
   IRender::SetClearColour(0.2f, 0.2f, 0.4f, 1.0f);
@@ -193,13 +192,22 @@ int main(int argc, char **args) {
   IRender::EnableCullFace();
 
   double time = 0.0;
-  float z_offset = 0.0f;
+  Matrix4f V(1.0f);
+  V[3][2] = 2.0f;
   
   Platform::Event::Check();
   while(Platform::ValidateWindow(display)) {
+    double secs = (((double)clock())/CLOCKS_PER_SEC);
+    double delta = secs - time;
+    if(move) {
+      //V *= yRotation(delta * move);
+      V [3][2] += delta * move;
+      dirty = true;
+    }
+
     if (dirty) {
-      Matrix4f V(1.0f);
-      V[3][2] = 2.0f;
+      /*Matrix4f V(1.0f);
+      V[3][2] = 2.0f;*/
 
       float S = 1.0f / tan(toRad(25.f));
       float F = 1000.0f, N = 0.01f, R = viewport.x / viewport.y;
@@ -213,15 +221,11 @@ int main(int argc, char **args) {
       GLuint uID = glGetUniformLocation(ProgramID, "VP");
       glUniformMatrix4fv(uID, 1, GL_FALSE, V * P);
       
-      glViewport(0, 0, viewport.x, viewport.y);
+      IRender::SetViewport(0, 0, viewport.x, viewport.y);
       dirty = false;
     }
 
     IRender::ClearBuffer(IRender::BufferBit::COLOUR | IRender::BufferBit::DEPTH);
-
-    double secs = (((double)clock())/CLOCKS_PER_SEC);
-    double delta = secs - time;
-    z_offset += delta * dir;
 
     LOG->PrintMessage(String("FPS: %.2f", 1.0f / delta));
     time = secs;
@@ -233,7 +237,7 @@ int main(int argc, char **args) {
 
     M[3][0] = 1.0f;
     M[3][1] = 1.0f;
-    M[3][2] = z_offset;
+    M[3][2] = 1.0f;
     glUniformMatrix4fv(uID, 1, GL_FALSE, M);
     IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
 

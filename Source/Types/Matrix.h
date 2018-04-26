@@ -6,8 +6,12 @@ namespace DTU {
 
   template <typename T, size_t Y, size_t X>
   struct Matrix {
+  private:
+    template <typename ... V>
+    void                          construct             (T*, T, V...);
+    void                          construct             (T*, T);
   protected:
-    T                             m_data[Y][X]          {{ 0 }};
+    T                             m_data[Y][X]          {{ T(0) }};
   public:
                                   /// <summary>
                                   /// Default constructor.
@@ -15,10 +19,16 @@ namespace DTU {
                                   Matrix                () = default;
 
                                   /// <summary>
+                                  /// Constructs a Matrix, setting each element repsectively with the arguments provided.
+                                  /// </summary>
+                                  template <typename ... V>
+                                  Matrix                (const T&, V...);
+
+                                  /// <summary>
                                   /// Copy constructor produces a Matrix, setting each element with the same value as that provided.
                                   /// </summary>
-                                  template<size_t V, size_t U>
-                                  Matrix                (const Matrix<T, V, U>&);
+                                  template <typename S, size_t V, size_t U>
+                                  Matrix                (const Matrix<S, V, U>&);
 
                                   /// <summary>
                                   /// Constructs a Matrix, setting each element repsectively with the elements of the provided array.
@@ -61,62 +71,44 @@ namespace DTU {
     Matrix&                       normaliseEigenvectors ();
   };
 
-  template <typename T, size_t N>
-  struct SqrMatrix : public Matrix<T, N, N> {
-                                  /// <summary>
-                                  /// Constructs a matrix, setting elements along the diagonal with the provided value.
-                                  /// </summary>
-                                  SqrMatrix             (const T&);
-
-                                  /// <summary>
-                                  /// Copy constructor produces a Matrix, setting each element with the same value as that provided.
-                                  /// </summary>
-                                  template<size_t V, size_t U>
-                                  SqrMatrix             (const Matrix<T, V, U>&);
-
-                                  /// <summary>
-                                  /// Constructs a Matrix, setting each element repsectively with the elements of the provided array.
-                                  /// </summary>
-                                  SqrMatrix             (const T*);
-    
-    /// <summary>
-    /// Checks whether the matrix is symmetrical.
-    /// </summary>
-    const bool                    Symmetric             () const;
-
-    /// <summary>
-    /// Transposes the Matrix. Mirroring each value along the diagonal.
-    /// </summary>
-    SqrMatrix&                    transpose             ();
-  };
-
   #define MATRIX_DEF(X, Y)                    \
     template <typename T>                     \
     using Matrix##X##x##Y = Matrix<T, X, Y>;  \
     MATH_TYPES(Matrix##X##x##Y)               \
 
-  #define SQAURE_MATRIX_DEF(S)            \
-    template <typename T>                 \
-    using Matrix##S = SqrMatrix<T, S>;    \
-    MATH_TYPES(Matrix##S)                 \
-    MATRIX_DEF(S, S)                      \
-
   MATRIX_DEF(2, 3)
   MATRIX_DEF(3, 2)
   MATRIX_DEF(3, 4)
   MATRIX_DEF(4, 3)
-  SQAURE_MATRIX_DEF(2)
-  SQAURE_MATRIX_DEF(3)
-  SQAURE_MATRIX_DEF(4)
 
   template <typename T, size_t Y, size_t X>
-  template <size_t V, size_t U>
-  Matrix<T, Y, X>::Matrix(const Matrix<T, V, U>& o) {
+  template <typename ... V>
+  void Matrix<T, Y, X>::construct(T* ptr, T val, V... args) {
+    construct(ptr, val);
+    if(ptr == &(this->m_data[Y-1][X-1]))
+      return;
+    construct(++ptr, args...);
+  }
+
+  template <typename T, size_t Y, size_t X>
+  void Matrix<T, Y, X>::construct(T* ptr, T val) {
+    *ptr = val;
+  }
+
+  template <typename T, size_t Y, size_t X>
+  template <typename ... V>
+  Matrix<T, Y, X>::Matrix(const T& val, V... args) {
+    construct(this->m_data[0], val, args...);
+  }
+
+  template <typename T, size_t Y, size_t X>
+  template <typename S, size_t V, size_t U>
+  Matrix<T, Y, X>::Matrix(const Matrix<S, V, U>& o) {
     const size_t min_y = V < Y ? V : Y;
     const size_t min_x = U < X ? U : X;
     for(size_t y = 0; y < min_y; ++y)
     for(size_t x = 0; x < min_x; ++x)
-      m_data[y][x] = o[y][x];
+      m_data[y][x] = (T)o[y][x];
   }
 
   template <typename T, size_t Y, size_t X>
@@ -213,33 +205,4 @@ namespace DTU {
     }
     return *this;
   }
-
-  template <typename T, size_t N>
-  SqrMatrix<T, N>::SqrMatrix(const T& val) {
-    for(size_t idx = 0; idx < N; ++idx)
-      this->m_data[idx][idx] = val;
-  }
-
-  template <typename T, size_t N>
-  template<size_t V, size_t U>
-  SqrMatrix<T, N>::SqrMatrix(const Matrix<T, V, U>& o) : Matrix<T,N,N>(o) {}
-
-  template <typename T, size_t N>
-  SqrMatrix<T, N>::SqrMatrix(const T* o) : Matrix<T,N,N>(o) {}
-
-  template <typename T, size_t N>
-  const bool SqrMatrix<T, N>::Symmetric() const {
-    for(size_t y = 0; y < N; ++y)
-    for(size_t x = y; x < N; ++x)
-      if(this->m_data[y][x] != this->m_data[x][y])
-        return false;
-    return true;
-  }
-
-  template <typename T, size_t N>
-  SqrMatrix<T, N>& SqrMatrix<T, N>::transpose() {
-    *this = this->transposed();
-    return *this;
-  }
-
 }

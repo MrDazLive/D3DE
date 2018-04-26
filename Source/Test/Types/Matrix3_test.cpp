@@ -1,6 +1,8 @@
 #include "declerations.h"
 
-#include <Types/Matrix.h>
+#include <Types/Matrix2.h>
+#include <Types/Matrix3.h>
+#include <Types/Matrix4.h>
 
 using namespace DTU;
 
@@ -9,11 +11,34 @@ namespace Types_Test {
 
   void Matrix3::Examine() {
     TestCase([]() {
-      Matrix3f m(1.0f);
+      Matrix3f m;
       return m[0][0] == 1.0f && m[0][1] == 0.0f && m[0][2] == 0.0f
           && m[1][0] == 0.0f && m[1][1] == 1.0f && m[1][2] == 0.0f
           && m[2][0] == 0.0f && m[2][1] == 0.0f && m[2][2] == 1.0f;
     }, "Matrix3()");
+
+    TestCase([]() {
+      Matrix3f m(2.0f);
+      return m[0][0] == 2.0f && m[0][1] == 0.0f && m[0][2] == 0.0f
+          && m[1][0] == 0.0f && m[1][1] == 2.0f && m[1][2] == 0.0f
+          && m[2][0] == 0.0f && m[2][1] == 0.0f && m[2][2] == 2.0f;
+    }, "Matrix3(const T&)");
+
+    TestCase([]() {
+      float n[3][3] = {
+        { 0.0f, 0.0f, 0.0f },
+        { 1.3f, 0.0f, 0.0f },
+        { 0.0f, 0.0f, 0.0f }
+      };
+      Matrix3f m(
+        0.0f, 0.0f, 0.0f,
+        1.3f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.0f
+      );
+      return m[0][0] == 0.0f && m[0][1] == 0.0f && m[0][2] == 0.0f
+          && m[1][0] == 1.3f && m[1][1] == 0.0f && m[1][2] == 0.0f
+          && m[2][0] == 0.0f && m[2][1] == 0.0f && m[2][2] == 0.0f;
+    }, "Matrix3(T...)");
 
     TestCase([]() {
       Matrix2f n(1.0f);
@@ -109,6 +134,13 @@ namespace Types_Test {
 
       return m.Symmetric();
     }, "Matrix3::Symmetric");
+
+    TestCase([]() {
+      float m_[3][3] = {{1,2,1}, {2,4,0}, {1,0,1}};
+      Matrix3f m(&m_[0][0]);
+
+      return m.Determinant() == -4.0f;
+    }, "Matrix3::Determinant");
 
     TestCase([]() {
       float m_[3][3] = {{1,2,1}, {0,2,0}, {2,0,1}};
