@@ -47,6 +47,16 @@ namespace DTU {
     /// Transposes the Matrix2. Mirroring each value along the diagonal.
     /// </summary>
     Matrix2&                      transpose           ();
+
+    /// <summary>
+    /// Inverse the Matrix2.
+    /// </summary>
+    Matrix2&                      inverse             ();
+
+    /// <summary>
+    /// Produces an inversed copy of the Matrix2.
+    /// </summary>
+    Matrix2                       inversed            () const;
   };
 
   MATH_TYPES(Matrix2)
@@ -85,6 +95,22 @@ namespace DTU {
   Matrix2<T>& Matrix2<T>::transpose() {
     *this = this->transposed();
     return *this;
+  }
+
+  template <typename T>
+  Matrix2<T>& Matrix2<T>::inverse() {
+    *this = this->inversed();
+    return *this;
+  }
+
+  template <typename T>
+  Matrix2<T> Matrix2<T>::inversed() const {
+    Matrix2 m;
+    m[0][0] =  this[1][1];
+    m[0][1] = -this[0][1];
+    m[1][0] = -this[1][0];
+    m[1][1] =  this[0][0];
+    return m / Deteminant();
   }
 
 }

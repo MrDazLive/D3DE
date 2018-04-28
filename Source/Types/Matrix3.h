@@ -47,6 +47,16 @@ namespace DTU {
     /// Transposes the Matrix3. Mirroring each value along the diagonal.
     /// </summary>
     Matrix3&                      transpose           ();
+
+    /// <summary>
+    /// Inverse the Matrix3.
+    /// </summary>
+    Matrix3&                      inverse();
+
+    /// <summary>
+    /// Produces an inversed copy of the Matrix3.
+    /// </summary>
+    Matrix3                       inversed() const;
   };
 
   MATH_TYPES(Matrix3)
@@ -91,6 +101,34 @@ namespace DTU {
   Matrix3<T>& Matrix3<T>::transpose() {
     *this = this->transposed();
     return *this;
+  }
+
+  template <typename T>
+  Matrix3<T>& Matrix3<T>::inverse() {
+    *this = this->inversed();
+    return *this;
+  }
+
+  template <typename T>
+  Matrix3<T> Matrix3<T>::inversed() const {
+    Matrix3 m;
+    m[0][0] =  Matrix2<T>(this->m_data[1][1], this->m_data[1][2], this->m_data[2][1], this->m_data[2][2]).Determinant();
+    m[0][1] = -Matrix2<T>(this->m_data[1][0], this->m_data[1][2], this->m_data[2][0], this->m_data[2][2]).Determinant();
+    m[0][2] =  Matrix2<T>(this->m_data[1][0], this->m_data[1][1], this->m_data[2][0], this->m_data[2][1]).Determinant();
+
+    m[1][0] = -Matrix2<T>(this->m_data[0][1], this->m_data[0][2], this->m_data[2][1], this->m_data[2][2]).Determinant();
+    m[1][1] =  Matrix2<T>(this->m_data[0][0], this->m_data[0][2], this->m_data[2][0], this->m_data[2][2]).Determinant();
+    m[1][2] = -Matrix2<T>(this->m_data[0][0], this->m_data[0][1], this->m_data[2][0], this->m_data[2][1]).Determinant();
+
+    m[2][0] =  Matrix2<T>(this->m_data[0][1], this->m_data[0][2], this->m_data[1][1], this->m_data[1][2]).Determinant();
+    m[2][1] = -Matrix2<T>(this->m_data[0][0], this->m_data[0][2], this->m_data[1][0], this->m_data[1][2]).Determinant();
+    m[2][2] =  Matrix2<T>(this->m_data[0][0], this->m_data[0][1], this->m_data[1][0], this->m_data[1][1]).Determinant();
+
+    T d = (this->m_data[0][0] * m[0][0])
+          + (this->m_data[0][1] * m[0][1])
+          + (this->m_data[0][2] * m[0][2]);
+
+    return m.transposed() / d;
   }
 
 }

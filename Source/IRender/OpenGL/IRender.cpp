@@ -59,14 +59,14 @@ namespace IRender {
 
   int CreateFragmentShader(const char** sourceArray, const size_t sourceCount) {
     auto index = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(index, sourceCount, sourceArray , NULL);
+    glShaderSource(index, (GLsizei)sourceCount, sourceArray , NULL);
     glCompileShader(index);
     return (int)index;
   }
 
   int CreateVertexShader(const char** sourceArray, const size_t sourceCount) {
     auto index = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(index, sourceCount, sourceArray , NULL);
+    glShaderSource(index, (GLsizei)sourceCount, sourceArray , NULL);
     glCompileShader(index);
 
 
@@ -151,7 +151,7 @@ namespace IRender {
   }
 
   void DrawElements(DrawMode mode, const size_t size, const size_t start) {
-    glDrawElements(mode, size, GL_UNSIGNED_INT, (void*)start);
+    glDrawElements(mode, (GLsizei)size, GL_UNSIGNED_INT, (void*)start);
   }
 
   void AddVertexAttribute(const unsigned int index, const size_t attriuteSize, const size_t glenum, const size_t vertexSize, const size_t offset) {

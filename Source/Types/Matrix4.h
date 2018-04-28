@@ -47,6 +47,16 @@ namespace DTU {
     /// Transposes the Matrix4. Mirroring each value along the diagonal.
     /// </summary>
     Matrix4&                      transpose           ();
+
+    /// <summary>
+    /// Inverse the Matrix4.
+    /// </summary>
+    Matrix4&                      inverse();
+
+    /// <summary>
+    /// Produces an inversed copy of the Matrix4.
+    /// </summary>
+    Matrix4                       inversed() const;
   };
 
   MATH_TYPES(Matrix4)
@@ -83,16 +93,55 @@ namespace DTU {
   }
   template <typename T>
   const T Matrix4<T>::Determinant() const {
-    return (this->m_data[0][0] * Matrix3<T>(this->m_data[1][1], this->m_data[1][2], this->m_data[1][3], this->m_data[2][1], this->m_data[2][2], this->m_data[2][3], this->m_data[3][1], this->m_data[3][2], this->m_data[3][3]).Determinant())
-            - (this->m_data[1][1] * Matrix3<T>(this->m_data[1][0], this->m_data[1][2], this->m_data[1][3], this->m_data[2][0], this->m_data[2][2], this->m_data[2][3], this->m_data[3][0], this->m_data[3][2], this->m_data[3][3]).Determinant())
-            + (this->m_data[2][2] * Matrix3<T>(this->m_data[1][0], this->m_data[1][1], this->m_data[1][3], this->m_data[2][0], this->m_data[2][1], this->m_data[2][3], this->m_data[3][0], this->m_data[3][1], this->m_data[3][3]).Determinant())
-            - (this->m_data[3][3] * Matrix3<T>(this->m_data[1][0], this->m_data[1][1], this->m_data[1][2], this->m_data[2][0], this->m_data[2][1], this->m_data[2][2], this->m_data[3][0], this->m_data[3][1], this->m_data[3][2]).Determinant());
+    auto data = this->m_data;
+    return (data[0][0] * Matrix3<T>(data[1][1], data[1][2], data[1][3], data[2][1], data[2][2], data[2][3], data[3][1], data[3][2], data[3][3]).Determinant())
+            - (data[0][1] * Matrix3<T>(data[1][0], data[1][2], data[1][3], data[2][0], data[2][2], data[2][3], data[3][0], data[3][2], data[3][3]).Determinant())
+            + (data[0][2] * Matrix3<T>(data[1][0], data[1][1], data[1][3], data[2][0], data[2][1], data[2][3], data[3][0], data[3][1], data[3][3]).Determinant())
+            - (data[0][3] * Matrix3<T>(data[1][0], data[1][1], data[1][2], data[2][0], data[2][1], data[2][2], data[3][0], data[3][1], data[3][2]).Determinant());
   }
 
   template <typename T>
   Matrix4<T>& Matrix4<T>::transpose() {
     *this = this->transposed();
     return *this;
+  }
+
+  template <typename T>
+  Matrix4<T>& Matrix4<T>::inverse() {
+    *this = this->inversed();
+    return *this;
+  }
+
+  template <typename T>
+  Matrix4<T> Matrix4<T>::inversed() const {
+    Matrix4 m;
+    auto data = this->m_data;
+
+    m[0][0] =  Matrix3<T>(data[1][1], data[1][2], data[1][3], data[2][1], data[2][2], data[2][3], data[3][1], data[3][2], data[3][3]).Determinant();
+    m[0][1] = -Matrix3<T>(data[1][0], data[1][2], data[1][3], data[2][0], data[2][2], data[2][3], data[3][0], data[3][2], data[3][3]).Determinant();
+    m[0][2] =  Matrix3<T>(data[1][0], data[1][1], data[1][3], data[2][0], data[2][1], data[2][3], data[3][0], data[3][1], data[3][3]).Determinant();
+    m[0][3] = -Matrix3<T>(data[1][0], data[1][1], data[1][1], data[2][0], data[2][1], data[2][2], data[3][0], data[3][1], data[3][2]).Determinant();
+
+    m[1][0] = -Matrix3<T>(data[0][1], data[0][2], data[0][3], data[2][1], data[2][2], data[2][3], data[3][1], data[3][2], data[3][3]).Determinant();
+    m[1][1] =  Matrix3<T>(data[0][0], data[0][2], data[0][3], data[2][0], data[2][2], data[2][3], data[3][0], data[3][2], data[3][3]).Determinant();
+    m[1][2] = -Matrix3<T>(data[0][0], data[0][1], data[0][3], data[2][0], data[2][1], data[2][3], data[3][0], data[3][1], data[3][3]).Determinant();
+    m[1][3] =  Matrix3<T>(data[0][0], data[0][1], data[0][1], data[2][0], data[2][1], data[2][2], data[3][0], data[3][1], data[3][2]).Determinant();
+
+    m[2][0] =  Matrix3<T>(data[0][1], data[0][2], data[0][3], data[1][1], data[1][2], data[1][3], data[3][1], data[3][2], data[3][3]).Determinant();
+    m[2][1] = -Matrix3<T>(data[0][0], data[0][2], data[0][3], data[1][0], data[1][2], data[1][3], data[3][0], data[3][2], data[3][3]).Determinant();
+    m[2][2] =  Matrix3<T>(data[0][0], data[0][1], data[0][3], data[1][0], data[1][1], data[1][3], data[3][0], data[3][1], data[3][3]).Determinant();
+    m[2][3] = -Matrix3<T>(data[0][0], data[0][1], data[0][1], data[1][0], data[1][1], data[1][2], data[3][0], data[3][1], data[3][2]).Determinant();
+
+    m[3][0] = -Matrix3<T>(data[0][1], data[0][2], data[0][3], data[1][1], data[1][2], data[1][3], data[2][1], data[2][2], data[2][3]).Determinant();
+    m[3][1] =  Matrix3<T>(data[0][0], data[0][2], data[0][3], data[1][0], data[1][2], data[1][3], data[2][0], data[2][2], data[2][3]).Determinant();
+    m[3][2] = -Matrix3<T>(data[0][0], data[0][1], data[0][3], data[1][0], data[1][1], data[1][3], data[2][0], data[2][1], data[2][3]).Determinant();
+    m[3][3] =  Matrix3<T>(data[0][0], data[0][1], data[0][1], data[1][0], data[1][1], data[1][2], data[2][0], data[2][1], data[2][2]).Determinant();
+
+    T d = (data[0][0] * m[0][0])
+      + (data[0][1] * m[0][1])
+      + (data[0][2] * m[0][2]);
+
+    return m.transposed() / d;
   }
 
 }

@@ -176,5 +176,29 @@ namespace Types_Test {
 
       return m == o;
     }, "Matrix3::normaliseEigenvectors");
+
+    TestCase([]() {
+      float m_[3][3] = { { 1,2,1 },{ 0,2,0 },{ 2,0,1 } };
+      Matrix3f m(&m_[0][0]);
+      Matrix3f n(&m_[0][0]);
+
+      Matrix3f t = n.inversed();
+
+      float o_[3][3] = {{ -1.0f ,1.0f, 1.0f },{ 0.0f, 0.5f, 0.0f },{ 2.0f, -2.0f, -1.0f }};
+      Matrix3f o(&o_[0][0]);
+
+      return m == n && t == o && (m * o == Matrix3f());
+    }, "Matrix3::inversed");
+
+    TestCase([]() {
+      float m_[3][3] = { { 1,2,1 },{ 0,2,0 },{ 2,0,1 } };
+      Matrix3f m(&m_[0][0]);
+      m.inverse();
+
+      float o_[3][3] = { { -1,1,1 },{ 0,.5f,0 },{ 2,-2,-1 } };
+      Matrix3f o(&o_[0][0]);
+
+      return m == o;
+    }, "Matrix3::inverse");
   }
 }

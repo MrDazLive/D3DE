@@ -43,10 +43,14 @@ namespace DTU {
     template<size_t V, size_t U> 
     bool              operator    !=                    (const Matrix<T, V, U>&) const;
     
+    Matrix            operator    *                     (const T&) const;
+    Matrix            operator    /                     (const T&) const;
     template<size_t V, size_t U> 
     Matrix<T, Y, U>   operator    *                     (const Matrix<T, V, U>&) const;
     Matrix&           operator    =                     (const Matrix<T, Y, X>&);
 
+    Matrix&           operator    *=                    (const T&);
+    Matrix&           operator    /=                    (const T&);
     template<size_t U> 
     Matrix&           operator    *=                    (const Matrix<T, X, U>&);
 
@@ -156,6 +160,24 @@ namespace DTU {
   }
 
   template <typename T, size_t Y, size_t X>
+  Matrix<T, Y, X> Matrix<T, Y, X>::operator * (const T& v) const {
+    Matrix<T, Y, X> m;
+    for (size_t y = 0; y < Y; ++y)
+    for (size_t x = 0; x < X; ++x)
+      m[y][x] = m_data[y][x] * v;
+    return m;
+  }
+
+  template <typename T, size_t Y, size_t X>
+  Matrix<T, Y, X> Matrix<T, Y, X>::operator / (const T& v) const {
+    Matrix<T, Y, X> m;
+    for (size_t y = 0; y < Y; ++y)
+    for (size_t x = 0; x < X; ++x)
+      m[y][x] = m_data[y][x] / v;
+    return m;
+  }
+
+  template <typename T, size_t Y, size_t X>
   template<size_t V, size_t U> 
   Matrix<T, Y, U> Matrix<T, Y, X>::operator * (const Matrix<T, V, U>& o) const {
     if(X != V)
@@ -174,6 +196,18 @@ namespace DTU {
     for(size_t y = 0; y < Y; ++y)
     for(size_t x = 0; x < X; ++x)
       m_data[y][x] = o[y][x];
+    return *this;
+  }
+
+  template <typename T, size_t Y, size_t X>
+  Matrix<T, Y, X>& Matrix<T, Y, X>::operator *= (const T& v) {
+    *this = *this * v;
+    return *this;
+  }
+
+  template <typename T, size_t Y, size_t X>
+  Matrix<T, Y, X>& Matrix<T, Y, X>::operator /= (const T& v) {
+    *this = *this / v;
     return *this;
   }
 

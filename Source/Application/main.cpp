@@ -14,9 +14,10 @@ using namespace DTU;
 #include <ctime>
 #include <math.h>
 #include <vector>
-#define toRad(Deg) Deg * PI / 180.f
+#define toRad(Deg) Deg * (float)PI / 180.f
 
 int move = 0;
+int rot = 0;
 bool wireframe = false;
 bool dirty = true;
 Vector2u viewport;
@@ -79,9 +80,9 @@ void sphereMesh(std::vector<Vector3f>& verts, std::vector<Vector3i>& element) {
   float x = 1.0f / (float)w, y = 1.0f / (float)h;
   for (int j = 0; j <= h; ++j) {
     for (int i = 0; i <= w; ++i) {
-      const float HALF_PI = PI / 2.0f;
-      float u = (x * (float)i * PI) + HALF_PI;
-      float v = y * (float)j * PI * 2.0f;
+      const float HALF_PI = (float)PI / 2.0f;
+      float u = (x * (float)i * (float)PI) + HALF_PI;
+      float v = y * (float)j * (float)PI * 2.0f;
       float a = 0.5f * cos(u) * cos(v);
       float b = 0.5f * cos(u) * sin(v);
       float c = 0.5f * sin(u);
@@ -113,6 +114,8 @@ class PEL : public Platform::Event::Listener {
   void  KeyboardPressed   (const System::KeyCode k, const unsigned int) override {
     if (k == System::KeyCode::W) ++move;
     if (k == System::KeyCode::S) --move;
+    if (k == System::KeyCode::A) --rot;
+    if (k == System::KeyCode::D) ++rot;
     if (k == System::KeyCode::Q) {
       wireframe = !wireframe;
       glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
@@ -122,6 +125,8 @@ class PEL : public Platform::Event::Listener {
   void  KeyboardReleased  (const System::KeyCode k, const unsigned int) override {
     if (k == System::KeyCode::W) --move;
     if (k == System::KeyCode::S) ++move;
+    if (k == System::KeyCode::A) ++rot;
+    if (k == System::KeyCode::D) --rot;
   }
 };
 
@@ -145,8 +150,6 @@ int main(int argc, char **args) {
     "uniform mat4 M;\n"
     "uniform mat4 VP;\n"
     "void main() {\n"
-      "float PI = 3.14159265359f;\n"
-      "float S = 1/tan((45.0f * PI)/360.0f);\n"
       "mat4 MVP = VP * M;\n"
       "vt_pos = in_pos;\n"
       "vt_z = (M * vec4(in_pos, 1.0)).z;\n"
@@ -155,14 +158,50 @@ int main(int argc, char **args) {
   };
 	int VertexShaderID = IRender::CreateVertexShader(VertexSource, 2);
 
-	char const* FragmentSource[] = {
+  char const* FragmentSource[] = {
     ShaderVersion,
     "in vec3 vt_pos;\n"
     "in float vt_z;\n"
     "out vec4 color;\n"
+    "uniform mat4 M;\n"
+
+    // 2D Random
+    "float random(in vec2 st) {"
+    "return fract(sin(dot(st.xy,"
+      "vec2(12.9898,78.233)))"
+      "* 43745.5453123);"
+    "}"
+
+    // 2D Noise based on Morgan McGuire @morgan3d
+    // https://www.shadertoy.com/view/4dS3Wd
+    "float noise(in vec2 st) {"
+      "vec2 i = floor(st);"
+      "vec2 f = fract(st);"
+
+      // Four corners in 2D of a tile
+      "float a = random(i);"
+      "float b = random(i + vec2(1.0, 0.0));"
+      "float c = random(i + vec2(0.0, 1.0));"
+      "float d = random(i + vec2(1.0, 1.0));"
+
+      // Smooth Interpolation
+
+      // Cubic Hermine Curve.  Same as SmoothStep()
+      "vec2 u = f*f*(3.0 - 2.0*f);"
+      //"u = smoothstep(0.,1.,f);"
+
+      // Mix 4 coorners porcentages
+      "return mix(a, b, u.x) +"
+        "(c - a)* u.y * (1.0 - u.x) +"
+        "(d - b) * u.x * u.y;"
+    "}"
+
     "void main() {\n"
-      "color = vec4(vt_pos / 2.0f + 0.5f, 1.0f);\n"
-      //"color = vec4(vec3(vt_z / 2.0f + 0.5f), 1.0f);\n"
+      "vec2 pos = vec2(vt_pos.x * vt_pos.y, vt_pos.z * vt_pos.y);\n"
+      "pos = pos / 2.0f + 0.5f;\n"
+      "color = M[3] * noise(pos * 16);\n"
+      //"color = vec4(vt_pos / 2.0f + 0.5f, 1.0f);\n"
+      //"color *= vec4(vec3(vt_z / 2.0f + 0.5f), 1.0f);\n"
     "}"
   };
 	int FragmentShaderID = IRender::CreateFragmentShader(FragmentSource, 2);
@@ -191,26 +230,28 @@ int main(int argc, char **args) {
   IRender::EnableDepthTest();
   IRender::EnableCullFace();
 
-  double time = 0.0;
+  float time = 0.0f;
   Matrix4f V(1.0f);
-  V[3][2] = 2.0f;
+  V[3][2] = -2.0f;
   
   Platform::Event::Check();
   while(Platform::ValidateWindow(display)) {
-    double secs = (((double)clock())/CLOCKS_PER_SEC);
-    double delta = secs - time;
+    float secs = (float)(((double)clock())/CLOCKS_PER_SEC);
+    float delta = secs - time;
     if(move) {
-      //V *= yRotation(delta * move);
-      V [3][2] += delta * move;
+      Matrix4f T;
+      T[3][2] = delta * move;
+      V = Matrix4f(T * V);
+      dirty = true;
+    }
+    if (rot) {
+      V = yRotation(rot * delta) * V;
       dirty = true;
     }
 
     if (dirty) {
-      /*Matrix4f V(1.0f);
-      V[3][2] = 2.0f;*/
-
       float S = 1.0f / tan(toRad(25.f));
-      float F = 1000.0f, N = 0.01f, R = viewport.x / viewport.y;
+      float F = 1000.0f, N = 0.01f, R = (float)viewport.x / (float)viewport.y;
       Matrix4f P(0.0f);
       P[0][0] = S / R;
       P[1][1] = S;
@@ -219,7 +260,7 @@ int main(int argc, char **args) {
       P[3][2] = (F * N) / (N - F);
 
       GLuint uID = glGetUniformLocation(ProgramID, "VP");
-      glUniformMatrix4fv(uID, 1, GL_FALSE, V * P);
+      glUniformMatrix4fv(uID, 1, GL_FALSE, V.inversed() * P);
       
       IRender::SetViewport(0, 0, viewport.x, viewport.y);
       dirty = false;
@@ -232,11 +273,20 @@ int main(int argc, char **args) {
     Matrix4f M = yRotation(secs) * xRotation(toRad(330.f)) * Matrix4f(2.0f);
     GLuint uID = glGetUniformLocation(ProgramID, "M");
 
+    M[3][0] = 1.0f;
+    M[3][1] = 0.0f;
+    M[3][2] = 0.0f;
     glUniformMatrix4fv(uID, 1, GL_FALSE, M);
     IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
 
-    M[3][0] = 1.0f;
+    M[3][0] = 0.0f;
     M[3][1] = 1.0f;
+    M[3][2] = 0.0f;
+    glUniformMatrix4fv(uID, 1, GL_FALSE, M);
+    IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
+
+    M[3][0] = 0.0f;
+    M[3][1] = 0.0f;
     M[3][2] = 1.0f;
     glUniformMatrix4fv(uID, 1, GL_FALSE, M);
     IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
