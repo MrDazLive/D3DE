@@ -5,11 +5,6 @@
 #include <Types/Vector3.h>
 #include <Types/Matrix4.h>
 
-#ifdef _WIN32
-#define APIENTRY __stdcall
-#endif
-#include <glad/glad.h>
-
 using namespace DTU;
 #include <ctime>
 #include <math.h>
@@ -118,7 +113,7 @@ class PEL : public Platform::Event::Listener {
     if (k == System::KeyCode::D) ++rot;
     if (k == System::KeyCode::Q) {
       wireframe = !wireframe;
-      glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+      //glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
     }
   }
 
@@ -138,7 +133,7 @@ int main(int argc, char **args) {
   Platform::CreateWindow(&display, 120, 120, 720, 540, "Application");
   IRender::CreateContext(display, Platform::WindowContext(display));
 
-  if (!IRender::Initialise() || !gladLoadGL())
+  if (!IRender::Initialise())
     exit(-1);
 
   const char* ShaderVersion = "#version 130 \n";
@@ -208,6 +203,8 @@ int main(int argc, char **args) {
 
   int shaders[] = { VertexShaderID, FragmentShaderID };
   int ProgramID = IRender::CreateShaderProgram(shaders, 2);
+  IRender::DeleteVertexShader(VertexShaderID);
+  IRender::DeleteFragmentShader(FragmentShaderID);
 
   int VAO = IRender::CreateVertexArray();
   int VBO = IRender::CreateArrayBuffer();
@@ -238,14 +235,11 @@ int main(int argc, char **args) {
   while(Platform::ValidateWindow(display)) {
     float secs = (float)(((double)clock())/CLOCKS_PER_SEC);
     float delta = secs - time;
-    if(move) {
+    if (move || rot) {
       Matrix4f T;
-      T[3][2] = delta * move;
-      V = Matrix4f(T * V);
-      dirty = true;
-    }
-    if (rot) {
-      V = yRotation(rot * delta) * V;
+      if (rot)  T = yRotation(rot * delta);
+      if (move) T[3][2] += delta * move;
+      V = T * V;
       dirty = true;
     }
 
@@ -259,8 +253,8 @@ int main(int argc, char **args) {
       P[2][3] = 1.0f;
       P[3][2] = (F * N) / (N - F);
 
-      GLuint uID = glGetUniformLocation(ProgramID, "VP");
-      glUniformMatrix4fv(uID, 1, GL_FALSE, V.inversed() * P);
+      int uID = IRender::GetUniformIndex(ProgramID, "VP");
+      IRender::SetUniformValue<float, 4, 4>(uID, V.inversed() * P);
       
       IRender::SetViewport(0, 0, viewport.x, viewport.y);
       dirty = false;
@@ -271,24 +265,24 @@ int main(int argc, char **args) {
     LOG->PrintMessage(String("FPS: %.2f", 1.0f / delta));
     time = secs;
     Matrix4f M = yRotation(secs) * xRotation(toRad(330.f)) * Matrix4f(2.0f);
-    GLuint uID = glGetUniformLocation(ProgramID, "M");
+    int uID = IRender::GetUniformIndex(ProgramID, "M");
 
     M[3][0] = 1.0f;
     M[3][1] = 0.0f;
     M[3][2] = 0.0f;
-    glUniformMatrix4fv(uID, 1, GL_FALSE, M);
+    IRender::SetUniformValue<float, 4, 4>(uID, M);
     IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
 
     M[3][0] = 0.0f;
     M[3][1] = 1.0f;
     M[3][2] = 0.0f;
-    glUniformMatrix4fv(uID, 1, GL_FALSE, M);
+    IRender::SetUniformValue<float, 4, 4>(uID, M);
     IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
 
     M[3][0] = 0.0f;
     M[3][1] = 0.0f;
     M[3][2] = 1.0f;
-    glUniformMatrix4fv(uID, 1, GL_FALSE, M);
+    IRender::SetUniformValue<float, 4, 4>(uID, M);
     IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
 
     IRender::SwapBuffer(display, Platform::WindowContext(display));

@@ -110,7 +110,7 @@ namespace DTU {
     m[0][1] = -this[0][1];
     m[1][0] = -this[1][0];
     m[1][1] =  this[0][0];
-    return m / Deteminant();
+    return m / Determinant();
   }
 
 }
