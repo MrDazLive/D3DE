@@ -16,6 +16,10 @@ namespace IRender {
     glDeleteVertexArrays(1, (GLuint*)&index);
   }
 
+  void SetInstancedAttribute(const unsigned int index) {
+    glVertexAttribDivisor(index, 1);
+  }
+
 #define GL_VERTEX_ATTRIBUTE_FUNCTIONS(TYPE, ENUM)                                                                                     \
   template <>                                                                                                                         \
   void AddVertexAttribute<TYPE>(const unsigned int index, const size_t attriuteSize, const size_t vertexSize, const size_t offset) {  \

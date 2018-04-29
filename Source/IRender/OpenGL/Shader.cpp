@@ -19,18 +19,20 @@ namespace IRender {
     }
   }
 
-#define GL_SHADER_FUNCTIONS(NAME, TYPE)                                           \
-  int Create##NAME##Shader(const char** sourceArray, const size_t sourceCount) {  \
-    auto index = glCreateShader(TYPE);                                            \
-    glShaderSource(index, (GLsizei)sourceCount, sourceArray, NULL);               \
-    glCompileShader(index);                                                       \
-    PrintShaderError(index);                                                      \
-    return (int)index;                                                            \
-  }                                                                               \
-                                                                                  \
-  void Delete##NAME##Shader(const int index) {                                    \
-    glDeleteShader((GLuint)index);                                                \
-  }                                                                               \
+#define GL_SHADER_FUNCTIONS(NAME, TYPE)                                                             \
+  int Create##NAME##Shader() {                                                                      \
+    return (int)glCreateShader(TYPE);                                                               \
+  }                                                                                                 \
+                                                                                                    \
+  void Delete##NAME##Shader(const int index) {                                                      \
+    glDeleteShader((GLuint)index);                                                                  \
+  }                                                                                                 \
+                                                                                                    \
+  void Compile##NAME##Shader(const int index, const char** sourceArray, const size_t sourceCount) { \
+    glShaderSource((GLuint)index, (GLsizei)sourceCount, sourceArray, NULL);                         \
+    glCompileShader((GLuint)index);                                                                 \
+    PrintShaderError((GLuint)index);                                                                \
+  }                                                                                                 \
 
   GL_SHADER_FUNCTIONS(Vertex,   GL_VERTEX_SHADER);
   GL_SHADER_FUNCTIONS(Fragment, GL_FRAGMENT_SHADER);

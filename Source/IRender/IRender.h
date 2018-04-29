@@ -19,4 +19,6 @@ namespace IRender {
 
   IRENDER_API void  DrawElements            (DrawMode, const size_t, const size_t);
 
+  IRENDER_API void  DrawElementsInstanced   (DrawMode, const size_t, const size_t, const size_t);
+
 }

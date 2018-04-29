@@ -4,13 +4,17 @@
 
 namespace IRender {
 
-  IRENDER_API int   CreateFragmentShader    (const char**, const size_t);
+  IRENDER_API int   CreateFragmentShader    ();
 
   IRENDER_API void  DeleteFragmentShader    (const int);
 
-  IRENDER_API int   CreateVertexShader      (const char**, const size_t);
+  IRENDER_API void  CompileFragmentShader   (const int, const char**, const size_t);
+
+  IRENDER_API int   CreateVertexShader      ();
 
   IRENDER_API void  DeleteVertexShader      (const int);
+
+  IRENDER_API void  CompileVertexShader     (const int, const char**, const size_t);
 
   IRENDER_API int   CreateShaderProgram     (const int*, const size_t);
 

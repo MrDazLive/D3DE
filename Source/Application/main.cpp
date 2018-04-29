@@ -1,6 +1,7 @@
 #include <IRender/IRender.h>
 #include <Platform/Platform.h>
 #include <Core/Log.h>
+#include <Core/File.h>
 #include <Core/Command.h>
 #include <Types/Vector3.h>
 #include <Types/Matrix4.h>
@@ -16,6 +17,31 @@ int rot = 0;
 bool wireframe = false;
 bool dirty = true;
 Vector2u viewport;
+
+int ProgramID;
+
+void ReloadShaders() {
+  auto LoadShader = [](const int idx, const char* doc, void(*cmp)(const int, const char**, const size_t)) {
+    static const char* ShaderVersion = "#version 130 \n";
+
+    Core::File file(doc);
+    DTU::String source;
+    file.getContent(source, true);
+
+    const char* array[] = { ShaderVersion, source} ;
+    cmp(idx, array, 2);
+  };
+  int Shaders[] = { IRender::CreateVertexShader(), IRender::CreateFragmentShader() };
+  LoadShader(Shaders[0], "vs.glsl", &IRender::CompileVertexShader);
+  LoadShader(Shaders[1], "fs.glsl", &IRender::CompileVertexShader);
+
+  IRender::DeleteShaderProgram(ProgramID);
+  ProgramID = IRender::CreateShaderProgram(Shaders, 2);
+  IRender::DeleteVertexShader(Shaders[0]);
+  IRender::DeleteFragmentShader(Shaders[1]);
+  IRender::SetActiveShaderProgram(ProgramID);
+  dirty = true;
+}
 
 Matrix4f xRotation(float rads) {
   Matrix4f r(1.0f);
@@ -111,6 +137,7 @@ class PEL : public Platform::Event::Listener {
     if (k == System::KeyCode::S) --move;
     if (k == System::KeyCode::A) --rot;
     if (k == System::KeyCode::D) ++rot;
+    if (k == System::KeyCode::E) ReloadShaders();
     if (k == System::KeyCode::Q) {
       wireframe = !wireframe;
       //glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
@@ -136,78 +163,9 @@ int main(int argc, char **args) {
   if (!IRender::Initialise())
     exit(-1);
 
-  const char* ShaderVersion = "#version 130 \n";
-	const char* VertexSource[] = {
-    ShaderVersion,
-    "in vec3 in_pos;\n"
-    "out vec3 vt_pos;\n"
-    "out float vt_z;\n"
-    "uniform mat4 M;\n"
-    "uniform mat4 VP;\n"
-    "void main() {\n"
-      "mat4 MVP = VP * M;\n"
-      "vt_pos = in_pos;\n"
-      "vt_z = (M * vec4(in_pos, 1.0)).z;\n"
-      "gl_Position = MVP * vec4(in_pos, 1.0);\n"
-    "}"
-  };
-	int VertexShaderID = IRender::CreateVertexShader(VertexSource, 2);
-
-  char const* FragmentSource[] = {
-    ShaderVersion,
-    "in vec3 vt_pos;\n"
-    "in float vt_z;\n"
-    "out vec4 color;\n"
-    "uniform mat4 M;\n"
-
-    // 2D Random
-    "float random(in vec2 st) {"
-    "return fract(sin(dot(st.xy,"
-      "vec2(12.9898,78.233)))"
-      "* 43745.5453123);"
-    "}"
-
-    // 2D Noise based on Morgan McGuire @morgan3d
-    // https://www.shadertoy.com/view/4dS3Wd
-    "float noise(in vec2 st) {"
-      "vec2 i = floor(st);"
-      "vec2 f = fract(st);"
-
-      // Four corners in 2D of a tile
-      "float a = random(i);"
-      "float b = random(i + vec2(1.0, 0.0));"
-      "float c = random(i + vec2(0.0, 1.0));"
-      "float d = random(i + vec2(1.0, 1.0));"
-
-      // Smooth Interpolation
-
-      // Cubic Hermine Curve.  Same as SmoothStep()
-      "vec2 u = f*f*(3.0 - 2.0*f);"
-      //"u = smoothstep(0.,1.,f);"
-
-      // Mix 4 coorners porcentages
-      "return mix(a, b, u.x) +"
-        "(c - a)* u.y * (1.0 - u.x) +"
-        "(d - b) * u.x * u.y;"
-    "}"
-
-    "void main() {\n"
-      "vec2 pos = vec2(vt_pos.x * vt_pos.y, vt_pos.z * vt_pos.y);\n"
-      "pos = pos / 2.0f + 0.5f;\n"
-      "color = M[3] * noise(pos * 16);\n"
-      //"color = vec4(vt_pos / 2.0f + 0.5f, 1.0f);\n"
-      //"color *= vec4(vec3(vt_z / 2.0f + 0.5f), 1.0f);\n"
-    "}"
-  };
-	int FragmentShaderID = IRender::CreateFragmentShader(FragmentSource, 2);
-
-  int shaders[] = { VertexShaderID, FragmentShaderID };
-  int ProgramID = IRender::CreateShaderProgram(shaders, 2);
-  IRender::DeleteVertexShader(VertexShaderID);
-  IRender::DeleteFragmentShader(FragmentShaderID);
-
   int VAO = IRender::CreateVertexArray();
   int VBO = IRender::CreateArrayBuffer();
+  int VIA = IRender::CreateArrayBuffer();
   int VEA = IRender::CreateElementBuffer();
 
   std::vector<Vector3f> verts;
@@ -221,7 +179,15 @@ int main(int argc, char **args) {
   IRender::SetActiveArrayBuffer(VBO);
   IRender::SetArrayBufferData(verts.data(), sizeof(Vector3f) * verts.size());
   IRender::AddVertexAttribute<float>(0, 3, sizeof(Vector3f), 0);
-  IRender::SetActiveShaderProgram(ProgramID);
+  /*IRender::SetActiveArrayBuffer(VIA);
+  IRender::AddVertexAttribute<float>(1, 4, sizeof(Matrix4f), 0);
+  IRender::AddVertexAttribute<float>(2, 4, sizeof(Matrix4f), sizeof(Matrix<float,1,4>));
+  IRender::AddVertexAttribute<float>(3, 4, sizeof(Matrix4f), sizeof(Matrix<float,2,4>));
+  IRender::AddVertexAttribute<float>(4, 4, sizeof(Matrix4f), sizeof(Matrix<float,3,4>));
+  IRender::SetInstancedAttribute(1);
+  IRender::SetInstancedAttribute(2);
+  IRender::SetInstancedAttribute(3);
+  IRender::SetInstancedAttribute(4);*/
 
   IRender::SetClearColour(0.2f, 0.2f, 0.4f, 1.0f);
   IRender::EnableDepthTest();
@@ -230,6 +196,8 @@ int main(int argc, char **args) {
   float time = 0.0f;
   Matrix4f V(1.0f);
   V[3][2] = -2.0f;
+
+  ReloadShaders();
   
   Platform::Event::Check();
   while(Platform::ValidateWindow(display)) {
@@ -267,22 +235,21 @@ int main(int argc, char **args) {
     Matrix4f M = yRotation(secs) * xRotation(toRad(330.f)) * Matrix4f(2.0f);
     int uID = IRender::GetUniformIndex(ProgramID, "M");
 
-    M[3][0] = 1.0f;
-    M[3][1] = 0.0f;
-    M[3][2] = 0.0f;
-    IRender::SetUniformValue<float, 4, 4>(uID, M);
+    Matrix4f xform[3] = { M, M, M };
+    xform[0][3][0] = 1.0f;
+    xform[1][3][1] = 1.0f;
+    xform[2][3][2] = 1.0f;
+    //IRender::SetActiveArrayBuffer(VIA);
+    //IRender::SetArrayBufferData(xform, sizeof(xform));
+    //IRender::DrawElementsInstanced(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0, 3);
+    
+    IRender::SetUniformValue<float, 4, 4>(uID, xform[0]);
     IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
-
-    M[3][0] = 0.0f;
-    M[3][1] = 1.0f;
-    M[3][2] = 0.0f;
-    IRender::SetUniformValue<float, 4, 4>(uID, M);
+    
+    IRender::SetUniformValue<float, 4, 4>(uID, xform[1]);
     IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
-
-    M[3][0] = 0.0f;
-    M[3][1] = 0.0f;
-    M[3][2] = 1.0f;
-    IRender::SetUniformValue<float, 4, 4>(uID, M);
+    
+    IRender::SetUniformValue<float, 4, 4>(uID, xform[2]);
     IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
 
     IRender::SwapBuffer(display, Platform::WindowContext(display));

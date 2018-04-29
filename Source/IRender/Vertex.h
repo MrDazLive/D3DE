@@ -10,6 +10,8 @@ namespace IRender {
   
   IRENDER_API void  SetActiveVertexArray    (const int);
 
+  IRENDER_API void  SetInstancedAttribute   (const unsigned int);
+
               template <typename T>
               void  AddVertexAttribute                (const unsigned int, const size_t, const size_t, const size_t) {}
               template <>
