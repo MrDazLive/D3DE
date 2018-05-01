@@ -28,12 +28,13 @@ void ReloadShaders() {
     DTU::String source;
     file.getContent(source, true);
 
-    const char* array[] = { ShaderVersion, source} ;
+    const char* array[] = { ShaderVersion, source } ;
     cmp(idx, array, 2);
   };
+
   int Shaders[] = { IRender::CreateVertexShader(), IRender::CreateFragmentShader() };
-  LoadShader(Shaders[0], "vs.glsl", &IRender::CompileVertexShader);
-  LoadShader(Shaders[1], "fs.glsl", &IRender::CompileVertexShader);
+  LoadShader(Shaders[0], RESOURCE_DIRECTORY"/Shaders/vs.glsl", &IRender::CompileVertexShader);
+  LoadShader(Shaders[1], RESOURCE_DIRECTORY"/Shaders/fs.glsl", &IRender::CompileFragmentShader);
 
   IRender::DeleteShaderProgram(ProgramID);
   ProgramID = IRender::CreateShaderProgram(Shaders, 2);
@@ -63,7 +64,7 @@ Matrix4f zRotation(float rads) {
   Matrix4f r(1.0f);
   r[0][0] = r[1][1] = cos(rads);
   r[0][1] = sin(rads);
-  r[1][0] = - r[0][1];
+  r[1][0] = -r[0][1];
   return r;
 }
 
@@ -179,15 +180,11 @@ int main(int argc, char **args) {
   IRender::SetActiveArrayBuffer(VBO);
   IRender::SetArrayBufferData(verts.data(), sizeof(Vector3f) * verts.size());
   IRender::AddVertexAttribute<float>(0, 3, sizeof(Vector3f), 0);
-  /*IRender::SetActiveArrayBuffer(VIA);
-  IRender::AddVertexAttribute<float>(1, 4, sizeof(Matrix4f), 0);
-  IRender::AddVertexAttribute<float>(2, 4, sizeof(Matrix4f), sizeof(Matrix<float,1,4>));
-  IRender::AddVertexAttribute<float>(3, 4, sizeof(Matrix4f), sizeof(Matrix<float,2,4>));
-  IRender::AddVertexAttribute<float>(4, 4, sizeof(Matrix4f), sizeof(Matrix<float,3,4>));
-  IRender::SetInstancedAttribute(1);
-  IRender::SetInstancedAttribute(2);
-  IRender::SetInstancedAttribute(3);
-  IRender::SetInstancedAttribute(4);*/
+  IRender::SetActiveArrayBuffer(VIA);
+  IRender::AddVertexAttribute<float>(1, 4, sizeof(Matrix4f), 0, true);
+  IRender::AddVertexAttribute<float>(2, 4, sizeof(Matrix4f), sizeof(Matrix<float, 1, 4>), true);
+  IRender::AddVertexAttribute<float>(3, 4, sizeof(Matrix4f), sizeof(Matrix<float, 2, 4>), true);
+  IRender::AddVertexAttribute<float>(4, 4, sizeof(Matrix4f), sizeof(Matrix<float, 3, 4>), true);
 
   IRender::SetClearColour(0.2f, 0.2f, 0.4f, 1.0f);
   IRender::EnableDepthTest();
@@ -230,7 +227,6 @@ int main(int argc, char **args) {
 
     IRender::ClearBuffer(IRender::BufferBit::COLOUR | IRender::BufferBit::DEPTH);
 
-    LOG->PrintMessage(String("FPS: %.2f", 1.0f / delta));
     time = secs;
     Matrix4f M = yRotation(secs) * xRotation(toRad(330.f)) * Matrix4f(2.0f);
     int uID = IRender::GetUniformIndex(ProgramID, "M");
@@ -239,22 +235,21 @@ int main(int argc, char **args) {
     xform[0][3][0] = 1.0f;
     xform[1][3][1] = 1.0f;
     xform[2][3][2] = 1.0f;
-    //IRender::SetActiveArrayBuffer(VIA);
-    //IRender::SetArrayBufferData(xform, sizeof(xform));
-    //IRender::DrawElementsInstanced(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0, 3);
+    IRender::SetActiveArrayBuffer(VIA);
+    IRender::SetArrayBufferData(xform, sizeof(xform));
+    IRender::DrawElementsInstanced(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0, 3);
     
-    IRender::SetUniformValue<float, 4, 4>(uID, xform[0]);
+    /*IRender::SetUniformValue<float, 4, 4>(uID, xform[0]);
     IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
     
     IRender::SetUniformValue<float, 4, 4>(uID, xform[1]);
     IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
     
     IRender::SetUniformValue<float, 4, 4>(uID, xform[2]);
-    IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
+    IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);*/
 
     IRender::SwapBuffer(display, Platform::WindowContext(display));
 
-    LOG->PrintMessage("Display updated.");
     dirty = false;
 
     Platform::Event::Check();

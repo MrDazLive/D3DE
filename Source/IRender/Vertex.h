@@ -10,17 +10,15 @@ namespace IRender {
   
   IRENDER_API void  SetActiveVertexArray    (const int);
 
-  IRENDER_API void  SetInstancedAttribute   (const unsigned int);
-
               template <typename T>
-              void  AddVertexAttribute                (const unsigned int, const size_t, const size_t, const size_t) {}
+              void  AddVertexAttribute                (const unsigned int, const size_t, const size_t, const size_t, bool = false) {}
               template <>
-  IRENDER_API void  AddVertexAttribute<int>           (const unsigned int, const size_t, const size_t, const size_t);
+  IRENDER_API void  AddVertexAttribute<int>           (const unsigned int, const size_t, const size_t, const size_t, bool);
               template <>
-  IRENDER_API void  AddVertexAttribute<unsigned int>  (const unsigned int, const size_t, const size_t, const size_t);
+  IRENDER_API void  AddVertexAttribute<unsigned int>  (const unsigned int, const size_t, const size_t, const size_t, bool);
               template <>
-  IRENDER_API void  AddVertexAttribute<float>         (const unsigned int, const size_t, const size_t, const size_t);
+  IRENDER_API void  AddVertexAttribute<float>         (const unsigned int, const size_t, const size_t, const size_t, bool);
               template <>
-  IRENDER_API void  AddVertexAttribute<double>        (const unsigned int, const size_t, const size_t, const size_t);
+  IRENDER_API void  AddVertexAttribute<double>        (const unsigned int, const size_t, const size_t, const size_t, bool);
 
 }

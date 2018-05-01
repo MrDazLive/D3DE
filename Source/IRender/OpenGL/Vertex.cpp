@@ -16,16 +16,13 @@ namespace IRender {
     glDeleteVertexArrays(1, (GLuint*)&index);
   }
 
-  void SetInstancedAttribute(const unsigned int index) {
-    glVertexAttribDivisor(index, 1);
-  }
-
-#define GL_VERTEX_ATTRIBUTE_FUNCTIONS(TYPE, ENUM)                                                                                     \
-  template <>                                                                                                                         \
-  void AddVertexAttribute<TYPE>(const unsigned int index, const size_t attriuteSize, const size_t vertexSize, const size_t offset) {  \
-    glEnableVertexAttribArray(index);                                                                                                 \
-    glVertexAttribPointer(index, (GLint)attriuteSize, ENUM, GL_FALSE, (GLsizei)vertexSize, (void*)offset);                            \
-  }                                                                                                                                   \
+#define GL_VERTEX_ATTRIBUTE_FUNCTIONS(TYPE, ENUM)                                                                                                     \
+  template <>                                                                                                                                         \
+  void AddVertexAttribute<TYPE>(const unsigned int index, const size_t attriuteSize, const size_t vertexSize, const size_t offset, bool instanced) {  \
+    glEnableVertexAttribArray(index);                                                                                                                 \
+    glVertexAttribPointer(index, (GLint)attriuteSize, ENUM, GL_FALSE, (GLsizei)vertexSize, (void*)offset);                                            \
+    if(instanced) glVertexAttribDivisor(index, 1);                                                                                                    \
+  }                                                                                                                                                   \
 
   GL_VERTEX_ATTRIBUTE_FUNCTIONS(int,            GL_INT);
   GL_VERTEX_ATTRIBUTE_FUNCTIONS(unsigned int,   GL_UNSIGNED_INT);
