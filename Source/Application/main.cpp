@@ -2,6 +2,7 @@
 #include <Platform/Platform.h>
 #include <Core/Log.h>
 #include <Core/File.h>
+#include <Core/Mesh.h>
 #include <Core/Command.h>
 #include <Types/Vector3.h>
 #include <Types/Matrix4.h>
@@ -97,32 +98,6 @@ void cubeMesh(std::vector<Vector3f>& verts, std::vector<Vector3i>& elements) {
   elements.push_back({ 3, 6, 7 });
 }
 
-void sphereMesh(std::vector<Vector3f>& verts, std::vector<Vector3i>& element) {
-  int w = 100, h = 100;
-  float x = 1.0f / (float)w, y = 1.0f / (float)h;
-  for (int j = 0; j <= h; ++j) {
-    for (int i = 0; i <= w; ++i) {
-      const float HALF_PI = (float)PI / 2.0f;
-      float u = (x * (float)i * (float)PI) + HALF_PI;
-      float v = y * (float)j * (float)PI * 2.0f;
-      float a = 0.5f * cos(u) * cos(v);
-      float b = 0.5f * cos(u) * sin(v);
-      float c = 0.5f * sin(u);
-      verts.push_back({ a, b, c });
-    }
-  }
-  for (int j = 0; j < h; ++j) {
-    for (int i = 0; i < w; ++i) {
-      int a = (j * (w + 1)) + i;
-      int b = a + 1;
-      int c = a + h + 1;
-      int d = c + 1;
-      element.push_back({ b, a, c });
-      element.push_back({ b, c, d });
-    }
-  }
-}
-
 class PEL : public Platform::Event::Listener {
   void  WindowClosed      (const int i) override {
     Platform::CloseWindow(i);
@@ -169,22 +144,23 @@ int main(int argc, char **args) {
   int VIA = IRender::CreateArrayBuffer();
   int VEA = IRender::CreateElementBuffer();
 
-  std::vector<Vector3f> verts;
-  std::vector<Vector3i> elements;
+  //std::vector<Vector3f> verts;
+  //std::vector<Vector3i> elements;
   //cubeMesh(verts, elements);
-  sphereMesh(verts, elements);
+  Core::Mesh mesh(Core::Mesh::Flags::POSITION);
+  Core::Mesh::Sphere(mesh, 100);
 
   IRender::SetActiveVertexArray(VAO);
   IRender::SetActiveElementBuffer(VEA);
-  IRender::SetElementBufferData(elements.data(), sizeof(Vector3i) * elements.size());
+  IRender::SetElementBufferData(mesh.elements.data(), sizeof(Vector3u) * mesh.elements.size());
   IRender::SetActiveArrayBuffer(VBO);
-  IRender::SetArrayBufferData(verts.data(), sizeof(Vector3f) * verts.size());
+  IRender::SetArrayBufferData(mesh.positions.data(), sizeof(Vector3f) * mesh.positions.size());
   IRender::AddVertexAttribute<float>(0, 3, sizeof(Vector3f), 0);
-  IRender::SetActiveArrayBuffer(VIA);
+  /*IRender::SetActiveArrayBuffer(VIA);
   IRender::AddVertexAttribute<float>(1, 4, sizeof(Matrix4f), 0, true);
   IRender::AddVertexAttribute<float>(2, 4, sizeof(Matrix4f), sizeof(Matrix<float, 1, 4>), true);
   IRender::AddVertexAttribute<float>(3, 4, sizeof(Matrix4f), sizeof(Matrix<float, 2, 4>), true);
-  IRender::AddVertexAttribute<float>(4, 4, sizeof(Matrix4f), sizeof(Matrix<float, 3, 4>), true);
+  IRender::AddVertexAttribute<float>(4, 4, sizeof(Matrix4f), sizeof(Matrix<float, 3, 4>), true);*/
 
   IRender::SetClearColour(0.2f, 0.2f, 0.4f, 1.0f);
   IRender::EnableDepthTest();
@@ -235,18 +211,18 @@ int main(int argc, char **args) {
     xform[0][3][0] = 1.0f;
     xform[1][3][1] = 1.0f;
     xform[2][3][2] = 1.0f;
-    IRender::SetActiveArrayBuffer(VIA);
-    IRender::SetArrayBufferData(xform, sizeof(xform));
-    IRender::DrawElementsInstanced(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0, 3);
+    //IRender::SetActiveArrayBuffer(VIA);
+    //IRender::SetArrayBufferData(xform, sizeof(xform));
+    //IRender::DrawElementsInstanced(IRender::DrawMode::TRIANGLES, mesh.elements.size() * 3, 0, 3);
     
-    /*IRender::SetUniformValue<float, 4, 4>(uID, xform[0]);
-    IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
+    IRender::SetUniformValue<float, 4, 4>(uID, xform[0]);
+    IRender::DrawElements(IRender::DrawMode::TRIANGLES, mesh.elements.size() * 3, 0);
     
     IRender::SetUniformValue<float, 4, 4>(uID, xform[1]);
-    IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);
+    IRender::DrawElements(IRender::DrawMode::TRIANGLES, mesh.elements.size() * 3, 0);
     
     IRender::SetUniformValue<float, 4, 4>(uID, xform[2]);
-    IRender::DrawElements(IRender::DrawMode::TRIANGLES, elements.size() * 3, 0);*/
+    IRender::DrawElements(IRender::DrawMode::TRIANGLES, mesh.elements.size() * 3, 0);
 
     IRender::SwapBuffer(display, Platform::WindowContext(display));
 

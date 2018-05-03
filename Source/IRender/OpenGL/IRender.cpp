@@ -1,15 +1,16 @@
 #include "../IRender.h"
+#include <iostream>
 
 namespace IRender {
 
-  int glGenBlock(void(*genFunc)(GLsizei, GLuint*)) {
-    GLuint index{ 0 };
-    genFunc(1, &index);
-    return (int)index;
-  }
-
   bool Initialise() {
-    return gladLoadGL() != 0;
+    if (gladLoadGL() == 0)
+      return false;
+
+    /*if (GLAD_GL_VERSION_3_3 == 0)
+      return false;*/
+
+    return true;
   }
 
   void DrawElements(DrawMode mode, const size_t size, const size_t start) {
