@@ -18,7 +18,7 @@ namespace Core {
     std::vector<DTU::Vector2f>  uvs           { };
 
     std::vector<DTU::Vector3u>  elements      { };
-    Flag8                       attributes    { 0 };
+    Flags8                      attributes    { };
 
                                 Mesh          (const Flag8&);
 

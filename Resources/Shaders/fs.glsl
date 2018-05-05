@@ -1,4 +1,5 @@
 in vec3 vt_localPosV;
+in vec3 vt_localNorV;
 flat in vec3 vt_localPosI;
 
 out vec4 color;
@@ -35,8 +36,9 @@ float noise(in vec2 st) {
 }
 
 void main() {
-  vec2 pos = vec2(vt_localPosV.x * vt_localPosV.y, vt_localPosV.z * vt_localPosV.y);
+  vec2 pos = vec2(vt_localPosV.x * vt_localPosV.z, vt_localPosV.y * vt_localPosV.z);
   pos = pos / 2.0f + 0.5f;
-  color = vec4(vt_localPosI * noise(pos * 8), 1.0f);
-  color *= vec4(vt_localPosV / 2.0f + 0.5f, 1.0f);
+  float noi = noise(pos * 8);
+  vec3 norm = vt_localNorV / 2.0f + 0.5f;
+  color = vec4(vt_localPosI * norm * noi, 1.0f);
 }

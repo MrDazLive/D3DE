@@ -8,6 +8,8 @@
 #include <Types/Matrix4.h>
 
 using namespace DTU;
+using namespace Core;
+
 #include <ctime>
 #include <math.h>
 #include <vector>
@@ -23,7 +25,7 @@ int ProgramID;
 
 void ReloadShaders() {
   auto LoadShader = [](const int idx, const char* doc, void(*cmp)(const int, const char**, const size_t)) {
-    static const char* ShaderVersion = "#version 130 \n";
+    static const char* ShaderVersion = "#version 330 \n";
 
     Core::File file(doc);
     DTU::String source;
@@ -129,7 +131,7 @@ class PEL : public Platform::Event::Listener {
 };
 
 int main(int argc, char **args) {
-  Core::Command::Collect(argc, args);
+  Command::Collect(argc, args);
 
   PEL pel;
   int display;
@@ -140,22 +142,32 @@ int main(int argc, char **args) {
     exit(-1);
 
   int VAO = IRender::CreateVertexArray();
-  int VBO = IRender::CreateArrayBuffer();
   int VIA = IRender::CreateArrayBuffer();
   int VEA = IRender::CreateElementBuffer();
 
-  //std::vector<Vector3f> verts;
-  //std::vector<Vector3i> elements;
-  //cubeMesh(verts, elements);
-  Core::Mesh mesh(Core::Mesh::Flags::POSITION);
-  Core::Mesh::Sphere(mesh, 100);
+  auto mFlags = Mesh::Flags::POSITION | Mesh::Flags::NORMAL;
+  Mesh mesh(mFlags);
+  Mesh::Sphere(mesh, 100);
+  LOG->PrintAssert(mesh.isValid(), "Invalid mesh.");
 
   IRender::SetActiveVertexArray(VAO);
   IRender::SetActiveElementBuffer(VEA);
   IRender::SetElementBufferData(mesh.elements.data(), sizeof(Vector3u) * mesh.elements.size());
-  IRender::SetActiveArrayBuffer(VBO);
-  IRender::SetArrayBufferData(mesh.positions.data(), sizeof(Vector3f) * mesh.positions.size());
-  IRender::AddVertexAttribute<float>(0, 3, sizeof(Vector3f), 0);
+  if (mesh.attributes.CheckFlags(Mesh::Flags::POSITION)) {
+    IRender::SetActiveArrayBuffer(IRender::CreateArrayBuffer());
+    IRender::SetArrayBufferData(mesh.positions.data(), sizeof(Vector3f) * mesh.positions.size());
+    IRender::AddVertexAttribute<float>(Mesh::Flags::POSITION >> 1, 3, sizeof(Vector3f), 0);
+  }
+  if (mesh.attributes.CheckFlags(Mesh::Flags::NORMAL)) {
+    IRender::SetActiveArrayBuffer(IRender::CreateArrayBuffer());
+    IRender::SetArrayBufferData(mesh.normals.data(), sizeof(Vector3f) * mesh.normals.size());
+    IRender::AddVertexAttribute<float>(Mesh::Flags::NORMAL >> 1, 3, sizeof(Vector3f), 0);
+  }
+  if (mesh.attributes.CheckFlags(Mesh::Flags::UV)) {
+    IRender::SetActiveArrayBuffer(IRender::CreateArrayBuffer());
+    IRender::SetArrayBufferData(mesh.uvs.data(), sizeof(Vector2f) * mesh.uvs.size());
+    IRender::AddVertexAttribute<float>(Mesh::Flags::UV >> 1, 3, sizeof(Vector2f), 0);
+  }
   /*IRender::SetActiveArrayBuffer(VIA);
   IRender::AddVertexAttribute<float>(1, 4, sizeof(Matrix4f), 0, true);
   IRender::AddVertexAttribute<float>(2, 4, sizeof(Matrix4f), sizeof(Matrix<float, 1, 4>), true);
@@ -211,6 +223,9 @@ int main(int argc, char **args) {
     xform[0][3][0] = 1.0f;
     xform[1][3][1] = 1.0f;
     xform[2][3][2] = 1.0f;
+    xform[0][3][3] = 1.0f;
+    xform[1][3][3] = 1.0f;
+    xform[2][3][3] = 1.0f;
     //IRender::SetActiveArrayBuffer(VIA);
     //IRender::SetArrayBufferData(xform, sizeof(xform));
     //IRender::DrawElementsInstanced(IRender::DrawMode::TRIANGLES, mesh.elements.size() * 3, 0, 3);
