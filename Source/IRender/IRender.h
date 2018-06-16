@@ -1,7 +1,10 @@
 #include "defines.h"
+
 #include "Buffer.h"
+#include "FrameBuffer.h"
 #include "Shader.h"
 #include "State.h"
+#include "Texture.h"
 #include "Vertex.h"
 
 namespace IRender {

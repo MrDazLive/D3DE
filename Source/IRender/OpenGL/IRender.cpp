@@ -14,11 +14,11 @@ namespace IRender {
   }
 
   void DrawElements(DrawMode mode, const size_t size, const size_t start) {
-    glDrawElements(mode, (GLsizei)size, GL_UNSIGNED_INT, (void*)start);
+    glDrawElements((GLenum)mode, (GLsizei)size, GL_UNSIGNED_INT, (void*)start);
   }
 
   void DrawElementsInstanced(DrawMode mode, const size_t size, const size_t start, const size_t count) {
-    glDrawElementsInstanced(mode, (GLsizei)size, GL_UNSIGNED_INT, (void*)start, (GLsizei)count);
+    glDrawElementsInstanced((GLenum)mode, (GLsizei)size, GL_UNSIGNED_INT, (void*)start, (GLsizei)count);
   }
 
 }

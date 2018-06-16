@@ -24,7 +24,7 @@ Vector2u viewport;
 int ProgramID;
 
 void ReloadShaders() {
-  /*auto LoadShader = [](const int idx, const char* doc, void(*cmp)(const int, const char**, const size_t)) {
+  auto LoadShader = [](const int idx, const char* doc, void(*cmp)(const int, const char**, const size_t)) {
     static const char* ShaderVersion = "#version 330 \n";
 
     Core::File file(doc);
@@ -42,7 +42,7 @@ void ReloadShaders() {
   IRender::LinkShaderProgram(ProgramID, Shaders, 2);
   IRender::DeleteVertexShader(Shaders[0]);
   IRender::DeleteFragmentShader(Shaders[1]);
-  IRender::SetActiveShaderProgram(ProgramID);*/
+  IRender::SetActiveShaderProgram(ProgramID);
   dirty = true;
 }
 
@@ -140,7 +140,7 @@ int main(int argc, char **args) {
   if (!IRender::Initialise())
     exit(-1);
 
-  //int VAO = IRender::CreateVertexArray();
+  int VAO = IRender::CreateVertexArray();
   //int VIA = IRender::CreateArrayBuffer();
   int VEA = IRender::CreateElementBuffer();
 
@@ -149,10 +149,10 @@ int main(int argc, char **args) {
   Mesh::Sphere(mesh, 100);
   LOG->PrintAssert(mesh.isValid(), "Invalid mesh.");
 
-  //IRender::SetActiveVertexArray(VAO);
+  IRender::SetActiveVertexArray(VAO);
   IRender::SetActiveElementBuffer(VEA);
   IRender::SetElementBufferData(mesh.elements.data(), sizeof(Vector3u) * mesh.elements.size());
-  /*if (mesh.attributes.CheckFlags(Mesh::Flags::POSITION)) {
+  if (mesh.attributes.CheckFlags(Mesh::Flags::POSITION)) {
     IRender::SetActiveArrayBuffer(IRender::CreateArrayBuffer());
     IRender::SetArrayBufferData(mesh.positions.data(), sizeof(Vector3f) * mesh.positions.size());
     IRender::AddVertexAttribute<float>(Mesh::Flags::POSITION >> 1, 3, sizeof(Vector3f), 0);
@@ -166,27 +166,52 @@ int main(int argc, char **args) {
     IRender::SetActiveArrayBuffer(IRender::CreateArrayBuffer());
     IRender::SetArrayBufferData(mesh.uvs.data(), sizeof(Vector2f) * mesh.uvs.size());
     IRender::AddVertexAttribute<float>(Mesh::Flags::UV >> 1, 3, sizeof(Vector2f), 0);
-  }*/
+  }
   /*IRender::SetActiveArrayBuffer(VIA);
   IRender::AddVertexAttribute<float>(1, 4, sizeof(Matrix4f), 0, true);
   IRender::AddVertexAttribute<float>(2, 4, sizeof(Matrix4f), sizeof(Matrix<float, 1, 4>), true);
   IRender::AddVertexAttribute<float>(3, 4, sizeof(Matrix4f), sizeof(Matrix<float, 2, 4>), true);
   IRender::AddVertexAttribute<float>(4, 4, sizeof(Matrix4f), sizeof(Matrix<float, 3, 4>), true);*/
 
-  IRender::SetClearColour(0.2f, 0.2f, 0.4f, 1.0f);
-  IRender::EnableDepthTest();
-  IRender::EnableCullFace();
-
   float time = 0.0f;
   Matrix4f V(1.0f);
   V[3][2] = -2.0f;
 
-  //ProgramID = IRender::CreateShaderProgram();
+  ProgramID = IRender::CreateShaderProgram();
   ReloadShaders();
+
+  int TBO = IRender::CreateTextureBuffer(true);
+  {
+    IRender::SetActiveTextureBuffer(TBO);
+    
+    IRender::TextureFormatDescription desc;
+    desc.normalised = true;
+
+    IRender::FormatTextureBuffer(100, 100, desc);
+  }
+
+  int FBO = IRender::CreateFrameBuffer();
+  {
+    IRender::FrameBufferDescription desc;
+    int attachments[] = { (int)IRender::Attachment::COLOUR };
+    desc.writeBuffer  = attachments;
+    desc.writeCount   = 1;
+    IRender::SetActiveFrameBuffer(FBO, &desc);
+    IRender::BindFrameBufferTexture(TBO, (unsigned int)IRender::Attachment::COLOUR);
+
+    IRender::SetClearColour(1.0f, 0.2f, 0.4f, 1.0f);
+    IRender::ClearBuffer(IRender::BufferBit::COLOUR);
+
+    IRender::SetActiveFrameBuffer(0, nullptr);
+  }
+
+  IRender::SetClearColour(0.2f, 0.2f, 0.4f, 1.0f);
+  IRender::EnableDepthTest();
+  IRender::EnableCullFace();
   
   Platform::Event::Check();
   while(Platform::ValidateWindow(display)) {
-    /*float secs = (float)(((double)clock())/CLOCKS_PER_SEC);
+    float secs = (float)(((double)clock())/CLOCKS_PER_SEC);
     float delta = secs - time;
     if (move || rot) {
       Matrix4f T;
@@ -211,11 +236,11 @@ int main(int argc, char **args) {
       
       IRender::SetViewport(0, 0, viewport.x, viewport.y);
       dirty = false;
-    }*/
+    }
 
     IRender::ClearBuffer(IRender::BufferBit::COLOUR | IRender::BufferBit::DEPTH);
 
-    /*time = secs;
+    time = secs;
     Matrix4f M = yRotation(secs) * xRotation(toRad(330.f)) * Matrix4f(2.0f);
     int uID = IRender::GetUniformIndex(ProgramID, "M");
 
@@ -237,7 +262,18 @@ int main(int argc, char **args) {
     IRender::DrawElements(IRender::DrawMode::TRIANGLES, mesh.elements.size() * 3, 0);
     
     IRender::SetUniformValue<float, 4, 4>(uID, xform[2]);
-    IRender::DrawElements(IRender::DrawMode::TRIANGLES, mesh.elements.size() * 3, 0);*/
+    IRender::DrawElements(IRender::DrawMode::TRIANGLES, mesh.elements.size() * 3, 0);
+
+    {
+      IRender::FrameBufferDescription desc;
+      desc.access     = IRender::Access::READ;
+      desc.readBuffer = IRender::Attachment::COLOUR;
+
+      IRender::SetActiveFrameBuffer(FBO, &desc);
+      IRender::BlitFrameBuffer(100, 100, IRender::BufferBit::COLOUR);
+
+      IRender::SetActiveFrameBuffer(0, nullptr);
+    }
 
     IRender::SwapBuffer(display, Platform::WindowContext(display));
 

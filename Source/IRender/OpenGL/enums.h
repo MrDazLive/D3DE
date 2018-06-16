@@ -1,9 +1,8 @@
 #pragma once
 
-#ifdef _WIN32
-#define APIENTRY __stdcall
-#endif
 #include <glad/glad.h>
+
+#include <cstdint>
 
 namespace IRender {
 
@@ -13,17 +12,31 @@ namespace IRender {
     STENCIL     = GL_STENCIL_BUFFER_BIT
   };
 
-  enum Face {
+  enum struct Face {
     FRONT       = GL_FRONT,
     BACK        = GL_BACK,
     BOTH        = GL_FRONT_AND_BACK
   };
   
-  enum DrawMode {
+  enum struct DrawMode {
     POINTS      = GL_POINTS,
     LINES       = GL_LINES,
     TRIANGLES   = GL_TRIANGLES,
     QUADS       = GL_QUADS
+  };
+
+  enum struct Attachment {
+    NONE        = GL_NONE,
+    COLOUR      = GL_COLOR_ATTACHMENT0,
+    DEPTH       = GL_DEPTH_ATTACHMENT,
+    STENCIL     = GL_STENCIL_ATTACHMENT
+  };
+
+  enum struct Access : uint8_t {
+    NONE        = 0,
+    READ        = (1 << 0),
+    WRITE       = (1 << 1),
+    READ_WRITE  = READ | WRITE
   };
 
 }
