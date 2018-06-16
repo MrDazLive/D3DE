@@ -16,15 +16,17 @@ namespace Platform {
   void CreateWindow(int* const idx, unsigned int left, unsigned int top, unsigned int width, unsigned int height, const char* name/* = "New Window"*/) {
     static auto handle = GetModuleHandle(NULL);
 
+
     WNDCLASS wc = {};
-    wc.lpfnWndProc = WindowProc;
-    wc.hInstance = handle;
-    wc.lpszClassName = "D3DE Application";
+    wc.lpfnWndProc    = WindowProc;
+    wc.hInstance      = handle;
+    wc.hCursor        = LoadCursor(NULL, IDC_ARROW);
+    wc.lpszClassName  = "D3DE Application";
     RegisterClass(&wc);
 
     // Create the window.
     DisplayContext ctx = CreateWindowEx(
-      0,                              // Optional window styles.
+      NULL,                           // Optional window styles.
       "D3DE Application",             // Window class
       name,                           // Window text
       WS_OVERLAPPEDWINDOW,            // Window style

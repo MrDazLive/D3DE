@@ -1,9 +1,7 @@
 #pragma once
 
-#ifdef _WIN32
-#define IRENDER_API __declspec(dllexport)
-#else
-#define IRENDER_API
-#endif
-
+#ifdef IRENDER_DIRECTX
+#include "DirectX/enums.h"
+#elif IRENDER_OPENGL
 #include "OpenGL/enums.h"
+#endif

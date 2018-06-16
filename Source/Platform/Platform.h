@@ -1,9 +1,3 @@
-#ifdef _WIN32
-#define PLATFORM_API __declspec(dllexport)
-#else
-#define PLATFORM_API 
-#endif
-
 #include "enums.h"
 
 namespace Platform {

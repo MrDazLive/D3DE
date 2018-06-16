@@ -16,7 +16,9 @@ namespace IRender {
 
   IRENDER_API void  CompileVertexShader     (const int, const char**, const size_t);
 
-  IRENDER_API int   CreateShaderProgram     (const int*, const size_t);
+  IRENDER_API int   CreateShaderProgram     ();
+
+  IRENDER_API void  LinkShaderProgram       (const int, const int*, const size_t);
 
   IRENDER_API void  DeleteShaderProgram     (const int);
 

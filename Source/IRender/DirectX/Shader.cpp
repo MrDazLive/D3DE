@@ -7,7 +7,7 @@
 namespace IRender {
 
   // Temporary error handling.
-  void PrintShaderError(GLuint index) {
+  /*void PrintShaderError(GLuint index) {
     GLint Result = GL_FALSE;
     int InfoLogLength;
     glGetShaderiv(index, GL_COMPILE_STATUS, &Result);
@@ -17,21 +17,21 @@ namespace IRender {
       glGetShaderInfoLog(index, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
       printf("%s\n", &VertexShaderErrorMessage[0]);
     }
-  }
+  }*/
 
 #define GL_SHADER_FUNCTIONS(NAME, TYPE)                                                             \
   int Create##NAME##Shader() {                                                                      \
-    return (int)glCreateShader(TYPE);                                                               \
+    return (int)0;                                                               \
   }                                                                                                 \
                                                                                                     \
   void Delete##NAME##Shader(const int index) {                                                      \
-    glDeleteShader((GLuint)index);                                                                  \
+    /*glDeleteShader((GLuint)index);*/                                                                  \
   }                                                                                                 \
                                                                                                     \
   void Compile##NAME##Shader(const int index, const char** sourceArray, const size_t sourceCount) { \
-    glShaderSource((GLuint)index, (GLsizei)sourceCount, sourceArray, NULL);                         \
+    /*glShaderSource((GLuint)index, (GLsizei)sourceCount, sourceArray, NULL);                         \
     glCompileShader((GLuint)index);                                                                 \
-    PrintShaderError((GLuint)index);                                                                \
+    PrintShaderError((GLuint)index);*/                                                                \
   }                                                                                                 \
 
   GL_SHADER_FUNCTIONS(Vertex,   GL_VERTEX_SHADER);
@@ -40,36 +40,36 @@ namespace IRender {
 #undef GL_SHADER_FUNCTIONS
 
   int CreateShaderProgram() {
-    return (int)glCreateProgram();
+    return (int)0;
   }
 
   void LinkShaderProgram(const int index, const int* shaderArray, size_t shaderCount) {
-    auto loop = [&](std::function<void(GLuint, GLuint)> func) {
+    /*auto loop = [&](std::function<void(GLuint, GLuint)> func) {
       for (size_t i = 0; i < shaderCount; ++i)
         func((GLuint)index, (GLuint)shaderArray[i]);
     };
 
     loop(glAttachShader);
     glLinkProgram(index);
-    loop(glDetachShader);
+    loop(glDetachShader);*/
   }
 
   void DeleteShaderProgram(const int index) {
-    glDeleteProgram((GLuint)index);
+    //glDeleteProgram((GLuint)index);
   }
 
   void SetActiveShaderProgram(const int index) {
-    glUseProgram((GLuint)index);
+    //glUseProgram((GLuint)index);
   }
 
   int GetUniformIndex(const int program, const char* uniform) {
-    return (int)glGetUniformLocation((GLuint)program, uniform);
+    return (int)0;
   }
 
 #define GL_UNIFORM_FUNCTIONS(TYPE, Y, X, FUNC)                      \
   template <>                                                       \
   void SetUniformValue<TYPE, Y, X>(const int index, TYPE* value) {  \
-    [](const int index, TYPE* value) { FUNC; }(index, value);       \
+    /*[](const int index, TYPE* value) { FUNC; }(index, value);*/       \
   }                                                                 \
 
 #define GL_TYPE_UNIFORM_FUNCTIONS(TYPE, EXT)                                                          \
