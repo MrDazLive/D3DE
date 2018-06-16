@@ -140,19 +140,19 @@ int main(int argc, char **args) {
   if (!IRender::Initialise())
     exit(-1);
 
-  /*int VAO = IRender::CreateVertexArray();
-  int VIA = IRender::CreateArrayBuffer();
-  int VEA = IRender::CreateElementBuffer();*/
+  //int VAO = IRender::CreateVertexArray();
+  //int VIA = IRender::CreateArrayBuffer();
+  int VEA = IRender::CreateElementBuffer();
 
   auto mFlags = Mesh::Flags::POSITION | Mesh::Flags::NORMAL;
   Mesh mesh(mFlags);
   Mesh::Sphere(mesh, 100);
   LOG->PrintAssert(mesh.isValid(), "Invalid mesh.");
 
-  /*IRender::SetActiveVertexArray(VAO);
+  //IRender::SetActiveVertexArray(VAO);
   IRender::SetActiveElementBuffer(VEA);
   IRender::SetElementBufferData(mesh.elements.data(), sizeof(Vector3u) * mesh.elements.size());
-  if (mesh.attributes.CheckFlags(Mesh::Flags::POSITION)) {
+  /*if (mesh.attributes.CheckFlags(Mesh::Flags::POSITION)) {
     IRender::SetActiveArrayBuffer(IRender::CreateArrayBuffer());
     IRender::SetArrayBufferData(mesh.positions.data(), sizeof(Vector3f) * mesh.positions.size());
     IRender::AddVertexAttribute<float>(Mesh::Flags::POSITION >> 1, 3, sizeof(Vector3f), 0);

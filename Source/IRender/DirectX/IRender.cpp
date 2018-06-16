@@ -1,27 +1,16 @@
 #include "../IRender.h"
 
-#include <windows.h>
-#include <windowsx.h>
-
-#include <d3d11.h>
-#pragma comment (lib, "d3d11.lib")
+#include "context.h"
 
 #include <iostream>
 #include <map>
-
-// global declarations
-IDXGISwapChain *swapchain;             // the pointer to the swap chain interface
-ID3D11Device *dev;                     // the pointer to our Direct3D device interface
-ID3D11DeviceContext *devcon;           // the pointer to our Direct3D device context
-ID3D11RenderTargetView *backbuffer;    // global declaration
 
 static float clearColour[4] { 1.0f, 1.0f, 1.0f, 1.0f };
 
 namespace IRender {
 
   bool Initialise() {
-
-    return true;
+    return DX::Device() != nullptr;
   }
 
   void CreateContext(const int idx, void* const ctx) {
@@ -42,7 +31,7 @@ namespace IRender {
     scd.Windowed = TRUE;                                    // windowed/full-screen mode
 
     // create a device, device context and swap chain using the information in the scd struct
-    int res = D3D11CreateDeviceAndSwapChain(NULL,
+    D3D11CreateDeviceAndSwapChain(NULL,
                                   D3D_DRIVER_TYPE_HARDWARE,
                                   NULL,
                                   NULL,
@@ -50,25 +39,25 @@ namespace IRender {
                                   NULL,
                                   D3D11_SDK_VERSION,
                                   &scd,
-                                  &swapchain,
-                                  &dev,
+                                  &DX::SwapChain(),
+                                  &DX::Device(),
                                   NULL,
-                                  &devcon);
+                                  &DX::DeviceContext());
 
     // get the address of the back buffer
     ID3D11Texture2D *pBackBuffer;
-    swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+    DX::SwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 
     // use the back buffer address to create the render target
-    dev->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer);
+    DX::Device()->CreateRenderTargetView(pBackBuffer, NULL, &DX::BackBuffer());
     pBackBuffer->Release();
 
     // set the render target as the back buffer
-    devcon->OMSetRenderTargets(1, &backbuffer, NULL);
+    DX::DeviceContext()->OMSetRenderTargets(1, &DX::BackBuffer(), NULL);
   }
 
   void SwapBuffer(const int idx, void* const ctx) {
-    swapchain->Present(DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL, 0);
+    DX::SwapChain()->Present(DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL, 0);
   }
 
   void DrawElements(DrawMode mode, const size_t size, const size_t start) {
@@ -88,7 +77,7 @@ namespace IRender {
   }
 
   void ClearBuffer(const unsigned int bits) {
-    if(bits & BufferBit::COLOUR) devcon->ClearRenderTargetView(backbuffer, clearColour);
+    if(bits & BufferBit::COLOUR) DX::DeviceContext()->ClearRenderTargetView(DX::BackBuffer(), clearColour);
   }
 
   void SetViewport(const int x, const int y, const unsigned int width, const unsigned int height) {
@@ -101,7 +90,7 @@ namespace IRender {
     viewport.Width = (float)width;
     viewport.Height = (float)height;
 
-    devcon->RSSetViewports(1, &viewport);
+    DX::DeviceContext()->RSSetViewports(1, &viewport);
   }
 
   void SetClearColour(const float& red, const float& green, const float& blue, const float& alpha) {
